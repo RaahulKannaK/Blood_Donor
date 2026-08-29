@@ -34,7 +34,7 @@ def entry_page(request):
             request.session["person_id"] = user.id
             request.session["person_name"] = user.name
 
-            return redirect("role_login")
+            return redirect("login")
 
         else:
             messages.error(request, "Name or password is incorrect.")
@@ -47,7 +47,7 @@ def entry_page(request):
 # ROLE + USERNAME + PASSWORD
 # ---------------------------------------------------------
 
-def role_login(request):
+def login(request):
 
     # First page must be completed
     if "person_id" not in request.session:
@@ -65,7 +65,7 @@ def role_login(request):
             messages.error(request, "Please select a role.")
             return render(
                 request,
-                "hemohub/role_login.html",
+                "hemohub/login.html",
                 {"person_name": person_name}
             )
 
@@ -73,7 +73,7 @@ def role_login(request):
             messages.error(request, "Please enter username and password.")
             return render(
                 request,
-                "hemohub/role_login.html",
+                "hemohub/login.html",
                 {"person_name": person_name}
             )
 
@@ -90,7 +90,7 @@ def role_login(request):
 
             return render(
                 request,
-                "hemohub/role_login.html",
+                "hemohub/login.html",
                 {"person_name": person_name}
             )
 
@@ -103,7 +103,7 @@ def role_login(request):
 
             return render(
                 request,
-                "hemohub/role_login.html",
+                "hemohub/login.html",
                 {"person_name": person_name}
             )
 
@@ -132,7 +132,7 @@ def role_login(request):
 
     return render(
         request,
-        "hemohub/role_login.html",
+        "hemohub/login.html",
         {"person_name": person_name}
     )
 
