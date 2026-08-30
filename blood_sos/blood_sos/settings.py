@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -75,16 +79,20 @@ WSGI_APPLICATION = 'blood_sos.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Change from sqlite3 to MySQL
-        'NAME': 'raahul',         # Replace with your MySQL database name
-        'USER': 'root',            # Replace with your MySQL username
-        'PASSWORD': 'raahul@185',    # Replace with your MySQL password
-        'HOST': 'localhost',                  # Use '127.0.0.1' if localhost doesn't work
-        'PORT': '3306',                        # Default MySQL port
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT"),
+
+        "OPTIONS": {
+            "charset": "utf8mb4",
+        },
     }
 }
-
 
 
 # Password validation
