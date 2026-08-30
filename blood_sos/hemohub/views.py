@@ -17,30 +17,63 @@ def entry_page(request):
         name = request.POST.get("name", "").strip()
         password = request.POST.get("password", "")
 
+        print("================================")
+        print("ENTRY LOGIN DEBUG")
+        print("Entered name:", name)
+        print("Password entered:", password)
+
         if not name or not password:
-            messages.error(request, "Please enter your name and password.")
+            messages.error(
+                request,
+                "Please enter your name and password."
+            )
             return render(request, "hemohub/entry.html")
 
         try:
             user = LoginUser.objects.get(name__iexact=name)
+
+            print("User found:", user.name)
+            print("Username:", user.username)
+            print("Role:", user.role)
+            print("Stored password:", user.password)
+
         except LoginUser.DoesNotExist:
-            messages.error(request, "Name or password is incorrect.")
+
+            print("USER NOT FOUND")
+
+            messages.error(
+                request,
+                "Name or password is incorrect."
+            )
+
             return render(request, "hemohub/entry.html")
 
-        # Check hashed password
-        if check_password(password, user.password):
+        password_valid = check_password(
+            password,
+            user.password
+        )
 
-            # Store person information temporarily
+        print("Password valid:", password_valid)
+
+        if password_valid:
+
+            print("LOGIN SUCCESS")
+
             request.session["person_id"] = user.id
             request.session["person_name"] = user.name
 
             return redirect("login")
 
         else:
-            messages.error(request, "Name or password is incorrect.")
+
+            print("PASSWORD INCORRECT")
+
+            messages.error(
+                request,
+                "Name or password is incorrect."
+            )
 
     return render(request, "hemohub/entry.html")
-
 
 # ---------------------------------------------------------
 # SECOND PAGE

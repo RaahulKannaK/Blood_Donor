@@ -1,22 +1,30 @@
-"""
-URL configuration for blood_sos project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
 
+from hemohub.views import (
+    entry_page,
+    login,
+    register,
+    forgot_password,
+    reset_password,
+    donor_dashboard,
+    needer_dashboard,
+    admin_dashboard,
+    logout_user,
+)
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
+
+    path("", entry_page, name="entry_page"),
+    path("login/", login, name="login"),
+    path("register/", register, name="register"),
+    path("forgot-password/", forgot_password, name="forgot_password"),
+    path("reset-password/", reset_password, name="reset_password"),
+
+    path("donor-dashboard/", donor_dashboard, name="donor_dashboard"),
+    path("needer-dashboard/", needer_dashboard, name="needer_dashboard"),
+    path("admin-dashboard/", admin_dashboard, name="admin_dashboard"),
+
+    path("logout/", logout_user, name="logout_user"),
 ]
