@@ -81,7 +81,6 @@ WSGI_APPLICATION = 'blood_sos.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-
         "NAME": os.getenv("DB_NAME"),
         "USER": os.getenv("DB_USER"),
         "PASSWORD": os.getenv("DB_PASSWORD"),
@@ -90,10 +89,12 @@ DATABASES = {
 
         "OPTIONS": {
             "charset": "utf8mb4",
+            "ssl": {
+                "ssl_mode": "REQUIRED",
+            },
         },
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
