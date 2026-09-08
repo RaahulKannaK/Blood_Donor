@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>HemoHub - Register</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: #f5f5f5;
+        }
+
+        .box {
+            width: 450px;
+
+            background: white;
+
+            padding: 40px;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #c62828;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        input,
+        select {
+            width: 100%;
+
+            padding: 13px;
+
+            margin-bottom: 18px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 9px;
+        }
+
+        button {
+            width: 100%;
+
+            padding: 14px;
+
+            background: #c62828;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 9px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .message {
+            background: #ffe5e5;
+            color: #b71c1c;
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+            margin-bottom: 15px;
+        }
+
+        .back {
+            display: block;
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            color: #c62828;
+
+            text-decoration: none;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+    <h1>🩸 HemoHub</h1>
+
+    <div class="subtitle">
+        Create your account
+    </div>
+
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="message">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <label>Name</label>
+
+        <input
+            type="text"
+            name="name"
+            placeholder="Your full name"
+            required
+        >
+
+
+        <label>Age</label>
+
+        <input
+            type="number"
+            name="age"
+            min="1"
+            max="120"
+            placeholder="Your age"
+            required
+        >
+
+
+        <label>Username</label>
+
+        <input
+            type="text"
+            name="username"
+            placeholder="Create username"
+            required
+        >
+
+
+        <label>Password</label>
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Create password"
+            required
+        >
+
+
+        <label>Confirm Password</label>
+
+        <input
+            type="password"
+            name="confirm_password"
+            placeholder="Confirm password"
+            required
+        >
+
+
+        <label>Role</label>
+
+        <select name="role" required>
+
+            <option value="">
+                Select role
+            </option>
+
+            <option value="donor">
+                Donor
+            </option>
+
+            <option value="needer">
+                Needer
+            </option>
+
+            <option value="admin">
+                Admin
+            </option>
+
+        </select>
+
+
+        <button type="submit">
+            Create Account
+        </button>
+
+    </form>
+
+
+    <a
+        href="{% url 'entry_page' %}"
+        class="back">
+        ← Back to Login
+    </a>
+
+</div>
+
+</body>
+
+</html>
