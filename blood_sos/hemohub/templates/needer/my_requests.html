@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Requests | SOS Blood Bank</title>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f8ff;
+            color: #172554;
+        }
+
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0d47a1, #1565c0);
+            color: white;
+            padding: 25px 18px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            box-shadow: 4px 0 15px rgba(13, 71, 161, 0.15);
+        }
+
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 10px 30px;
+        }
+
+
+        .logo-icon {
+            width: 43px;
+            height: 43px;
+            background: #e53935;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+        }
+
+
+        .logo-text h2 {
+            font-size: 18px;
+        }
+
+
+        .logo-text span {
+            font-size: 11px;
+            opacity: 0.75;
+        }
+
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+
+        .nav-item {
+            padding: 13px 14px;
+            border-radius: 10px;
+            color: #e3f2fd;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.12);
+        }
+
+
+        .nav-item.active {
+            background: white;
+            color: #0d47a1;
+            font-weight: 600;
+        }
+
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 15px;
+        }
+
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 250px;
+            padding: 25px 35px;
+            min-height: 100vh;
+        }
+
+
+        /* ================= TOPBAR ================= */
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+
+        .page-title h1 {
+            color: #0d47a1;
+            font-size: 27px;
+        }
+
+
+        .page-title p {
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+
+        .new-request-btn {
+            border: none;
+            background: #e53935;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+
+        .new-request-btn:hover {
+            background: #c62828;
+        }
+
+
+        /* ================= REQUEST SUMMARY ================= */
+
+        .request-summary {
+            background: white;
+            border-radius: 18px;
+            padding: 23px;
+            box-shadow: 0 3px 15px rgba(30,64,175,0.07);
+            margin-bottom: 22px;
+        }
+
+
+        .summary-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+
+        .blood-info {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+
+        .blood-drop {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: #ffebee;
+            color: #d32f2f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+
+        .blood-info h2 {
+            color: #172554;
+            font-size: 19px;
+        }
+
+
+        .blood-info p {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+
+        .status-badge {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+
+        .emergency-badge {
+            background: #ffebee;
+            color: #d32f2f;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+
+        /* ================= DETAILS ================= */
+
+        .request-details {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+
+        .detail-box {
+            background: #f8fbff;
+            border-radius: 11px;
+            padding: 13px;
+        }
+
+
+        .detail-box span {
+            display: block;
+            color: #94a3b8;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+
+        .detail-box strong {
+            color: #334155;
+            font-size: 13px;
+        }
+
+
+        /* ================= PROGRESS ================= */
+
+        .progress-section {
+            padding-top: 20px;
+        }
+
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+
+        .progress-header strong {
+            color: #1565c0;
+            font-size: 13px;
+        }
+
+
+        .progress-header span {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+
+        .progress-bar {
+            height: 9px;
+            background: #e2e8f0;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+
+        .progress-fill {
+            height: 100%;
+            width: 65%;
+            background: #1565c0;
+            border-radius: 20px;
+        }
+
+
+        /* ================= QUEUE GRID ================= */
+
+        .queue-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 22px;
+        }
+
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 3px 15px rgba(30,64,175,0.07);
+        }
+
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+
+        .card-header h3 {
+            color: #0d47a1;
+            font-size: 17px;
+        }
+
+
+        .count-badge {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 5px 9px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+
+        /* ================= DONOR ================= */
+
+        .donor {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+
+        .donor:last-child {
+            border-bottom: none;
+        }
+
+
+        .donor-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+
+        .donor-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #e3f2fd;
+            color: #1565c0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+        }
+
+
+        .donor-info h4 {
+            font-size: 13px;
+            color: #172554;
+        }
+
+
+        .donor-info p {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 3px;
+        }
+
+
+        .accepted {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 5px 9px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+
+        .waiting {
+            background: #fff3e0;
+            color: #e65100;
+            padding: 5px 9px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+
+        /* ================= TRACKING ================= */
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 8px;
+            top: 8px;
+            width: 2px;
+            height: 88%;
+            background: #dbeafe;
+        }
+
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+
+        .timeline-dot {
+            position: absolute;
+            left: -28px;
+            top: 0;
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            background: #1565c0;
+            border: 3px solid #e3f2fd;
+        }
+
+
+        .timeline-item.pending .timeline-dot {
+            background: #cbd5e1;
+            border-color: #f1f5f9;
+        }
+
+
+        .timeline-item h4 {
+            font-size: 13px;
+            color: #334155;
+        }
+
+
+        .timeline-item p {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+
+        /* ================= ACTIONS ================= */
+
+        .request-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+
+        .track-btn {
+            flex: 1;
+            border: none;
+            background: #1565c0;
+            color: white;
+            padding: 11px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+
+        .cancel-btn {
+            flex: 1;
+            border: 1px solid #ffcdd2;
+            background: #fff5f5;
+            color: #d32f2f;
+            padding: 11px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+
+        .track-btn:hover {
+            background: #0d47a1;
+        }
+
+
+        .cancel-btn:hover {
+            background: #ffebee;
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        .mobile-menu {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border: none;
+            background: white;
+            color: #1565c0;
+            border-radius: 10px;
+            font-size: 20px;
+        }
+
+
+        @media (max-width: 1000px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: 0.3s;
+            }
+
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+
+            .mobile-menu {
+                display: block;
+            }
+
+
+            .request-details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+
+            .queue-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .main {
+                padding: 15px;
+            }
+
+
+            .topbar {
+                gap: 10px;
+            }
+
+
+            .page-title h1 {
+                font-size: 21px;
+            }
+
+
+            .new-request-btn {
+                display: none;
+            }
+
+
+            .summary-top {
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+
+            .request-details {
+                grid-template-columns: 1fr 1fr;
+            }
+
+
+            .request-actions {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar" id="sidebar">
+
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                🩸
+            </div>
+
+            <div class="logo-text">
+
+                <h2>SOS BLOOD BANK</h2>
+
+                <span>
+                    Save Lives • Donate Blood
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="nav-menu">
+
+            <a
+                href="#"
+                class="nav-item"
+                onclick="goDashboard()"
+            >
+                <span class="nav-icon">🏠</span>
+                Dashboard
+            </a>
+
+
+            <a
+                href="#"
+                class="nav-item"
+                onclick="goCreateRequest()"
+            >
+                <span class="nav-icon">🩸</span>
+                Create Blood Request
+            </a>
+
+
+            <a
+                href="#"
+                class="nav-item active"
+            >
+                <span class="nav-icon">📋</span>
+                My Requests
+            </a>
+
+
+            <a
+                href="#"
+                class="nav-item"
+                onclick="goFindDonor()"
+            >
+                <span class="nav-icon">👥</span>
+                Find Donor
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a
+                href="#"
+                class="nav-item"
+                onclick="showNotifications()"
+            >
+                <span class="nav-icon">🔔</span>
+                Notifications
+            </a>
+
+
+            <a
+                href="#"
+                class="nav-item"
+                onclick="showProfile()"
+            >
+                <span class="nav-icon">👤</span>
+                Profile
+            </a>
+
+
+            <a
+                href="#"
+                class="nav-item"
+                onclick="logoutUser()"
+            >
+                <span class="nav-icon">🚪</span>
+                Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+
+
+        <!-- TOP BAR -->
+
+        <div class="topbar">
+
+
+            <button
+                class="mobile-menu"
+                onclick="toggleSidebar()"
+            >
+                ☰
+            </button>
+
+
+            <div class="page-title">
+
+                <h1>My Blood Requests</h1>
+
+                <p>
+                    Track your requests and donor responses.
+                </p>
+
+            </div>
+
+
+            <button
+                class="new-request-btn"
+                onclick="goCreateRequest()"
+            >
+                + New Request
+            </button>
+
+        </div>
+
+
+
+        <!-- ================= REQUEST SUMMARY ================= -->
+
+        <section class="request-summary">
+
+
+            <div class="summary-top">
+
+
+                <div class="blood-info">
+
+                    <div class="blood-drop">
+                        O+
+                    </div>
+
+
+                    <div>
+
+                        <h2>
+                            O Positive Blood Request
+                        </h2>
+
+                        <p>
+                            Request ID: #REQ1024
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <span class="emergency-badge">
+                        🔴 Emergency
+                    </span>
+
+                    <span class="status-badge">
+                        Active
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- DETAILS -->
+
+            <div class="request-details">
+
+
+                <div class="detail-box">
+
+                    <span>
+                        Units Required
+                    </span>
+
+                    <strong>
+                        2 Units
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <span>
+                        Patient
+                    </span>
+
+                    <strong>
+                        Patient Name
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <span>
+                        Hospital
+                    </span>
+
+                    <strong>
+                        City Hospital
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <span>
+                        Location
+                    </span>
+
+                    <strong>
+                        Chennai
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PROGRESS -->
+
+            <div class="progress-section">
+
+                <div class="progress-header">
+
+                    <strong>
+                        Donor Matching Progress
+                    </strong>
+
+                    <span>
+                        3 of 5 donors responding
+                    </span>
+
+                </div>
+
+
+                <div class="progress-bar">
+
+                    <div class="progress-fill"></div>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ================= QUEUE ================= -->
+
+        <section class="queue-grid">
+
+
+            <!-- DONOR RESPONSE QUEUE -->
+
+            <div class="card">
+
+
+                <div class="card-header">
+
+                    <h3>
+                        Donor Response Queue
+                    </h3>
+
+                    <span class="count-badge">
+                        5 Responses
+                    </span>
+
+                </div>
+
+
+
+                <!-- ACCEPTED -->
+
+                <div class="donor">
+
+
+                    <div class="donor-left">
+
+                        <div class="donor-avatar">
+                            A
+                        </div>
+
+
+                        <div class="donor-info">
+
+                            <h4>
+                                Arun Kumar
+                            </h4>
+
+                            <p>
+                                O+ • 2.4 km away
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="accepted">
+                        ✓ Accepted
+                    </span>
+
+                </div>
+
+
+
+                <!-- ACCEPTED -->
+
+                <div class="donor">
+
+
+                    <div class="donor-left">
+
+                        <div class="donor-avatar">
+                            R
+                        </div>
+
+
+                        <div class="donor-info">
+
+                            <h4>
+                                Rahul S
+                            </h4>
+
+                            <p>
+                                O+ • 4.1 km away
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="accepted">
+                        ✓ Accepted
+                    </span>
+
+                </div>
+
+
+
+                <!-- WAITING -->
+
+                <div class="donor">
+
+
+                    <div class="donor-left">
+
+                        <div class="donor-avatar">
+                            P
+                        </div>
+
+
+                        <div class="donor-info">
+
+                            <h4>
+                                Priya M
+                            </h4>
+
+                            <p>
+                                O+ • 5.7 km away
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="waiting">
+                        Waiting
+                    </span>
+
+                </div>
+
+
+
+                <!-- WAITING -->
+
+                <div class="donor">
+
+
+                    <div class="donor-left">
+
+                        <div class="donor-avatar">
+                            S
+                        </div>
+
+
+                        <div class="donor-info">
+
+                            <h4>
+                                Suresh K
+                            </h4>
+
+                            <p>
+                                O+ • 7.2 km away
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="waiting">
+                        Waiting
+                    </span>
+
+                </div>
+
+
+
+                <!-- WAITING -->
+
+                <div class="donor">
+
+
+                    <div class="donor-left">
+
+                        <div class="donor-avatar">
+                            V
+                        </div>
+
+
+                        <div class="donor-info">
+
+                            <h4>
+                                Vishnu R
+                            </h4>
+
+                            <p>
+                                O+ • 8.5 km away
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="waiting">
+                        Waiting
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ================= TRACKING ================= -->
+
+            <div class="card">
+
+
+                <div class="card-header">
+
+                    <h3>
+                        Request Tracking
+                    </h3>
+
+                </div>
+
+
+
+                <div class="timeline">
+
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-dot"></div>
+
+                        <h4>
+                            Request Created
+                        </h4>
+
+                        <p>
+                            Your blood request was created.
+                        </p>
+
+                    </div>
+
+
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-dot"></div>
+
+                        <h4>
+                            Donors Notified
+                        </h4>
+
+                        <p>
+                            Matching donors were notified.
+                        </p>
+
+                    </div>
+
+
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-dot"></div>
+
+                        <h4>
+                            Donors Responding
+                        </h4>
+
+                        <p>
+                            3 donors have responded.
+                        </p>
+
+                    </div>
+
+
+
+                    <div class="timeline-item pending">
+
+                        <div class="timeline-dot"></div>
+
+                        <h4>
+                            Blood Collection
+                        </h4>
+
+                        <p>
+                            Waiting for donor confirmation.
+                        </p>
+
+                    </div>
+
+
+
+                    <div class="timeline-item pending">
+
+                        <div class="timeline-dot"></div>
+
+                        <h4>
+                            Request Fulfilled
+                        </h4>
+
+                        <p>
+                            Waiting for blood requirement to be fulfilled.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- ACTIONS -->
+
+                <div class="request-actions">
+
+                    <button
+                        class="track-btn"
+                        onclick="trackDonor()"
+                    >
+                        📍 Track Donor
+                    </button>
+
+
+                    <button
+                        class="cancel-btn"
+                        onclick="cancelRequest()"
+                    >
+                        Cancel Request
+                    </button>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+
+        /* ================= SIDEBAR ================= */
+
+        function toggleSidebar() {
+
+            const sidebar =
+                document.getElementById("sidebar");
+
+            sidebar.classList.toggle("open");
+
+        }
+
+
+
+        /* ================= NAVIGATION ================= */
+
+        function goDashboard() {
+
+            alert(
+                "Dashboard page will open here."
+            );
+
+        }
+
+
+        function goCreateRequest() {
+
+            alert(
+                "Create Blood Request page will open here."
+            );
+
+        }
+
+
+        function goFindDonor() {
+
+            alert(
+                "Find Donor page will open here."
+            );
+
+        }
+
+
+
+        /* ================= TRACK DONOR ================= */
+
+        function trackDonor() {
+
+            alert(
+                "Donor tracking will be available when a donor confirms the request."
+            );
+
+        }
+
+
+
+        /* ================= CANCEL REQUEST ================= */
+
+        function cancelRequest() {
+
+            const confirmation =
+                confirm(
+                    "Are you sure you want to cancel this blood request?"
+                );
+
+
+            if (confirmation) {
+
+                alert(
+                    "Your blood request has been cancelled."
+                );
+
+            }
+
+        }
+
+
+
+        /* ================= NOTIFICATIONS ================= */
+
+        function showNotifications() {
+
+            alert(
+                "Your notifications will appear here."
+            );
+
+        }
+
+
+
+        /* ================= PROFILE ================= */
+
+        function showProfile() {
+
+            alert(
+                "Your profile will open here."
+            );
+
+        }
+
+
+
+        /* ================= LOGOUT ================= */
+
+        function logoutUser() {
+
+            const confirmation =
+                confirm(
+                    "Are you sure you want to logout?"
+                );
+
+
+            if (confirmation) {
+
+                alert(
+                    "You have been logged out."
+                );
+
+            }
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
