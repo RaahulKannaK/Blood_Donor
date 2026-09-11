@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>HemoHub - Blood Requests</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial;
+}
+
+body {
+    background: #f4f7fb;
+    color: #172b4d;
+}
+
+.sidebar {
+    position: fixed;
+    width: 240px;
+    height: 100vh;
+    background: #0b1f3a;
+    color: white;
+    padding: 25px 15px;
+}
+
+.logo {
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 35px;
+}
+
+.logo span {
+    color: #e53935;
+}
+
+.menu a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 14px;
+    margin: 8px 0;
+    border-radius: 8px;
+}
+
+.menu a:hover,
+.menu .active {
+    background: #c62828;
+}
+
+.main {
+    margin-left: 240px;
+    padding: 30px;
+}
+
+.filters {
+    margin: 20px 0;
+}
+
+.filters button {
+    border: none;
+    padding: 10px 17px;
+    margin-right: 8px;
+    border-radius: 7px;
+    cursor: pointer;
+    background: white;
+    color: #172b4d;
+}
+
+.filters button.active,
+.filters button:hover {
+    background: #c62828;
+    color: white;
+}
+
+.request-card {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    box-shadow: 0 3px 10px #00000015;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.blood {
+    font-size: 25px;
+    color: #c62828;
+    font-weight: bold;
+}
+
+.badge {
+    padding: 7px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.critical {
+    background: #ffe0e0;
+    color: #c62828;
+}
+
+.urgent {
+    background: #fff0d9;
+    color: #a05a00;
+}
+
+.normal {
+    background: #e5f7e9;
+    color: green;
+}
+
+.info {
+    margin: 12px 0;
+    color: #667085;
+}
+
+.respond {
+    background: #c62828;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.respond:hover {
+    background: #a91f1f;
+}
+
+@media(max-width: 700px) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="sidebar">
+
+<div class="logo">
+Hemo<span>Hub</span>
+</div>
+
+<div class="menu">
+
+<a href="dashboard.html">🏠 Dashboard</a>
+
+<a href="profile.html">👤 Profile</a>
+
+<a href="radar.html">📍 Blood Radar</a>
+
+<a href="#" class="active">
+🩸 Requests
+</a>
+
+<a href="alerts.html">🔔 Alerts</a>
+
+<a href="history.html">📋 History</a>
+
+<a href="#">🚪 Logout</a>
+
+</div>
+
+</div>
+
+
+<div class="main">
+
+<h1>Blood Requests</h1>
+
+<p>
+View blood requirements and respond to requests.
+</p>
+
+
+<div class="filters">
+
+<button
+class="active"
+onclick="filterRequests('all', this)">
+All
+</button>
+
+<button
+onclick="filterRequests('critical', this)">
+Critical
+</button>
+
+<button
+onclick="filterRequests('urgent', this)">
+Urgent
+</button>
+
+<button
+onclick="filterRequests('normal', this)">
+Normal
+</button>
+
+</div>
+
+
+<div id="requests">
+
+
+<div class="request-card"
+data-status="critical">
+
+<div class="header">
+
+<div>
+
+<div class="blood">
+O+ Blood Required
+</div>
+
+<h3>KG Hospital</h3>
+
+</div>
+
+<div class="badge critical">
+CRITICAL
+</div>
+
+</div>
+
+<div class="info">
+
+📍 2.3 km away
+
+<br>
+
+👤 Patient: Emergency Case
+
+<br>
+
+🕐 Required: Immediately
+
+</div>
+
+<button
+class="respond"
+onclick="respond('KG Hospital','O+')">
+
+I Can Donate
+
+</button>
+
+</div>
+
+
+<div class="request-card"
+data-status="urgent">
+
+<div class="header">
+
+<div>
+
+<div class="blood">
+A+ Blood Required
+</div>
+
+<h3>PSG Hospital</h3>
+
+</div>
+
+<div class="badge urgent">
+URGENT
+</div>
+
+</div>
+
+<div class="info">
+
+📍 4.1 km away
+
+<br>
+
+👤 Patient: Surgery
+
+<br>
+
+🕐 Required: Today
+
+</div>
+
+<button
+class="respond"
+onclick="respond('PSG Hospital','A+')">
+
+I Can Donate
+
+</button>
+
+</div>
+
+
+<div class="request-card"
+data-status="normal">
+
+<div class="header">
+
+<div>
+
+<div class="blood">
+B+ Blood Required
+</div>
+
+<h3>KMCH</h3>
+
+</div>
+
+<div class="badge normal">
+NORMAL
+</div>
+
+</div>
+
+<div class="info">
+
+📍 8.2 km away
+
+<br>
+
+👤 Patient: Treatment
+
+<br>
+
+🕐 Required: Tomorrow
+
+</div>
+
+<button
+class="respond"
+onclick="respond('KMCH','B+')">
+
+I Can Donate
+
+</button>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<script>
+
+function filterRequests(status, button) {
+
+    let cards =
+    document.querySelectorAll(".request-card");
+
+    let buttons =
+    document.querySelectorAll(".filters button");
+
+    buttons.forEach(function(btn) {
+
+        btn.classList.remove("active");
+
+    });
+
+    button.classList.add("active");
+
+
+    cards.forEach(function(card) {
+
+        let cardStatus =
+        card.getAttribute("data-status");
+
+        if (
+            status === "all" ||
+            status === cardStatus
+        ) {
+
+            card.style.display = "block";
+
+        } else {
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+}
+
+
+function respond(hospital, blood) {
+
+    let answer =
+    confirm(
+        "Do you want to respond to the " +
+        blood +
+        " blood request at " +
+        hospital +
+        "?"
+    );
+
+    if (answer) {
+
+        alert(
+            "Thank you for volunteering!\n\n" +
+            "Hospital: " +
+            hospital +
+            "\nBlood Group: " +
+            blood
+        );
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
