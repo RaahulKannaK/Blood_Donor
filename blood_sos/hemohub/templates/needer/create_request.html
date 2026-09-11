@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Blood Request | SOS Blood Bank</title>
+
+
+    <style>
+
+        /* ================= GENERAL ================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f8ff;
+            color: #172554;
+            min-height: 100vh;
+        }
+
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0d47a1, #1565c0);
+            color: white;
+            padding: 25px 18px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            box-shadow: 4px 0 15px rgba(13, 71, 161, 0.15);
+        }
+
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 10px 30px;
+        }
+
+
+        .logo-icon {
+            width: 43px;
+            height: 43px;
+            background: #e53935;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 23px;
+        }
+
+
+        .logo-text h2 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+
+        .logo-text span {
+            font-size: 11px;
+            opacity: 0.75;
+        }
+
+
+        /* ================= NAVIGATION ================= */
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+
+        .nav-item {
+            width: 100%;
+            padding: 13px 14px;
+            border-radius: 10px;
+            color: #e3f2fd;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+
+        .nav-item.active {
+            background: white;
+            color: #0d47a1;
+            font-weight: 600;
+        }
+
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 15px;
+        }
+
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 250px;
+            min-height: 100vh;
+            padding: 25px 35px;
+        }
+
+
+        /* ================= TOP BAR ================= */
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+
+        .page-title h1 {
+            font-size: 27px;
+            color: #0d47a1;
+        }
+
+
+        .page-title p {
+            color: #64748b;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+
+        .back-btn {
+            border: none;
+            background: white;
+            color: #1565c0;
+            padding: 10px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+        }
+
+
+        .back-btn:hover {
+            background: #e3f2fd;
+        }
+
+
+        /* ================= FORM CONTAINER ================= */
+
+        .form-container {
+            max-width: 950px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 18px rgba(30, 64, 175, 0.08);
+        }
+
+
+        .form-heading {
+            margin-bottom: 25px;
+        }
+
+
+        .form-heading h2 {
+            color: #0d47a1;
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+
+
+        .form-heading p {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+
+        /* ================= SECTION ================= */
+
+        .form-section {
+            margin-bottom: 28px;
+        }
+
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: #1565c0;
+            font-size: 16px;
+            font-weight: 700;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 18px;
+        }
+
+
+        .section-number {
+            width: 27px;
+            height: 27px;
+            border-radius: 8px;
+            background: #e3f2fd;
+            color: #1565c0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+        }
+
+
+        /* ================= FORM GRID ================= */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 7px;
+        }
+
+
+        .required {
+            color: #e53935;
+        }
+
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid #dbe3ef;
+            border-radius: 10px;
+            outline: none;
+            background: #fbfdff;
+            color: #172554;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #1976d2;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(25,118,210,0.08);
+        }
+
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+
+        .input-help {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+
+
+        /* ================= BLOOD GROUP ================= */
+
+        .blood-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+
+        .blood-option {
+            position: relative;
+        }
+
+
+        .blood-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+
+        .blood-option label {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 5px;
+            border: 1px solid #dbe3ef;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+            color: #1565c0;
+            background: #fbfdff;
+            transition: 0.2s;
+        }
+
+
+        .blood-option input:checked + label {
+            background: #ffebee;
+            border-color: #e53935;
+            color: #d32f2f;
+        }
+
+
+        /* ================= UNITS ================= */
+
+        .unit-options {
+            display: flex;
+            gap: 10px;
+        }
+
+
+        .unit-option {
+            position: relative;
+            flex: 1;
+        }
+
+
+        .unit-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+
+        .unit-option label {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid #dbe3ef;
+            border-radius: 10px;
+            cursor: pointer;
+            color: #1565c0;
+            font-weight: 600;
+            background: #fbfdff;
+            transition: 0.2s;
+        }
+
+
+        .unit-option input:checked + label {
+            background: #e3f2fd;
+            border-color: #1976d2;
+            color: #0d47a1;
+        }
+
+
+        /* ================= URGENCY ================= */
+
+        .urgency-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+
+        .urgency-option {
+            position: relative;
+        }
+
+
+        .urgency-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+
+        .urgency-option label {
+            display: block;
+            padding: 15px;
+            border: 1px solid #dbe3ef;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+
+        .urgency-option label strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+
+
+        .urgency-option label span {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+
+        .emergency-label {
+            color: #d32f2f;
+        }
+
+
+        .urgent-label {
+            color: #e65100;
+        }
+
+
+        .normal-label {
+            color: #2e7d32;
+        }
+
+
+        .urgency-option input:checked + label {
+            border-width: 2px;
+        }
+
+
+        .urgency-option input:checked + .emergency-label-box {
+            background: #fff5f5;
+            border-color: #e53935;
+        }
+
+
+        .urgency-option input:checked + .urgent-label-box {
+            background: #fff8ed;
+            border-color: #fb8c00;
+        }
+
+
+        .urgency-option input:checked + .normal-label-box {
+            background: #f1f8f2;
+            border-color: #43a047;
+        }
+
+
+        /* ================= FORM ACTIONS ================= */
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 22px;
+        }
+
+
+        .cancel-btn {
+            border: 1px solid #dbe3ef;
+            background: white;
+            color: #64748b;
+            padding: 12px 22px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+
+        .cancel-btn:hover {
+            background: #f8fafc;
+        }
+
+
+        .submit-btn {
+            border: none;
+            background: #e53935;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+
+        .submit-btn:hover {
+            background: #c62828;
+            transform: translateY(-1px);
+        }
+
+
+        /* ================= SUCCESS MESSAGE ================= */
+
+        .success-message {
+            display: none;
+            margin-bottom: 20px;
+            padding: 14px 16px;
+            background: #e8f5e9;
+            border: 1px solid #a5d6a7;
+            color: #2e7d32;
+            border-radius: 10px;
+            font-size: 13px;
+        }
+
+
+        .success-message.show {
+            display: block;
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        .mobile-menu {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border: none;
+            background: white;
+            color: #1565c0;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: 0.3s;
+            }
+
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+
+            .mobile-menu {
+                display: block;
+            }
+
+
+            .topbar {
+                gap: 12px;
+            }
+
+
+            .page-title {
+                flex: 1;
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .form-container {
+                padding: 20px;
+            }
+
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+
+            .blood-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+
+            .urgency-options {
+                grid-template-columns: 1fr;
+            }
+
+
+            .unit-options {
+                flex-direction: column;
+            }
+
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+
+            .cancel-btn,
+            .submit-btn {
+                width: 100%;
+            }
+
+
+            .back-btn {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar" id="sidebar">
+
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                🩸
+            </div>
+
+            <div class="logo-text">
+                <h2>SOS BLOOD BANK</h2>
+                <span>Save Lives • Donate Blood</span>
+            </div>
+
+        </div>
+
+
+        <nav class="nav-menu">
+
+            <a href="#" class="nav-item" onclick="goDashboard()">
+                <span class="nav-icon">🏠</span>
+                Dashboard
+            </a>
+
+
+            <a href="#" class="nav-item active">
+                <span class="nav-icon">🩸</span>
+                Create Blood Request
+            </a>
+
+
+            <a href="#" class="nav-item" onclick="goMyRequests()">
+                <span class="nav-icon">📋</span>
+                My Requests
+            </a>
+
+
+            <a href="#" class="nav-item" onclick="goFindDonor()">
+                <span class="nav-icon">👥</span>
+                Find Donor
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="#" class="nav-item" onclick="showNotifications()">
+                <span class="nav-icon">🔔</span>
+                Notifications
+            </a>
+
+
+            <a href="#" class="nav-item" onclick="showProfile()">
+                <span class="nav-icon">👤</span>
+                Profile
+            </a>
+
+
+            <a href="#" class="nav-item" onclick="logoutUser()">
+                <span class="nav-icon">🚪</span>
+                Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+
+
+        <!-- TOP BAR -->
+
+        <div class="topbar">
+
+            <button class="mobile-menu" onclick="toggleSidebar()">
+                ☰
+            </button>
+
+
+            <div class="page-title">
+
+                <h1>Create Blood Request</h1>
+
+                <p>
+                    Provide the details needed to find a suitable donor.
+                </p>
+
+            </div>
+
+
+            <button class="back-btn" onclick="goDashboard()">
+                ← Dashboard
+            </button>
+
+        </div>
+
+
+
+        <!-- ================= FORM ================= -->
+
+        <div class="form-container">
+
+
+            <div class="form-heading">
+
+                <h2>Blood Request Details</h2>
+
+                <p>
+                    Please provide accurate information so that suitable
+                    donors can be identified quickly.
+                </p>
+
+            </div>
+
+
+            <!-- SUCCESS MESSAGE -->
+
+            <div class="success-message" id="successMessage">
+
+                ✅ Your blood request has been created successfully.
+                Suitable donors can now be notified.
+
+            </div>
+
+
+            <form id="bloodRequestForm">
+
+
+                <!-- ================= PATIENT DETAILS ================= -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+
+                        <div class="section-number">
+                            1
+                        </div>
+
+                        Patient Details
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Patient Name
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="patientName"
+                                placeholder="Enter patient name"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Patient Age
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="number"
+                                id="patientAge"
+                                placeholder="Enter age"
+                                min="0"
+                                max="120"
+                                required
+                            >
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================= BLOOD DETAILS ================= -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+
+                        <div class="section-number">
+                            2
+                        </div>
+
+                        Blood Requirement
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+
+                        <!-- BLOOD GROUP -->
+
+                        <div class="form-group full">
+
+                            <label>
+                                Blood Group
+                                <span class="required">*</span>
+                            </label>
+
+
+                            <div class="blood-options">
+
+
+                                <div class="blood-option">
+
+                                    <input
+                                        type="radio"
+                                        name="bloodGroup"
+                                        id="aPositive"
+                                        value="A+"
+                                    >
+
+                                    <label for="aPositive">
+                                        A+
+                                    </label>
+
+                                </div>
+
+
+                                <div class="blood-option">
+
+                                    <input
+                                        type="radio"
+                                        name="bloodGroup"
+                                        id="aNegative"
+                                        value="A-"
+                                    >
+
+                                    <label for="aNegative">
+                                        A-
+                                    </label>
+
+                                </div>
+
+
+                                <div class="blood-option">
+
+                                    <input
+                                        type="radio"
+                                        name="bloodGroup"
+                                        id="bPositive"
+                                        value="B+"
+                                    >
+
+                                    <label for="bPositive">
+                                        B+
+                                    </label>
+
+                                </div>
+
+
+                                <div class="blood-option">
+
+                                    <input
+                                        type="radio"
+                                        name="bloodGroup"
+                                        id="bNegative"
+                                        value="B-"
+                                    >
+
+                                    <label for="bNegative">
+                                        B-
+                                    </label>
+
+                                </div>
+
+
+                                <div class="blood-option">
+
+                                    <input
+                                        type="radio"
+                                        name="bloodGroup"
+                                        id="oPositive"
+                                        value="O+"
+                                    >
+
+                                    <label for="oPositive">
+                                        O+
+                                    </label>
+
+                                </div>
+
+
+                                <div class="blood-option">
+
+                                    <input
+                                        type="radio"
+                                        name="bloodGroup"
+                                        id="oNegative"
+                                        value="O-"
+                                    >
+
+                                    <label for="oNegative">
+                                        O-
+                                    </label>
+
+                                </div>
+
+
+                                <div class="blood-option">
+
+                                    <input
+                                        type="radio"
+                                        name="bloodGroup"
+                                        id="abPositive"
+                                        value="AB+"
+                                    >
+
+                                    <label for="abPositive">
+                                        AB+
+                                    </label>
+
+                                </div>
+
+
+                                <div class="blood-option">
+
+                                    <input
+                                        type="radio"
+                                        name="bloodGroup"
+                                        id="abNegative"
+                                        value="AB-"
+                                    >
+
+                                    <label for="abNegative">
+                                        AB-
+                                    </label>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- UNITS -->
+
+                        <div class="form-group full">
+
+                            <label>
+                                Units Required
+                                <span class="required">*</span>
+                            </label>
+
+
+                            <div class="unit-options">
+
+
+                                <div class="unit-option">
+
+                                    <input
+                                        type="radio"
+                                        name="units"
+                                        id="unit1"
+                                        value="1"
+                                    >
+
+                                    <label for="unit1">
+                                        1 Unit
+                                    </label>
+
+                                </div>
+
+
+                                <div class="unit-option">
+
+                                    <input
+                                        type="radio"
+                                        name="units"
+                                        id="unit2"
+                                        value="2"
+                                    >
+
+                                    <label for="unit2">
+                                        2 Units
+                                    </label>
+
+                                </div>
+
+
+                                <div class="unit-option">
+
+                                    <input
+                                        type="radio"
+                                        name="units"
+                                        id="unit3"
+                                        value="3"
+                                    >
+
+                                    <label for="unit3">
+                                        3 Units
+                                    </label>
+
+                                </div>
+
+
+                                <div class="unit-option">
+
+                                    <input
+                                        type="radio"
+                                        name="units"
+                                        id="unit4"
+                                        value="4"
+                                    >
+
+                                    <label for="unit4">
+                                        4 Units
+                                    </label>
+
+                                </div>
+
+
+                                <div class="unit-option">
+
+                                    <input
+                                        type="radio"
+                                        name="units"
+                                        id="unit5"
+                                        value="5"
+                                    >
+
+                                    <label for="unit5">
+                                        5+ Units
+                                    </label>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================= LOCATION ================= -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+
+                        <div class="section-number">
+                            3
+                        </div>
+
+                        Location Details
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Hospital / Medical Center
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="hospital"
+                                placeholder="Enter hospital name"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Location
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="location"
+                                placeholder="Enter area / city"
+                                required
+                            >
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================= URGENCY ================= -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+
+                        <div class="section-number">
+                            4
+                        </div>
+
+                        Urgency Level
+
+                    </div>
+
+
+                    <div class="urgency-options">
+
+
+                        <div class="urgency-option">
+
+                            <input
+                                type="radio"
+                                name="urgency"
+                                id="emergency"
+                                value="Emergency"
+                            >
+
+                            <label
+                                for="emergency"
+                                class="emergency-label-box"
+                            >
+
+                                <strong class="emergency-label">
+                                    🔴 Emergency
+                                </strong>
+
+                                <span>
+                                    Blood required immediately
+                                </span>
+
+                            </label>
+
+                        </div>
+
+
+                        <div class="urgency-option">
+
+                            <input
+                                type="radio"
+                                name="urgency"
+                                id="urgent"
+                                value="Urgent"
+                            >
+
+                            <label
+                                for="urgent"
+                                class="urgent-label-box"
+                            >
+
+                                <strong class="urgent-label">
+                                    🟠 Urgent
+                                </strong>
+
+                                <span>
+                                    Blood required soon
+                                </span>
+
+                            </label>
+
+                        </div>
+
+
+                        <div class="urgency-option">
+
+                            <input
+                                type="radio"
+                                name="urgency"
+                                id="normal"
+                                value="Normal"
+                            >
+
+                            <label
+                                for="normal"
+                                class="normal-label-box"
+                            >
+
+                                <strong class="normal-label">
+                                    🟢 Normal
+                                </strong>
+
+                                <span>
+                                    Blood required when available
+                                </span>
+
+                            </label>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================= ADDITIONAL INFO ================= -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+
+                        <div class="section-number">
+                            5
+                        </div>
+
+                        Additional Information
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Additional Information
+                        </label>
+
+                        <textarea
+                            id="additionalInfo"
+                            placeholder="Add any important information about the blood requirement..."
+                        ></textarea>
+
+                        <span class="input-help">
+                            Do not enter unnecessary sensitive personal information.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================= BUTTONS ================= -->
+
+                <div class="form-actions">
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        onclick="goDashboard()"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="submit-btn"
+                    >
+                        🩸 Submit Blood Request
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+
+        /* ================= MOBILE SIDEBAR ================= */
+
+        function toggleSidebar() {
+
+            const sidebar =
+                document.getElementById("sidebar");
+
+            sidebar.classList.toggle("open");
+
+        }
+
+
+
+        /* ================= NAVIGATION ================= */
+
+        function goDashboard() {
+
+            alert("Dashboard page will open here.");
+
+            /*
+                Later replace with Django URL:
+
+                window.location.href =
+                "{% url 'needer_dashboard' %}";
+            */
+
+        }
+
+
+        function goMyRequests() {
+
+            alert("My Requests page will open here.");
+
+            /*
+                Later:
+
+                window.location.href =
+                "{% url 'my_requests' %}";
+            */
+
+        }
+
+
+        function goFindDonor() {
+
+            alert("Find Donor page will open here.");
+
+            /*
+                Later:
+
+                window.location.href =
+                "{% url 'find_donor' %}";
+            */
+
+        }
+
+
+
+        /* ================= NOTIFICATIONS ================= */
+
+        function showNotifications() {
+
+            alert(
+                "Your notifications will appear here."
+            );
+
+        }
+
+
+
+        /* ================= PROFILE ================= */
+
+        function showProfile() {
+
+            alert(
+                "Your Needer profile will open here."
+            );
+
+        }
+
+
+
+        /* ================= LOGOUT ================= */
+
+        function logoutUser() {
+
+            const confirmLogout =
+                confirm(
+                    "Are you sure you want to logout?"
+                );
+
+
+            if (confirmLogout) {
+
+                alert(
+                    "You have been logged out."
+                );
+
+                /*
+                    Later connect Django logout.
+                */
+
+            }
+
+        }
+
+
+
+        /* ================= FORM SUBMISSION ================= */
+
+        document
+            .getElementById("bloodRequestForm")
+            .addEventListener("submit", function(event) {
+
+                event.preventDefault();
+
+
+                /* Patient */
+
+                const patientName =
+                    document.getElementById("patientName").value.trim();
+
+                const patientAge =
+                    document.getElementById("patientAge").value;
+
+
+                /* Blood Group */
+
+                const bloodGroup =
+                    document.querySelector(
+                        'input[name="bloodGroup"]:checked'
+                    );
+
+
+                /* Units */
+
+                const units =
+                    document.querySelector(
+                        'input[name="units"]:checked'
+                    );
+
+
+                /* Location */
+
+                const hospital =
+                    document.getElementById("hospital").value.trim();
+
+                const location =
+                    document.getElementById("location").value.trim();
+
+
+                /* Urgency */
+
+                const urgency =
+                    document.querySelector(
+                        'input[name="urgency"]:checked'
+                    );
+
+
+                /* Validation */
+
+                if (!patientName) {
+
+                    alert(
+                        "Please enter the patient name."
+                    );
+
+                    return;
+
+                }
+
+
+                if (!patientAge) {
+
+                    alert(
+                        "Please enter the patient age."
+                    );
+
+                    return;
+
+                }
+
+
+                if (!bloodGroup) {
+
+                    alert(
+                        "Please select the blood group."
+                    );
+
+                    return;
+
+                }
+
+
+                if (!units) {
+
+                    alert(
+                        "Please select the required units."
+                    );
+
+                    return;
+
+                }
+
+
+                if (!hospital) {
+
+                    alert(
+                        "Please enter the hospital name."
+                    );
+
+                    return;
+
+                }
+
+
+                if (!location) {
+
+                    alert(
+                        "Please enter the location."
+                    );
+
+                    return;
+
+                }
+
+
+                if (!urgency) {
+
+                    alert(
+                        "Please select the urgency level."
+                    );
+
+                    return;
+
+                }
+
+
+                /* Success */
+
+                const successMessage =
+                    document.getElementById(
+                        "successMessage"
+                    );
+
+
+                successMessage.classList.add("show");
+
+
+                successMessage.innerHTML =
+                    "✅ Blood request created successfully for " +
+                    bloodGroup.value +
+                    " (" +
+                    units.value +
+                    " unit(s)). Suitable donors can now be notified.";
+
+
+                /* Scroll to success message */
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+
+
+                /*
+                    IMPORTANT:
+
+                    Later this JavaScript will NOT
+                    create the database record.
+
+                    Django backend will receive:
+
+                    patientName
+                    patientAge
+                    bloodGroup
+                    units
+                    hospital
+                    location
+                    urgency
+                    additionalInfo
+
+                    and save them in the database.
+                */
+
+            });
+
+
+    </script>
+
+
+</body>
+
+</html>
