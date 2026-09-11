@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>HemoHub - Alerts</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial;
+}
+
+body {
+    background: #f4f7fb;
+    color: #172b4d;
+}
+
+.sidebar {
+    position: fixed;
+    width: 240px;
+    height: 100vh;
+    background: #0b1f3a;
+    color: white;
+    padding: 25px 15px;
+}
+
+.logo {
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 35px;
+}
+
+.logo span {
+    color: #e53935;
+}
+
+.menu a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 14px;
+    margin: 8px 0;
+    border-radius: 8px;
+}
+
+.menu a:hover,
+.menu .active {
+    background: #c62828;
+}
+
+.main {
+    margin-left: 240px;
+    padding: 30px;
+}
+
+.alert {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    margin: 18px 0;
+    box-shadow: 0 3px 10px #00000015;
+    border-left: 5px solid #c62828;
+}
+
+.alert h2 {
+    color: #c62828;
+    margin-bottom: 8px;
+}
+
+.alert p {
+    color: #667085;
+    line-height: 1.6;
+}
+
+.time {
+    font-size: 13px;
+    color: #98a2b3;
+    margin-top: 10px;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 7px;
+    background: #c62828;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #a91f1f;
+}
+
+.empty {
+    background: white;
+    padding: 50px;
+    text-align: center;
+    border-radius: 12px;
+    display: none;
+}
+
+@media(max-width:700px) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="sidebar">
+
+<div class="logo">
+Hemo<span>Hub</span>
+</div>
+
+<div class="menu">
+
+<a href="dashboard.html">🏠 Dashboard</a>
+
+<a href="profile.html">👤 Profile</a>
+
+<a href="radar.html">📍 Blood Radar</a>
+
+<a href="requests.html">🩸 Requests</a>
+
+<a href="#" class="active">
+🔔 Alerts
+</a>
+
+<a href="history.html">📋 History</a>
+
+<a href="#">🚪 Logout</a>
+
+</div>
+
+</div>
+
+
+<div class="main">
+
+<h1>🔔 Emergency Alerts</h1>
+
+<p>
+Important blood donation notifications.
+</p>
+
+
+<div id="alerts">
+
+
+<div class="alert">
+
+<h2>🚨 Critical Blood Requirement</h2>
+
+<p>
+
+O+ blood is urgently required at
+KG Hospital.
+
+<br>
+
+Distance: 2.3 km
+
+<br>
+
+Required immediately.
+
+</p>
+
+<div class="time">
+5 minutes ago
+</div>
+
+<button
+onclick="respond('KG Hospital','O+')">
+
+Respond Now
+
+</button>
+
+<button
+onclick="removeAlert(this)"
+style="margin-left:10px;background:#0b1f3a;">
+
+Dismiss
+
+</button>
+
+</div>
+
+
+<div class="alert">
+
+<h2>🩸 Blood Request Nearby</h2>
+
+<p>
+
+A+ blood is required at PSG Hospital
+for a surgery patient.
+
+<br>
+
+Distance: 4.1 km
+
+</p>
+
+<div class="time">
+25 minutes ago
+</div>
+
+<button
+onclick="respond('PSG Hospital','A+')">
+
+View Request
+
+</button>
+
+<button
+onclick="removeAlert(this)"
+style="margin-left:10px;background:#0b1f3a;">
+
+Dismiss
+
+</button>
+
+</div>
+
+
+<div class="alert">
+
+<h2>❤️ Thank You, Donor!</h2>
+
+<p>
+
+Your previous donation helped save lives.
+
+Thank you for being part of HemoHub.
+
+</p>
+
+<div class="time">
+Yesterday
+</div>
+
+</div>
+
+
+</div>
+
+
+<div id="empty"
+class="empty">
+
+<h2>🎉 No New Alerts</h2>
+
+<p>
+You are all caught up!
+</p>
+
+</div>
+
+</div>
+
+
+<script>
+
+function respond(hospital, blood) {
+
+    alert(
+        "Request opened.\n\n" +
+        "Hospital: " +
+        hospital +
+        "\nBlood Group: " +
+        blood
+    );
+
+}
+
+
+function removeAlert(button) {
+
+    let alertBox =
+    button.parentElement;
+
+    alertBox.remove();
+
+    let remaining =
+    document.querySelectorAll(".alert");
+
+    if (remaining.length === 0) {
+
+        document.getElementById("empty")
+        .style.display = "block";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
