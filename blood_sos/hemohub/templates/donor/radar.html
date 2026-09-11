@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>HemoHub - Blood Radar</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial;
+}
+
+body {
+    background: #f4f7fb;
+    color: #172b4d;
+}
+
+.sidebar {
+    position: fixed;
+    width: 240px;
+    height: 100vh;
+    background: #0b1f3a;
+    color: white;
+    padding: 25px 15px;
+}
+
+.logo {
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 35px;
+}
+
+.logo span {
+    color: #e53935;
+}
+
+.menu a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 14px;
+    margin: 8px 0;
+    border-radius: 8px;
+}
+
+.menu a:hover,
+.menu .active {
+    background: #c62828;
+}
+
+.main {
+    margin-left: 240px;
+    padding: 30px;
+}
+
+.controls {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.controls select {
+    padding: 10px;
+    margin-right: 10px;
+    border-radius: 7px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 7px;
+    background: #c62828;
+    color: white;
+    cursor: pointer;
+}
+
+.map {
+    height: 280px;
+    background: #dce5ee;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+
+.map-title {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: white;
+    padding: 10px 15px;
+    border-radius: 7px;
+    z-index: 2;
+}
+
+.pin {
+    position: absolute;
+    font-size: 30px;
+}
+
+.pin1 {
+    left: 30%;
+    top: 40%;
+}
+
+.pin2 {
+    left: 60%;
+    top: 25%;
+}
+
+.pin3 {
+    left: 75%;
+    top: 65%;
+}
+
+.requests {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px #00000015;
+}
+
+.blood {
+    color: #c62828;
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.distance {
+    color: #667085;
+    margin: 10px 0;
+}
+
+.critical {
+    color: #c62828;
+    font-weight: bold;
+}
+
+.card button {
+    margin-top: 15px;
+}
+
+@media(max-width: 800px) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+    .requests {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="sidebar">
+
+<div class="logo">
+Hemo<span>Hub</span>
+</div>
+
+<div class="menu">
+
+<a href="dashboard.html">🏠 Dashboard</a>
+
+<a href="profile.html">👤 Profile</a>
+
+<a href="#" class="active">
+📍 Blood Radar
+</a>
+
+<a href="requests.html">
+🩸 Requests
+</a>
+
+<a href="alerts.html">
+🔔 Alerts
+</a>
+
+<a href="history.html">
+📋 History
+</a>
+
+<a href="#">
+🚪 Logout
+</a>
+
+</div>
+
+</div>
+
+
+<div class="main">
+
+<h1>📍 Blood Radar</h1>
+
+<p>
+Find blood requests near your current location.
+</p>
+
+
+<div class="controls">
+
+<label>
+Blood Group:
+</label>
+
+<select id="bloodGroup">
+
+<option value="all">All</option>
+<option value="O+">O+</option>
+<option value="O-">O-</option>
+<option value="A+">A+</option>
+<option value="A-">A-</option>
+<option value="B+">B+</option>
+
+</select>
+
+
+<label>
+Radius:
+</label>
+
+<select id="radius">
+
+<option value="5">5 km</option>
+<option value="10">10 km</option>
+<option value="20">20 km</option>
+<option value="50">50 km</option>
+
+</select>
+
+
+<button onclick="searchRequests()">
+Search
+</button>
+
+<button onclick="getLocation()">
+📍 My Location
+</button>
+
+</div>
+
+
+<div class="map">
+
+<div class="map-title">
+Nearby Blood Requests
+</div>
+
+<div class="pin pin1">📍</div>
+
+<div class="pin pin2">📍</div>
+
+<div class="pin pin3">📍</div>
+
+</div>
+
+
+<div id="requestContainer"
+class="requests">
+
+<div class="card"
+data-blood="O+"
+data-distance="2">
+
+<div class="blood">
+O+
+</div>
+
+<h3>KG Hospital</h3>
+
+<p class="distance">
+📍 2.3 km away
+</p>
+
+<p class="critical">
+🚨 Critical
+</p>
+
+<button onclick="respond('KG Hospital')">
+Respond
+</button>
+
+</div>
+
+
+<div class="card"
+data-blood="A+"
+data-distance="4">
+
+<div class="blood">
+A+
+</div>
+
+<h3>PSG Hospital</h3>
+
+<p class="distance">
+📍 4.1 km away
+</p>
+
+<p class="critical">
+⚠ Urgent
+</p>
+
+<button onclick="respond('PSG Hospital')">
+Respond
+</button>
+
+</div>
+
+
+<div class="card"
+data-blood="B+"
+data-distance="8">
+
+<div class="blood">
+B+
+</div>
+
+<h3>KMCH</h3>
+
+<p class="distance">
+📍 8.2 km away
+</p>
+
+<p>
+Normal
+</p>
+
+<button onclick="respond('KMCH')">
+Respond
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+function searchRequests() {
+
+    let blood =
+    document.getElementById("bloodGroup").value;
+
+    let radius =
+    Number(document.getElementById("radius").value);
+
+    let cards =
+    document.querySelectorAll(".card");
+
+    cards.forEach(function(card) {
+
+        let cardBlood =
+        card.getAttribute("data-blood");
+
+        let distance =
+        Number(card.getAttribute("data-distance"));
+
+        let bloodMatch =
+        blood === "all" ||
+        blood === cardBlood;
+
+        let distanceMatch =
+        distance <= radius;
+
+        if (bloodMatch && distanceMatch) {
+
+            card.style.display = "block";
+
+        } else {
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+}
+
+
+function getLocation() {
+
+    if (navigator.geolocation) {
+
+        navigator.geolocation.getCurrentPosition(
+
+            function(position) {
+
+                alert(
+                    "Location detected successfully.\n" +
+                    "Latitude: " +
+                    position.coords.latitude +
+                    "\nLongitude: " +
+                    position.coords.longitude
+                );
+
+            },
+
+            function() {
+
+                alert(
+                    "Unable to access your location."
+                );
+
+            }
+
+        );
+
+    } else {
+
+        alert(
+            "Geolocation is not supported."
+        );
+
+    }
+
+}
+
+
+function respond(hospital) {
+
+    alert(
+        "Response sent to " +
+        hospital +
+        "."
+    );
+
+}
+
+</script>
+
+</body>
+</html>
