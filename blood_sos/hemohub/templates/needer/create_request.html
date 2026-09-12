@@ -707,7 +707,7 @@
             </a>
 
 
-            <a href="#" class="nav-item" onclick="logoutUser()">
+            <a href="{% url 'logout' %}" class="nav-item">
                 <span class="nav-icon">🚪</span>
                 Logout
             </a>
@@ -778,7 +778,8 @@
             </div>
 
 
-            <form id="bloodRequestForm">
+            <form method="POST" action="{% url 'create_request' %}">
+    {% csrf_token %}
 
 
                 <!-- ================= PATIENT DETAILS ================= -->

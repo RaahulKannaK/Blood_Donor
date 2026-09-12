@@ -714,17 +714,17 @@
                 Dashboard
             </a>
 
-            <a href="#" class="nav-item" onclick="openCreateRequest()">
+            <a href="{% url 'create_request' %}" class="nav-item"></a>
                 <span class="nav-icon">🩸</span>
                 Create Blood Request
             </a>
 
-            <a href="#" class="nav-item" onclick="openMyRequests()">
+            <a href="{% url 'my_requests' %}" class="nav-item"></a>
                 <span class="nav-icon">📋</span>
                 My Requests
             </a>
 
-            <a href="#" class="nav-item" onclick="openFindDonor()">
+            <a href="{% url 'find_donor' %}" class="nav-item"></a>
                 <span class="nav-icon">👥</span>
                 Find Donor
             </a>
@@ -744,7 +744,7 @@
                 Profile
             </a>
 
-            <a href="#" class="nav-item" onclick="logoutUser()">
+            <a href="{% url 'logout' %}" class="nav-item">
                 <span class="nav-icon">🚪</span>
                 Logout
             </a>
@@ -1149,57 +1149,6 @@
 
         }
 
-
-        /* ================= PAGE NAVIGATION ================= */
-
-        function openCreateRequest() {
-
-            alert(
-                "Create Blood Request page will open here."
-            );
-
-            /*
-             Later we will replace this with:
-
-             window.location.href =
-             "{% url 'create_request' %}";
-            */
-
-        }
-
-
-        function openMyRequests() {
-
-            alert(
-                "My Requests page will open here."
-            );
-
-            /*
-             Later:
-
-             window.location.href =
-             "{% url 'my_requests' %}";
-            */
-
-        }
-
-
-        function openFindDonor() {
-
-            alert(
-                "Find Donor page will open here."
-            );
-
-            /*
-             Later:
-
-             window.location.href =
-             "{% url 'find_donor' %}";
-            */
-
-        }
-
-
         function showPage(page) {
 
             if (page === "dashboard") {
@@ -1212,32 +1161,6 @@
             }
 
         }
-
-
-        /* ================= LOGOUT ================= */
-
-        function logoutUser() {
-
-            const confirmLogout =
-                confirm(
-                    "Are you sure you want to logout?"
-                );
-
-            if (confirmLogout) {
-
-                alert("You have been logged out.");
-
-                /*
-                 Later connect to Django logout:
-
-                 window.location.href =
-                 "{% url 'logout' %}";
-                */
-
-            }
-
-        }
-
 
         /* ================= CLOSE WHEN CLICKING OUTSIDE ================= */
 

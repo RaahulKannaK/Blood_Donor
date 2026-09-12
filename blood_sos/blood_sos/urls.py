@@ -11,6 +11,7 @@ from hemohub.views import (
     needer_dashboard,
     admin_dashboard,
     logout_user,
+    create_request,cancel_request,check_password,my_requests,find_donor,
 )
 
 urlpatterns = [
@@ -25,6 +26,11 @@ urlpatterns = [
     path("donor-dashboard/", donor_dashboard, name="donor_dashboard"),
     path("needer-dashboard/", needer_dashboard, name="needer_dashboard"),
     path("admin-dashboard/", admin_dashboard, name="admin_dashboard"),
-
+    path("needer/dashboard/", needer_dashboard, name="needer_dashboard"),
+    path("needer/create-request/", create_request, name="create_request"),
+    path("needer/my-requests/", my_requests, name="my_requests"),
+    path("needer/cancel/<int:request_id>/", cancel_request, name="cancel_request"),
+    path("needer/find-donor/", find_donor, name="find_donor"),
+    path("logout/", logout_user, name="logout"),
     path("logout/", logout_user, name="logout_user"),
 ]
