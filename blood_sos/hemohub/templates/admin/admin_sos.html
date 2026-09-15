@@ -846,7 +846,7 @@
         <nav class="menu">
 
 
-            <a href="admin_dashboard">
+            <a href="{% url 'admin_dashboard' %}">
 
                 <span class="menu-icon">▦</span>
 
@@ -906,7 +906,7 @@
 
         <div class="logout">
 
-            <a href="{% url 'logout' %}">
+            <a href="{% url 'logout_user' %}">
                 Logout
             </a>
 
