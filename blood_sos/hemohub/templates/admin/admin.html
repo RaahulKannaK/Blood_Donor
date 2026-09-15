@@ -1,0 +1,375 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Admin Dashboard</title>
+
+<style>
+
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #f5f5f5;
+}
+
+.sidebar {
+    position: fixed;
+    width: 230px;
+    height: 100vh;
+    background: #700000;
+    color: white;
+    padding: 20px;
+}
+
+.sidebar p {
+    padding: 10px;
+}
+
+.main {
+    margin-left: 270px;
+    padding: 30px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 15px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px #ddd;
+}
+
+.number {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.red {
+    color: red;
+}
+
+.orange {
+    color: orange;
+}
+
+.green {
+    color: green;
+}
+
+table {
+    width: 100%;
+    background: white;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.verify {
+    background: green;
+    color: white;
+}
+
+.block {
+    background: red;
+    color: white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="sidebar">
+
+<h2>🩸 SOS ADMIN</h2>
+
+<p>📊 Dashboard</p>
+<p>👥 User Management</p>
+<p>🩸 Donor Management</p>
+<p>🏥 Needer Management</p>
+<p>✅ Verification</p>
+<p>🚫 User Blocking</p>
+<p>🏥 Hospital Verification</p>
+<p>🚨 SOS Monitoring</p>
+<p>⚠️ Suspicious Requests</p>
+<p>📈 Analytics</p>
+
+</div>
+
+
+<div class="main">
+
+<h1>Admin Dashboard</h1>
+
+
+<!-- SOS -->
+
+<h2>🚨 Active SOS</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>Critical</h3>
+<div class="number red">3</div>
+</div>
+
+<div class="card">
+<h3>High</h3>
+<div class="number orange">5</div>
+</div>
+
+<div class="card">
+<h3>Normal</h3>
+<div class="number">8</div>
+</div>
+
+<div class="card">
+<h3>Total SOS</h3>
+<div class="number">16</div>
+</div>
+
+</div>
+
+
+<!-- USERS -->
+
+<h2>👥 User Management</h2>
+
+<table>
+
+<tr>
+<th>User</th>
+<th>Role</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+<tr>
+<td>Arun</td>
+<td>Donor</td>
+<td>Pending</td>
+<td>
+<button class="verify"
+onclick="verifyUser()">
+Verify
+</button>
+
+<button class="block"
+onclick="blockUser()">
+Block
+</button>
+</td>
+</tr>
+
+<tr>
+<td>Priya</td>
+<td>Needer</td>
+<td>Verified</td>
+<td>
+<button class="block"
+onclick="blockUser()">
+Block
+</button>
+</td>
+</tr>
+
+</table>
+
+
+<!-- HOSPITAL -->
+
+<h2>🏥 Hospital Verification</h2>
+
+<table>
+
+<tr>
+<th>Hospital</th>
+<th>Location</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+<tr>
+
+<td>ABC Hospital</td>
+<td>Coimbatore</td>
+<td>Pending</td>
+
+<td>
+
+<button class="verify"
+onclick="verifyHospital()">
+Approve
+</button>
+
+<button class="block">
+Reject
+</button>
+
+</td>
+
+</tr>
+
+</table>
+
+
+<!-- FRAUD -->
+
+<h2>⚠️ Suspicious Request Detection</h2>
+
+<div class="card">
+
+<p>
+<b>User:</b> Needer102
+</p>
+
+<p>
+<b>Activity:</b> 10 SOS requests within 5 minutes
+</p>
+
+<p class="red">
+<b>Risk: HIGH</b>
+</p>
+
+<button class="block"
+onclick="reviewFraud()">
+Review / Block
+</button>
+
+</div>
+
+
+<!-- ANALYTICS -->
+
+<h2>📈 Emergency Analytics</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>Total SOS Requests</h3>
+<div class="number">1842</div>
+</div>
+
+<div class="card">
+<h3>Successful Matches</h3>
+<div class="number green">1421</div>
+</div>
+
+<div class="card">
+<h3>Failed Requests</h3>
+<div class="number red">421</div>
+</div>
+
+<div class="card">
+<h3>Successful Donations</h3>
+<div class="number green">1356</div>
+</div>
+
+</div>
+
+
+<!-- ESCALATION -->
+
+<h2>🚨 Smart SOS Escalation</h2>
+
+<div class="card">
+
+<p>
+<strong>Stage 1:</strong>
+0–5 KM → Notify donors
+</p>
+
+<p>
+↓ Wait 2 minutes
+</p>
+
+<p>
+<strong>Stage 2:</strong>
+5–10 KM → Notify donors
+</p>
+
+<p>
+↓ Wait 2 minutes
+</p>
+
+<p>
+<strong>Stage 3:</strong>
+10–15 KM → Notify donors
+</p>
+
+<p>
+↓
+</p>
+
+<p>
+<strong>Stage 4:</strong>
+Admin Escalation
+</p>
+
+</div>
+
+
+<!-- MATCHING -->
+
+<h2>🧠 Smart Matching</h2>
+
+<div class="card">
+
+<p>🩸 Blood Group → Highest Priority</p>
+
+<p>📍 Distance → Nearby Donors</p>
+
+<p>🟢 Availability → Available Donors</p>
+
+<p>⭐ Reliability → Trusted Donors</p>
+
+<p>🚨 Urgency → Emergency Priority</p>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+function verifyUser() {
+    alert("User verified successfully!");
+}
+
+function blockUser() {
+    alert("User has been blocked.");
+}
+
+function verifyHospital() {
+    alert("Hospital verified successfully!");
+}
+
+function reviewFraud() {
+    alert("Suspicious request sent for Admin review.");
+}
+
+</script>
+
+</body>
+</html>
+

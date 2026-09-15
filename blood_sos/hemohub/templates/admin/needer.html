@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Needer Dashboard</title>
+
+<style>
+
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #f5f5f5;
+}
+
+.sidebar {
+    position: fixed;
+    width: 220px;
+    height: 100vh;
+    background: #8b0000;
+    color: white;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    text-align: center;
+}
+
+.sidebar p {
+    padding: 12px;
+    cursor: pointer;
+}
+
+.sidebar p:hover {
+    background: #b22222;
+}
+
+.main {
+    margin-left: 260px;
+    padding: 30px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px #ddd;
+}
+
+.sos {
+    background: #d00000;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+input, select {
+    padding: 10px;
+    margin: 8px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <h2>🩸 SOS</h2>
+
+    <p>📊 Dashboard</p>
+    <p>🔎 Search Blood</p>
+    <p>🚨 Create SOS</p>
+    <p>📋 My Requests</p>
+    <p>🔔 Notifications</p>
+    <p>👤 Profile</p>
+    <p>🚪 Logout</p>
+
+</div>
+
+
+<div class="main">
+
+<h1>Needer Dashboard</h1>
+
+<div class="card">
+
+<h2>🔎 Search Blood</h2>
+
+<select>
+    <option>Select Blood Group</option>
+    <option>A+</option>
+    <option>A-</option>
+    <option>B+</option>
+    <option>B-</option>
+    <option>O+</option>
+    <option>O-</option>
+    <option>AB+</option>
+    <option>AB-</option>
+</select>
+
+<input type="number" placeholder="Units Required">
+
+<button>Search</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>🚨 Emergency SOS</h2>
+
+<p>
+Need blood urgently?
+</p>
+
+<button class="sos" onclick="sendSOS()">
+SEND SOS REQUEST
+</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>📋 Active Request</h2>
+
+<p>Blood Group: O+</p>
+<p>Units Required: 2</p>
+<p>Status: Searching for donors</p>
+<p>Matching Stage: 0–5 KM</p>
+
+</div>
+
+
+<div class="card">
+
+<h2>🔔 Notifications</h2>
+
+<p>🚨 SOS request is being sent to nearby donors.</p>
+<p>🩸 3 suitable donors found.</p>
+
+</div>
+
+</div>
+
+
+<script>
+
+function sendSOS() {
+
+    let confirmSOS =
+        confirm("Are you sure you want to send an emergency SOS?");
+
+    if (confirmSOS) {
+
+        alert("SOS request created successfully!");
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
+
