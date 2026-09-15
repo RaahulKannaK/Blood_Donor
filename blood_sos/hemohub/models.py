@@ -1,9 +1,10 @@
+
 from django.db import models
 
 
-# =========================================================
+# ---------------------------------------------------------
 # LOGIN USER
-# =========================================================
+# ---------------------------------------------------------
 
 class LoginUser(models.Model):
 
@@ -13,7 +14,9 @@ class LoginUser(models.Model):
         ('needer', 'Needer'),
     ]
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(
+        max_length=100
+    )
 
     age = models.PositiveIntegerField()
 
@@ -31,7 +34,10 @@ class LoginUser(models.Model):
         choices=ROLE_CHOICES
     )
 
-    # Admin verification / blocking
+    # -----------------------------------------------------
+    # ADMIN USER MANAGEMENT
+    # -----------------------------------------------------
+
     is_verified = models.BooleanField(
         default=False
     )
@@ -40,17 +46,14 @@ class LoginUser(models.Model):
         default=False
     )
 
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
     def __str__(self):
+
         return f"{self.name} - {self.role}"
 
 
-# =========================================================
+# ---------------------------------------------------------
 # DONOR PROFILE
-# =========================================================
+# ---------------------------------------------------------
 
 class DonorProfile(models.Model):
 
@@ -60,8 +63,7 @@ class DonorProfile(models.Model):
     )
 
     blood_group = models.CharField(
-        max_length=5,
-        blank=True
+        max_length=5
     )
 
     location = models.CharField(
@@ -88,47 +90,13 @@ class DonorProfile(models.Model):
     )
 
     def __str__(self):
+
         return f"{self.user.name} - {self.blood_group}"
 
 
-# =========================================================
-# HOSPITAL
-# =========================================================
-
-class Hospital(models.Model):
-
-    name = models.CharField(
-        max_length=150
-    )
-
-    location = models.CharField(
-        max_length=100
-    )
-
-    phone = models.CharField(
-        max_length=15,
-        blank=True
-    )
-
-    is_verified = models.BooleanField(
-        default=False
-    )
-
-    is_blocked = models.BooleanField(
-        default=False
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    def __str__(self):
-        return f"{self.name} - {self.location}"
-
-
-# =========================================================
+# ---------------------------------------------------------
 # BLOOD REQUEST
-# =========================================================
+# ---------------------------------------------------------
 
 class BloodRequest(models.Model):
 
@@ -136,20 +104,6 @@ class BloodRequest(models.Model):
         ('Emergency', 'Emergency'),
         ('Urgent', 'Urgent'),
         ('Normal', 'Normal'),
-    ]
-
-    STATUS_CHOICES = [
-        ('Active', 'Active'),
-        ('Fulfilled', 'Fulfilled'),
-        ('Cancelled', 'Cancelled'),
-    ]
-
-    STAGE_CHOICES = [
-        ('Stage 1', 'Stage 1'),
-        ('Stage 2', 'Stage 2'),
-        ('Stage 3', 'Stage 3'),
-        ('Admin Escalation', 'Admin Escalation'),
-        ('Completed', 'Completed'),
     ]
 
     needer = models.ForeignKey(
@@ -168,11 +122,6 @@ class BloodRequest(models.Model):
     )
 
     units = models.PositiveIntegerField()
-
-    # Units already received
-    received_units = models.PositiveIntegerField(
-        default=0
-    )
 
     hospital = models.CharField(
         max_length=150
@@ -193,76 +142,59 @@ class BloodRequest(models.Model):
 
     status = models.CharField(
         max_length=20,
-        choices=STATUS_CHOICES,
         default='Active'
-    )
-
-    # SOS escalation
-    current_stage = models.CharField(
-        max_length=30,
-        choices=STAGE_CHOICES,
-        default='Stage 1'
-    )
-
-    progress = models.PositiveIntegerField(
-        default=0
     )
 
     created_at = models.DateTimeField(
         auto_now_add=True
     )
 
-    updated_at = models.DateTimeField(
-        auto_now=True
+    def __str__(self):
+
+        return f"{self.blood_group} request by {self.needer.name}"
+
+
+# ---------------------------------------------------------
+# SUSPICIOUS REQUEST
+# ---------------------------------------------------------
+
+class SuspiciousRequest(models.Model):
+
+    blood_request = models.ForeignKey(
+        BloodRequest,
+        on_delete=models.CASCADE,
+        related_name="suspicious_alerts"
     )
 
-    def update_progress(self):
+    title = models.CharField(
+        max_length=150
+    )
 
-        if self.units > 0:
+    description = models.TextField()
 
-            self.progress = int(
-                (self.received_units / self.units) * 100
-            )
+    severity = models.CharField(
+        max_length=20,
+        default="High"
+    )
 
-        else:
+    is_reviewed = models.BooleanField(
+        default=False
+    )
 
-            self.progress = 0
-
-        if self.progress >= 100:
-
-            self.progress = 100
-            self.status = 'Fulfilled'
-            self.current_stage = 'Completed'
-
-        elif self.received_units >= 1:
-
-            self.current_stage = 'Stage 1'
-
-        else:
-
-            self.current_stage = 'Stage 1'
-
-        self.save()
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
 
     def __str__(self):
-        return (
-            f"{self.blood_group} request "
-            f"by {self.needer.name}"
-        )
+
+        return f"{self.title} - {self.severity}"
 
 
-# =========================================================
+# ---------------------------------------------------------
 # DONOR RESPONSE
-# =========================================================
+# ---------------------------------------------------------
 
 class DonorResponse(models.Model):
-
-    STATUS_CHOICES = [
-        ('Responded', 'Responded'),
-        ('Accepted', 'Accepted'),
-        ('Completed', 'Completed'),
-        ('Cancelled', 'Cancelled'),
-    ]
 
     donor = models.ForeignKey(
         DonorProfile,
@@ -276,7 +208,6 @@ class DonorResponse(models.Model):
 
     status = models.CharField(
         max_length=20,
-        choices=STATUS_CHOICES,
         default='Responded'
     )
 
@@ -292,9 +223,9 @@ class DonorResponse(models.Model):
         )
 
 
-# =========================================================
+# ---------------------------------------------------------
 # DONATION HISTORY
-# =========================================================
+# ---------------------------------------------------------
 
 class DonationHistory(models.Model):
 
@@ -328,3 +259,44 @@ class DonationHistory(models.Model):
             f"{self.donor.user.name} - "
             f"{self.donation_date}"
         )
+
+
+# ---------------------------------------------------------
+# ADMIN ACTION LOG
+# ---------------------------------------------------------
+
+class AdminActionLog(models.Model):
+
+    admin = models.ForeignKey(
+        LoginUser,
+        on_delete=models.CASCADE,
+        related_name="admin_actions"
+    )
+
+    action = models.CharField(
+        max_length=100
+    )
+
+    target_user = models.ForeignKey(
+        LoginUser,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="admin_action_targets"
+    )
+
+    description = models.TextField(
+        blank=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+
+        return (
+            f"{self.admin.name} - "
+            f"{self.action}"
+        )
+

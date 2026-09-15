@@ -1,9 +1,9 @@
+
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 from django.utils import timezone
-from django.db.models import Count
-from datetime import timedelta
+from django.db import models
 
 from .models import (
     LoginUser,
@@ -11,12 +11,14 @@ from .models import (
     BloodRequest,
     DonorResponse,
     DonationHistory,
-    Hospital
+    SuspiciousRequest,
+    AdminActionLog
 )
 
 
 # =========================================================
-# ENTRY PAGE
+# FIRST PAGE
+# NAME + PASSWORD
 # =========================================================
 
 def entry_page(request):
@@ -63,32 +65,25 @@ def entry_page(request):
                 "hemohub/entry.html"
             )
 
-        if user.is_blocked:
-
-            messages.error(
-                request,
-                "Your account has been blocked by Admin."
-            )
-
-            return render(
-                request,
-                "hemohub/entry.html"
-            )
-
         if check_password(
             password,
             user.password
         ):
 
             request.session["person_id"] = user.id
+
             request.session["person_name"] = user.name
 
-            return redirect("login")
+            return redirect(
+                "login"
+            )
 
-        messages.error(
-            request,
-            "Name or password is incorrect."
-        )
+        else:
+
+            messages.error(
+                request,
+                "Name or password is incorrect."
+            )
 
     return render(
         request,
@@ -97,14 +92,17 @@ def entry_page(request):
 
 
 # =========================================================
-# LOGIN
+# SECOND PAGE
+# ROLE + USERNAME + PASSWORD
 # =========================================================
 
 def login(request):
 
     if "person_id" not in request.session:
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
 
     person_name = request.session.get(
         "person_name"
@@ -179,11 +177,15 @@ def login(request):
                 }
             )
 
+        # -------------------------------------------------
+        # CHECK BLOCKED ACCOUNT
+        # -------------------------------------------------
+
         if user.is_blocked:
 
             messages.error(
                 request,
-                "This account has been blocked by Admin."
+                "Your account has been blocked by the administrator."
             )
 
             return render(
@@ -193,6 +195,10 @@ def login(request):
                     "person_name": person_name
                 }
             )
+
+        # -------------------------------------------------
+        # CHECK PASSWORD
+        # -------------------------------------------------
 
         if not check_password(
             password,
@@ -217,8 +223,11 @@ def login(request):
         # -------------------------------------------------
 
         request.session["user_id"] = user.id
+
         request.session["username"] = user.username
+
         request.session["role"] = user.role
+
         request.session["name"] = user.name
 
         request.session.pop(
@@ -231,11 +240,19 @@ def login(request):
             None
         )
 
+        # -------------------------------------------------
+        # ADMIN
+        # -------------------------------------------------
+
         if user.role == "admin":
 
             return redirect(
                 "admin_dashboard"
             )
+
+        # -------------------------------------------------
+        # DONOR
+        # -------------------------------------------------
 
         elif user.role == "donor":
 
@@ -252,6 +269,10 @@ def login(request):
             return redirect(
                 "donor_dashboard"
             )
+
+        # -------------------------------------------------
+        # NEEDER
+        # -------------------------------------------------
 
         elif user.role == "needer":
 
@@ -351,18 +372,21 @@ def register(request):
                 "hemohub/register.html"
             )
 
+        # -------------------------------------------------
+        # CREATE USER
+        # -------------------------------------------------
+
         user = LoginUser.objects.create(
             name=name,
             age=age,
             username=username,
             password=make_password(password),
-            role=role,
-
-            # Admin accounts are automatically verified.
-            is_verified=(role == "admin"),
-
-            is_blocked=False
+            role=role
         )
+
+        # -------------------------------------------------
+        # CREATE DONOR PROFILE
+        # -------------------------------------------------
 
         if role == "donor":
 
@@ -542,7 +566,9 @@ def donor_dashboard(request):
 
     if request.session.get("role") != "donor":
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
 
     user_id = request.session.get(
         "user_id"
@@ -567,6 +593,10 @@ def donor_dashboard(request):
             "entry_page"
         )
 
+    # -----------------------------------------------------
+    # MATCHING BLOOD REQUESTS
+    # -----------------------------------------------------
+
     nearby_requests = BloodRequest.objects.filter(
         status="Active",
         blood_group=donor.blood_group
@@ -575,6 +605,10 @@ def donor_dashboard(request):
     )
 
     nearby_count = nearby_requests.count()
+
+    # -----------------------------------------------------
+    # DONATION HISTORY
+    # -----------------------------------------------------
 
     donation_history = DonationHistory.objects.filter(
         donor=donor
@@ -585,6 +619,10 @@ def donor_dashboard(request):
     total_donations = donation_history.count()
 
     lives_helped = total_donations * 3
+
+    # -----------------------------------------------------
+    # CONTEXT
+    # -----------------------------------------------------
 
     context = {
 
@@ -631,7 +669,9 @@ def donor_profile(request):
 
     if request.session.get("role") != "donor":
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
 
     user_id = request.session.get(
         "user_id"
@@ -646,6 +686,11 @@ def donor_profile(request):
         )
 
     except DonorProfile.DoesNotExist:
+
+        messages.error(
+            request,
+            "Donor profile not found."
+        )
 
         return redirect(
             "donor_dashboard"
@@ -683,18 +728,30 @@ def donor_profile(request):
             ""
         )
 
+        # -------------------------------------------------
+        # UPDATE USER
+        # -------------------------------------------------
+
         if name:
+
             donor.user.name = name
 
         if age:
+
             donor.user.age = age
 
         donor.user.save()
 
+        # -------------------------------------------------
+        # UPDATE DONOR PROFILE
+        # -------------------------------------------------
+
         if blood_group:
+
             donor.blood_group = blood_group
 
         donor.phone = phone
+
         donor.location = location
 
         if last_donation:
@@ -734,11 +791,9 @@ def donor_profile(request):
 
         "location": donor.location,
 
-        "last_donation_date":
-            donor.last_donation_date,
+        "last_donation_date": donor.last_donation_date,
 
-        "is_available":
-            donor.is_available,
+        "is_available": donor.is_available,
 
     }
 
@@ -757,7 +812,9 @@ def update_availability(request):
 
     if request.session.get("role") != "donor":
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
 
     user_id = request.session.get(
         "user_id"
@@ -781,9 +838,13 @@ def update_availability(request):
             "availability"
         )
 
-        donor.is_available = (
-            availability == "on"
-        )
+        if availability == "on":
+
+            donor.is_available = True
+
+        else:
+
+            donor.is_available = False
 
         donor.save()
 
@@ -807,22 +868,32 @@ def update_availability(request):
 
 
 # =========================================================
-# BLOOD RADAR
+# DONOR BLOOD RADAR
 # =========================================================
 
 def blood_radar(request):
 
     if request.session.get("role") != "donor":
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
 
     user_id = request.session.get(
         "user_id"
     )
 
-    donor = DonorProfile.objects.get(
-        user_id=user_id
-    )
+    try:
+
+        donor = DonorProfile.objects.get(
+            user_id=user_id
+        )
+
+    except DonorProfile.DoesNotExist:
+
+        return redirect(
+            "donor_dashboard"
+        )
 
     blood_group = request.GET.get(
         "blood_group",
@@ -840,44 +911,42 @@ def blood_radar(request):
         "-created_at"
     )
 
+    # -----------------------------------------------------
+    # BLOOD GROUP FILTER
+    # -----------------------------------------------------
+
     if blood_group != "all":
 
         requests_list = requests_list.filter(
             blood_group=blood_group
         )
 
-    elif donor.blood_group:
+    # -----------------------------------------------------
+    # DEFAULT DONOR BLOOD GROUP
+    # -----------------------------------------------------
+
+    if blood_group == "all" and donor.blood_group:
 
         requests_list = requests_list.filter(
             blood_group=donor.blood_group
         )
 
-    if radius != "all":
+    context = {
 
-        try:
+        "donor": donor,
 
-            radius_value = float(radius)
+        "requests_list": requests_list,
 
-            requests_list = requests_list.filter(
-                needer__isnull=False
-            )
+        "blood_group": blood_group,
 
-            # Distance filtering can be implemented
-            # after adding request coordinates.
+        "radius": radius,
 
-        except ValueError:
-
-            pass
+    }
 
     return render(
         request,
         "donor/radar.html",
-        {
-            "donor": donor,
-            "requests_list": requests_list,
-            "blood_group": blood_group,
-            "radius": radius
-        }
+        context
     )
 
 
@@ -889,15 +958,25 @@ def donor_requests(request):
 
     if request.session.get("role") != "donor":
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
 
     user_id = request.session.get(
         "user_id"
     )
 
-    donor = DonorProfile.objects.get(
-        user_id=user_id
-    )
+    try:
+
+        donor = DonorProfile.objects.get(
+            user_id=user_id
+        )
+
+    except DonorProfile.DoesNotExist:
+
+        return redirect(
+            "donor_dashboard"
+        )
 
     status_filter = request.GET.get(
         "status",
@@ -910,11 +989,19 @@ def donor_requests(request):
         "-created_at"
     )
 
+    # -----------------------------------------------------
+    # DONOR BLOOD GROUP
+    # -----------------------------------------------------
+
     if donor.blood_group:
 
         requests_list = requests_list.filter(
             blood_group=donor.blood_group
         )
+
+    # -----------------------------------------------------
+    # URGENCY FILTER
+    # -----------------------------------------------------
 
     if status_filter != "all":
 
@@ -934,6 +1021,10 @@ def donor_requests(request):
                 urgency=status_map[status_filter]
             )
 
+    # -----------------------------------------------------
+    # EXISTING RESPONSES
+    # -----------------------------------------------------
+
     responses = DonorResponse.objects.filter(
         donor=donor
     )
@@ -951,8 +1042,7 @@ def donor_requests(request):
 
         "status_filter": status_filter,
 
-        "responded_request_ids":
-            responded_request_ids,
+        "responded_request_ids": responded_request_ids,
 
     }
 
@@ -964,17 +1054,16 @@ def donor_requests(request):
 
 
 # =========================================================
-# RESPOND TO REQUEST
+# RESPOND TO BLOOD REQUEST
 # =========================================================
 
-def respond_to_request(
-    request,
-    request_id
-):
+def respond_to_request(request, request_id):
 
     if request.session.get("role") != "donor":
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
 
     user_id = request.session.get(
         "user_id"
@@ -987,6 +1076,11 @@ def respond_to_request(
         )
 
     except DonorProfile.DoesNotExist:
+
+        messages.error(
+            request,
+            "Donor profile not found."
+        )
 
         return redirect(
             "donor_dashboard"
@@ -1010,6 +1104,10 @@ def respond_to_request(
             "donor_requests"
         )
 
+    # -----------------------------------------------------
+    # AVAILABILITY
+    # -----------------------------------------------------
+
     if not donor.is_available:
 
         messages.error(
@@ -1021,6 +1119,10 @@ def respond_to_request(
             "donor_requests"
         )
 
+    # -----------------------------------------------------
+    # BLOOD GROUP
+    # -----------------------------------------------------
+
     if donor.blood_group != blood_request.blood_group:
 
         messages.error(
@@ -1031,6 +1133,10 @@ def respond_to_request(
         return redirect(
             "donor_requests"
         )
+
+    # -----------------------------------------------------
+    # DUPLICATE RESPONSE
+    # -----------------------------------------------------
 
     already_responded = DonorResponse.objects.filter(
         donor=donor,
@@ -1047,6 +1153,10 @@ def respond_to_request(
         return redirect(
             "donor_requests"
         )
+
+    # -----------------------------------------------------
+    # CREATE RESPONSE
+    # -----------------------------------------------------
 
     DonorResponse.objects.create(
         donor=donor,
@@ -1072,11 +1182,25 @@ def donation_history(request):
 
     if request.session.get("role") != "donor":
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
 
-    donor = DonorProfile.objects.get(
-        user_id=request.session["user_id"]
+    user_id = request.session.get(
+        "user_id"
     )
+
+    try:
+
+        donor = DonorProfile.objects.get(
+            user_id=user_id
+        )
+
+    except DonorProfile.DoesNotExist:
+
+        return redirect(
+            "donor_dashboard"
+        )
 
     history = DonationHistory.objects.filter(
         donor=donor
@@ -1088,16 +1212,24 @@ def donation_history(request):
 
     lives_helped = total_donations * 3
 
+    context = {
+
+        "donor": donor,
+
+        "history": history,
+
+        "total_donations": total_donations,
+
+        "lives_helped": lives_helped,
+
+        "last_donation": history.first(),
+
+    }
+
     return render(
         request,
         "donor/history.html",
-        {
-            "donor": donor,
-            "history": history,
-            "total_donations": total_donations,
-            "lives_helped": lives_helped,
-            "last_donation": history.first(),
-        }
+        context
     )
 
 
@@ -1109,11 +1241,25 @@ def donor_alerts(request):
 
     if request.session.get("role") != "donor":
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
 
-    donor = DonorProfile.objects.get(
-        user_id=request.session["user_id"]
+    user_id = request.session.get(
+        "user_id"
     )
+
+    try:
+
+        donor = DonorProfile.objects.get(
+            user_id=user_id
+        )
+
+    except DonorProfile.DoesNotExist:
+
+        return redirect(
+            "donor_dashboard"
+        )
 
     alerts = BloodRequest.objects.filter(
         status="Active",
@@ -1125,11 +1271,19 @@ def donor_alerts(request):
         "-created_at"
     )
 
+    # -----------------------------------------------------
+    # MATCH BLOOD GROUP
+    # -----------------------------------------------------
+
     if donor.blood_group:
 
         alerts = alerts.filter(
             blood_group=donor.blood_group
         )
+
+    # -----------------------------------------------------
+    # EXISTING RESPONSES
+    # -----------------------------------------------------
 
     responses = DonorResponse.objects.filter(
         donor=donor
@@ -1140,15 +1294,20 @@ def donor_alerts(request):
         flat=True
     )
 
+    context = {
+
+        "donor": donor,
+
+        "alerts": alerts,
+
+        "responded_request_ids": responded_request_ids,
+
+    }
+
     return render(
         request,
         "donor/alerts.html",
-        {
-            "donor": donor,
-            "alerts": alerts,
-            "responded_request_ids":
-                responded_request_ids,
-        }
+        context
     )
 
 
@@ -1160,14 +1319,12 @@ def needer_dashboard(request):
 
     if request.session.get("role") != "needer":
 
-        return redirect("entry_page")
-
-    user_id = request.session.get(
-        "user_id"
-    )
+        return redirect(
+            "entry_page"
+        )
 
     my_requests = BloodRequest.objects.filter(
-        needer_id=user_id
+        needer_id=request.session["user_id"]
     ).order_by(
         "-created_at"
     )
@@ -1176,43 +1333,46 @@ def needer_dashboard(request):
         status="Active"
     ).count()
 
-    fulfilled_requests = my_requests.filter(
-        status="Fulfilled"
-    ).count()
+    # -----------------------------------------------------
+    # DONOR RESPONSES
+    # -----------------------------------------------------
 
     response_count = DonorResponse.objects.filter(
-        blood_request__needer_id=user_id
+        blood_request__needer_id=request.session["user_id"]
     ).count()
 
-    active_request = my_requests.filter(
-        status="Active"
-    ).first()
+    context = {
+
+        "name": request.session.get(
+            "name"
+        ),
+
+        "username": request.session.get(
+            "username"
+        ),
+
+        "role": request.session.get(
+            "role"
+        ),
+
+        "active_count": active_requests,
+
+        "fulfilled_count": my_requests.filter(
+            status="Fulfilled"
+        ).count(),
+
+        "response_count": response_count,
+
+        "active_request": my_requests.filter(
+            status="Active"
+        ).first(),
+
+    }
 
     return render(
         request,
         "needer/needer_dahboard.html",
-        {
-            "name": request.session.get("name"),
-
-            "username":
-                request.session.get("username"),
-
-            "role":
-                request.session.get("role"),
-
-            "active_count":
-                active_requests,
-
-            "fulfilled_count":
-                fulfilled_requests,
-
-            "response_count":
-                response_count,
-
-            "active_request":
-                active_request,
-
-        }
+        context
     )
 
 
@@ -1224,7 +1384,9 @@ def create_request(request):
 
     if request.session.get("role") != "needer":
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
 
     if request.method == "POST":
 
@@ -1300,21 +1462,13 @@ def create_request(request):
 
             units=units,
 
-            received_units=0,
-
             hospital=hospital,
 
             location=location,
 
             urgency=urgency,
 
-            additional_info=additional_info,
-
-            status="Active",
-
-            current_stage="Stage 1",
-
-            progress=0
+            additional_info=additional_info
 
         )
 
@@ -1341,7 +1495,9 @@ def my_requests(request):
 
     if request.session.get("role") != "needer":
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
 
     requests_list = BloodRequest.objects.filter(
         needer_id=request.session["user_id"]
@@ -1352,21 +1508,23 @@ def my_requests(request):
     latest_request = requests_list.first()
 
     response_count = DonorResponse.objects.filter(
-        blood_request__needer_id=
-        request.session["user_id"]
+        blood_request__needer_id=request.session["user_id"]
     ).count()
+
+    context = {
+
+        "requests_list": requests_list,
+
+        "latest_request": latest_request,
+
+        "response_count": response_count,
+
+    }
 
     return render(
         request,
         "needer/my_requests.html",
-        {
-            "requests_list": requests_list,
-
-            "latest_request": latest_request,
-
-            "response_count":
-                response_count,
-        }
+        context
     )
 
 
@@ -1374,14 +1532,13 @@ def my_requests(request):
 # CANCEL REQUEST
 # =========================================================
 
-def cancel_request(
-    request,
-    request_id
-):
+def cancel_request(request, request_id):
 
     if request.session.get("role") != "needer":
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
 
     blood_request = BloodRequest.objects.filter(
         id=request_id,
@@ -1415,7 +1572,9 @@ def find_donor(request):
         "admin"
     ]:
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
 
     blood_group = request.GET.get(
         "blood_group",
@@ -1433,8 +1592,7 @@ def find_donor(request):
     )
 
     donors = DonorProfile.objects.filter(
-        is_available=True,
-        user__is_blocked=False
+        is_available=True
     ).select_related(
         "user"
     )
@@ -1473,105 +1631,11 @@ def find_donor(request):
         {
             "donors": donors,
 
-            "blood_group":
-                blood_group,
+            "blood_group": blood_group,
 
-            "location":
-                location,
+            "location": location,
 
-            "distance":
-                distance
-        }
-    )
-
-
-# =========================================================
-# SOS TRACKING
-# =========================================================
-
-def sos_tracking(
-    request,
-    request_id
-):
-
-    if request.session.get("role") not in [
-        "needer",
-        "admin"
-    ]:
-
-        return redirect("entry_page")
-
-    try:
-
-        blood_request = BloodRequest.objects.select_related(
-            "needer"
-        ).get(
-            id=request_id
-        )
-
-    except BloodRequest.DoesNotExist:
-
-        messages.error(
-            request,
-            "SOS request not found."
-        )
-
-        return redirect(
-            "my_requests"
-        )
-
-    # Needer can only see own request
-    if request.session.get("role") == "needer":
-
-        if blood_request.needer_id != request.session["user_id"]:
-
-            messages.error(
-                request,
-                "You are not allowed to view this request."
-            )
-
-            return redirect(
-                "my_requests"
-            )
-
-    responses = DonorResponse.objects.filter(
-        blood_request=blood_request
-    ).select_related(
-        "donor__user"
-    )
-
-    response_count = responses.count()
-
-    received_units = blood_request.received_units
-
-    remaining_units = max(
-        blood_request.units - received_units,
-        0
-    )
-
-    progress = blood_request.progress
-
-    return render(
-        request,
-        "needer/sos_tracking.html",
-        {
-            "blood_request":
-                blood_request,
-
-            "responses":
-                responses,
-
-            "response_count":
-                response_count,
-
-            "received_units":
-                received_units,
-
-            "remaining_units":
-                remaining_units,
-
-            "progress":
-                progress,
+            "distance": distance
         }
     )
 
@@ -1584,13 +1648,17 @@ def admin_dashboard(request):
 
     if request.session.get("role") != "admin":
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
 
     # -----------------------------------------------------
-    # USERS
+    # USER COUNTS
     # -----------------------------------------------------
 
-    total_users = LoginUser.objects.count()
+    total_users = LoginUser.objects.exclude(
+        role="admin"
+    ).count()
 
     total_donors = LoginUser.objects.filter(
         role="donor"
@@ -1600,202 +1668,251 @@ def admin_dashboard(request):
         role="needer"
     ).count()
 
-    pending_users = LoginUser.objects.filter(
-        is_verified=False
-    ).exclude(
-        role="admin"
-    ).count()
-
-    blocked_users = LoginUser.objects.filter(
-        is_blocked=True
-    ).count()
-
-    users = LoginUser.objects.all().order_by(
-        "-created_at"
-    )[:20]
-
     # -----------------------------------------------------
-    # SOS
+    # ACTIVE SOS
     # -----------------------------------------------------
 
     active_sos = BloodRequest.objects.filter(
         status="Active"
-    )
+    ).count()
 
-    critical_sos = active_sos.filter(
+    critical_sos = BloodRequest.objects.filter(
+        status="Active",
         urgency="Emergency"
     ).count()
 
-    high_sos = active_sos.filter(
+    high_sos = BloodRequest.objects.filter(
+        status="Active",
         urgency="Urgent"
     ).count()
 
-    normal_sos = active_sos.filter(
+    normal_sos = BloodRequest.objects.filter(
+        status="Active",
         urgency="Normal"
     ).count()
 
-    total_sos = active_sos.count()
-
     # -----------------------------------------------------
-    # ALL REQUESTS
+    # RECENT SOS
     # -----------------------------------------------------
 
-    total_requests = BloodRequest.objects.count()
+    recent_sos = BloodRequest.objects.select_related(
+        "needer"
+    ).order_by(
+        "-created_at"
+    )[:10]
 
-    successful_matches = DonorResponse.objects.count()
+    # -----------------------------------------------------
+    # MATCHING
+    # -----------------------------------------------------
+
+    successful_matches = DonorResponse.objects.filter(
+        status__in=[
+            "Accepted",
+            "Responded"
+        ]
+    ).count()
 
     successful_donations = DonationHistory.objects.filter(
         status="Completed"
     ).count()
 
-    failed_requests = BloodRequest.objects.filter(
-        status="Cancelled"
-    ).count()
+    context = {
+
+        "name": request.session.get(
+            "name"
+        ),
+
+        "username": request.session.get(
+            "username"
+        ),
+
+        "role": request.session.get(
+            "role"
+        ),
+
+        "total_users": total_users,
+
+        "total_donors": total_donors,
+
+        "total_needers": total_needers,
+
+        "active_sos": active_sos,
+
+        "critical_sos": critical_sos,
+
+        "high_sos": high_sos,
+
+        "normal_sos": normal_sos,
+
+        "recent_sos": recent_sos,
+
+        "successful_matches": successful_matches,
+
+        "successful_donations": successful_donations,
+
+    }
+
+    return render(
+        request,
+        "admin/admin_dashboard.html",
+        context
+    )
+
+
+# =========================================================
+# ADMIN USERS
+# =========================================================
+
+def admin_users(request):
+
+    if request.session.get("role") != "admin":
+
+        return redirect(
+            "entry_page"
+        )
+
+    users = LoginUser.objects.exclude(
+        role="admin"
+    ).order_by(
+        "-id"
+    )
 
     # -----------------------------------------------------
-    # HOSPITALS
+    # SEARCH
     # -----------------------------------------------------
 
-    hospitals = Hospital.objects.all().order_by(
-        "-created_at"
-    )[:20]
+    search = request.GET.get(
+        "search",
+        ""
+    ).strip()
 
-    total_hospitals = Hospital.objects.count()
+    if search:
 
-    verified_hospitals = Hospital.objects.filter(
-        is_verified=True
+        users = users.filter(
+
+            models.Q(
+                name__icontains=search
+            )
+
+            |
+
+            models.Q(
+                username__icontains=search
+            )
+
+        )
+
+    # -----------------------------------------------------
+    # ROLE FILTER
+    # -----------------------------------------------------
+
+    role = request.GET.get(
+        "role",
+        "all"
+    )
+
+    if role != "all":
+
+        users = users.filter(
+            role=role
+        )
+
+    # -----------------------------------------------------
+    # STATUS FILTER
+    # -----------------------------------------------------
+
+    status = request.GET.get(
+        "status",
+        "all"
+    )
+
+    if status == "verified":
+
+        users = users.filter(
+            is_verified=True
+        )
+
+    elif status == "pending":
+
+        users = users.filter(
+            is_verified=False,
+            is_blocked=False
+        )
+
+    elif status == "blocked":
+
+        users = users.filter(
+            is_blocked=True
+        )
+
+    # -----------------------------------------------------
+    # COUNTS
+    # -----------------------------------------------------
+
+    total_users = LoginUser.objects.exclude(
+        role="admin"
     ).count()
 
-    pending_hospitals = Hospital.objects.filter(
+    total_donors = LoginUser.objects.filter(
+        role="donor"
+    ).count()
+
+    total_needers = LoginUser.objects.filter(
+        role="needer"
+    ).count()
+
+    pending_verification = LoginUser.objects.filter(
+        role__in=[
+            "donor",
+            "needer"
+        ],
         is_verified=False,
         is_blocked=False
     ).count()
 
     # -----------------------------------------------------
-    # SUSPICIOUS REQUESTS
+    # VERIFICATION COUNTS
     # -----------------------------------------------------
 
-    five_minutes_ago = (
-        timezone.now() -
-        timedelta(minutes=5)
-    )
+    pending_donors = LoginUser.objects.filter(
+        role="donor",
+        is_verified=False,
+        is_blocked=False
+    ).count()
 
-    suspicious_requests = (
-        BloodRequest.objects
-        .filter(
-            created_at__gte=five_minutes_ago
-        )
-        .values(
-            "needer",
-            "needer__name",
-            "needer__username"
-        )
-        .annotate(
-            request_count=Count("id")
-        )
-        .filter(
-            request_count__gte=10
-        )
-    )
-
-    # -----------------------------------------------------
-    # RECENT REQUESTS
-    # -----------------------------------------------------
-
-    recent_requests = BloodRequest.objects.select_related(
-        "needer"
-    ).order_by(
-        "-created_at"
-    )[:20]
-
-    # -----------------------------------------------------
-    # CONTEXT
-    # -----------------------------------------------------
+    pending_needers = LoginUser.objects.filter(
+        role="needer",
+        is_verified=False,
+        is_blocked=False
+    ).count()
 
     context = {
 
-        "name":
-            request.session.get("name"),
+        "users": users,
 
-        "username":
-            request.session.get("username"),
+        "total_users": total_users,
 
-        "role":
-            request.session.get("role"),
+        "total_donors": total_donors,
 
-        # Users
-        "total_users":
-            total_users,
+        "total_needers": total_needers,
 
-        "total_donors":
-            total_donors,
+        "pending_verification": pending_verification,
 
-        "total_needers":
-            total_needers,
+        "pending_donors": pending_donors,
 
-        "pending_users":
-            pending_users,
+        "pending_needers": pending_needers,
 
-        "blocked_users":
-            blocked_users,
+        "search": search,
 
-        "users":
-            users,
+        "selected_role": role,
 
-        # SOS
-        "critical_sos":
-            critical_sos,
+        "selected_status": status,
 
-        "high_sos":
-            high_sos,
-
-        "normal_sos":
-            normal_sos,
-
-        "total_sos":
-            total_sos,
-
-        "active_sos":
-            active_sos,
-
-        # Analytics
-        "total_requests":
-            total_requests,
-
-        "successful_matches":
-            successful_matches,
-
-        "failed_requests":
-            failed_requests,
-
-        "successful_donations":
-            successful_donations,
-
-        # Hospitals
-        "hospitals":
-            hospitals,
-
-        "total_hospitals":
-            total_hospitals,
-
-        "verified_hospitals":
-            verified_hospitals,
-
-        "pending_hospitals":
-            pending_hospitals,
-
-        # Fraud
-        "suspicious_requests":
-            suspicious_requests,
-
-        # Recent requests
-        "recent_requests":
-            recent_requests,
     }
 
     return render(
         request,
-        "hemohub/admin_dashboard.html",
+        "admin/admin_users.html",
         context
     )
 
@@ -1804,30 +1921,24 @@ def admin_dashboard(request):
 # ADMIN VERIFY USER
 # =========================================================
 
-def admin_verify_user(
-    request,
-    user_id
-):
+def admin_verify_user(request, user_id):
 
     if request.session.get("role") != "admin":
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
+
+    if request.method != "POST":
+
+        return redirect(
+            "admin_users"
+        )
 
     try:
 
         user = LoginUser.objects.get(
             id=user_id
-        )
-
-        user.is_verified = True
-
-        user.is_blocked = False
-
-        user.save()
-
-        messages.success(
-            request,
-            f"{user.name} has been verified successfully."
         )
 
     except LoginUser.DoesNotExist:
@@ -1837,8 +1948,43 @@ def admin_verify_user(
             "User not found."
         )
 
+        return redirect(
+            "admin_users"
+        )
+
+    user.is_verified = True
+
+    user.is_blocked = False
+
+    user.save()
+
+    # -----------------------------------------------------
+    # ADMIN LOG
+    # -----------------------------------------------------
+
+    admin = LoginUser.objects.get(
+        id=request.session["user_id"]
+    )
+
+    AdminActionLog.objects.create(
+        admin=admin,
+
+        action="Verify User",
+
+        target_user=user,
+
+        description=(
+            f"{user.name} was verified by admin."
+        )
+    )
+
+    messages.success(
+        request,
+        f"{user.name} has been verified successfully."
+    )
+
     return redirect(
-        "admin_dashboard"
+        "admin_users"
     )
 
 
@@ -1846,38 +1992,25 @@ def admin_verify_user(
 # ADMIN BLOCK USER
 # =========================================================
 
-def admin_block_user(
-    request,
-    user_id
-):
+def admin_block_user(request, user_id):
 
     if request.session.get("role") != "admin":
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
+
+    if request.method != "POST":
+
+        return redirect(
+            "admin_users"
+        )
 
     try:
 
         user = LoginUser.objects.get(
             id=user_id
         )
-
-        if user.role == "admin":
-
-            messages.error(
-                request,
-                "Admin accounts cannot be blocked."
-            )
-
-        else:
-
-            user.is_blocked = True
-
-            user.save()
-
-            messages.success(
-                request,
-                f"{user.name} has been blocked."
-            )
 
     except LoginUser.DoesNotExist:
 
@@ -1886,8 +2019,41 @@ def admin_block_user(
             "User not found."
         )
 
+        return redirect(
+            "admin_users"
+        )
+
+    user.is_blocked = True
+
+    user.save()
+
+    # -----------------------------------------------------
+    # ADMIN LOG
+    # -----------------------------------------------------
+
+    admin = LoginUser.objects.get(
+        id=request.session["user_id"]
+    )
+
+    AdminActionLog.objects.create(
+        admin=admin,
+
+        action="Block User",
+
+        target_user=user,
+
+        description=(
+            f"{user.name} was blocked by admin."
+        )
+    )
+
+    messages.success(
+        request,
+        f"{user.name} has been blocked."
+    )
+
     return redirect(
-        "admin_dashboard"
+        "admin_users"
     )
 
 
@@ -1895,28 +2061,24 @@ def admin_block_user(
 # ADMIN UNBLOCK USER
 # =========================================================
 
-def admin_unblock_user(
-    request,
-    user_id
-):
+def admin_unblock_user(request, user_id):
 
     if request.session.get("role") != "admin":
 
-        return redirect("entry_page")
+        return redirect(
+            "entry_page"
+        )
+
+    if request.method != "POST":
+
+        return redirect(
+            "admin_users"
+        )
 
     try:
 
         user = LoginUser.objects.get(
             id=user_id
-        )
-
-        user.is_blocked = False
-
-        user.save()
-
-        messages.success(
-            request,
-            f"{user.name} has been unblocked."
         )
 
     except LoginUser.DoesNotExist:
@@ -1926,174 +2088,290 @@ def admin_unblock_user(
             "User not found."
         )
 
+        return redirect(
+            "admin_users"
+        )
+
+    user.is_blocked = False
+
+    user.save()
+
+    # -----------------------------------------------------
+    # ADMIN LOG
+    # -----------------------------------------------------
+
+    admin = LoginUser.objects.get(
+        id=request.session["user_id"]
+    )
+
+    AdminActionLog.objects.create(
+        admin=admin,
+
+        action="Unblock User",
+
+        target_user=user,
+
+        description=(
+            f"{user.name} was unblocked by admin."
+        )
+    )
+
+    messages.success(
+        request,
+        f"{user.name} has been unblocked."
+    )
+
     return redirect(
-        "admin_dashboard"
+        "admin_users"
     )
 
 
 # =========================================================
-# ADMIN VERIFY HOSPITAL
+# ADMIN SOS MONITORING
 # =========================================================
 
-def admin_verify_hospital(
-    request,
-    hospital_id
-):
+def admin_sos(request):
 
     if request.session.get("role") != "admin":
-
-        return redirect("entry_page")
-
-    try:
-
-        hospital = Hospital.objects.get(
-            id=hospital_id
-        )
-
-        hospital.is_verified = True
-
-        hospital.is_blocked = False
-
-        hospital.save()
-
-        messages.success(
-            request,
-            f"{hospital.name} has been verified."
-        )
-
-    except Hospital.DoesNotExist:
-
-        messages.error(
-            request,
-            "Hospital not found."
-        )
-
-    return redirect(
-        "admin_dashboard"
-    )
-
-
-# =========================================================
-# ADMIN REJECT / BLOCK HOSPITAL
-# =========================================================
-
-def admin_reject_hospital(
-    request,
-    hospital_id
-):
-
-    if request.session.get("role") != "admin":
-
-        return redirect("entry_page")
-
-    try:
-
-        hospital = Hospital.objects.get(
-            id=hospital_id
-        )
-
-        hospital.is_blocked = True
-
-        hospital.is_verified = False
-
-        hospital.save()
-
-        messages.success(
-            request,
-            f"{hospital.name} has been rejected."
-        )
-
-    except Hospital.DoesNotExist:
-
-        messages.error(
-            request,
-            "Hospital not found."
-        )
-
-    return redirect(
-        "admin_dashboard"
-    )
-
-
-# =========================================================
-# ADMIN UPDATE REQUEST STAGE
-# =========================================================
-
-def admin_update_sos_stage(
-    request,
-    request_id
-):
-
-    if request.session.get("role") != "admin":
-
-        return redirect("entry_page")
-
-    try:
-
-        blood_request = BloodRequest.objects.get(
-            id=request_id
-        )
-
-    except BloodRequest.DoesNotExist:
-
-        messages.error(
-            request,
-            "SOS request not found."
-        )
 
         return redirect(
-            "admin_dashboard"
+            "entry_page"
         )
 
-    if request.method == "POST":
+    # -----------------------------------------------------
+    # ACTIVE REQUESTS
+    # -----------------------------------------------------
 
-        stage = request.POST.get(
-            "stage",
-            ""
-        )
+    active_requests = BloodRequest.objects.filter(
+        status="Active"
+    ).select_related(
+        "needer"
+    ).order_by(
+        "-created_at"
+    )
 
-        valid_stages = [
-            "Stage 1",
-            "Stage 2",
-            "Stage 3",
-            "Admin Escalation",
-            "Completed"
+    # -----------------------------------------------------
+    # COUNTS
+    # -----------------------------------------------------
+
+    active_sos = active_requests.count()
+
+    critical_sos = active_requests.filter(
+        urgency="Emergency"
+    ).count()
+
+    waiting_requests = active_requests.filter(
+        urgency__in=[
+            "Emergency",
+            "Urgent"
         ]
+    ).count()
 
-        if stage in valid_stages:
+    successful_matches = DonorResponse.objects.filter(
+        status__in=[
+            "Accepted",
+            "Responded"
+        ]
+    ).count()
 
-            blood_request.current_stage = stage
+    # -----------------------------------------------------
+    # SUSPICIOUS REQUESTS
+    # -----------------------------------------------------
 
-            if stage == "Stage 1":
+    suspicious_requests = SuspiciousRequest.objects.filter(
+        is_reviewed=False
+    ).select_related(
+        "blood_request",
+        "blood_request__needer"
+    ).order_by(
+        "-created_at"
+    )
 
-                blood_request.progress = 25
+    context = {
 
-            elif stage == "Stage 2":
+        "active_requests": active_requests,
 
-                blood_request.progress = 50
+        "active_sos": active_sos,
 
-            elif stage == "Stage 3":
+        "critical_sos": critical_sos,
 
-                blood_request.progress = 75
+        "waiting_requests": waiting_requests,
 
-            elif stage == "Admin Escalation":
+        "successful_matches": successful_matches,
 
-                blood_request.progress = 90
+        "suspicious_requests": suspicious_requests,
 
-            elif stage == "Completed":
+    }
 
-                blood_request.progress = 100
-                blood_request.status = "Fulfilled"
+    return render(
+        request,
+        "admin/admin_sos.html",
+        context
+    )
 
-            blood_request.save()
 
-            messages.success(
-                request,
-                "SOS stage updated successfully."
-            )
+# =========================================================
+# ADMIN ANALYTICS
+# =========================================================
 
-    return redirect(
-        "admin_dashboard"
+def admin_analytics(request):
+
+    if request.session.get("role") != "admin":
+
+        return redirect(
+            "entry_page"
+        )
+
+    # -----------------------------------------------------
+    # TOTAL SOS REQUESTS
+    # -----------------------------------------------------
+
+    total_sos = BloodRequest.objects.count()
+
+    # -----------------------------------------------------
+    # SUCCESSFUL MATCHES
+    # -----------------------------------------------------
+
+    successful_matches = DonorResponse.objects.filter(
+        status__in=[
+            "Accepted",
+            "Responded"
+        ]
+    ).count()
+
+    # -----------------------------------------------------
+    # FAILED REQUESTS
+    # -----------------------------------------------------
+
+    failed_requests = BloodRequest.objects.filter(
+        status__in=[
+            "Cancelled",
+            "Failed"
+        ]
+    ).count()
+
+    # -----------------------------------------------------
+    # SUCCESSFUL DONATIONS
+    # -----------------------------------------------------
+
+    successful_donations = DonationHistory.objects.filter(
+        status="Completed"
+    ).count()
+
+    # -----------------------------------------------------
+    # MATCH SUCCESS RATE
+    # -----------------------------------------------------
+
+    if total_sos > 0:
+
+        match_success_rate = round(
+            (
+                successful_matches /
+                total_sos
+            ) * 100
+        )
+
+    else:
+
+        match_success_rate = 0
+
+    # -----------------------------------------------------
+    # DONOR RESPONSE RATE
+    # -----------------------------------------------------
+
+    total_active_requests = BloodRequest.objects.filter(
+        status="Active"
+    ).count()
+
+    requests_with_responses = BloodRequest.objects.filter(
+        donorresponse__isnull=False
+    ).distinct().count()
+
+    if total_active_requests > 0:
+
+        donor_response_rate = round(
+            (
+                requests_with_responses /
+                total_active_requests
+            ) * 100
+        )
+
+    else:
+
+        donor_response_rate = 0
+
+    # -----------------------------------------------------
+    # COMPLETION RATE
+    # -----------------------------------------------------
+
+    if total_sos > 0:
+
+        completion_rate = round(
+            (
+                successful_donations /
+                total_sos
+            ) * 100
+        )
+
+    else:
+
+        completion_rate = 0
+
+    # -----------------------------------------------------
+    # BLOOD GROUP DEMAND
+    # -----------------------------------------------------
+
+    blood_group_demand = []
+
+    blood_groups = [
+        "O+",
+        "B+",
+        "A+",
+        "AB+",
+        "O-",
+        "B-",
+        "A-",
+        "AB-"
+    ]
+
+    for blood_group in blood_groups:
+
+        count = BloodRequest.objects.filter(
+            blood_group=blood_group
+        ).count()
+
+        blood_group_demand.append({
+
+            "blood_group": blood_group,
+
+            "count": count
+
+        })
+
+    context = {
+
+        "total_sos": total_sos,
+
+        "successful_matches": successful_matches,
+
+        "failed_requests": failed_requests,
+
+        "successful_donations": successful_donations,
+
+        "match_success_rate": match_success_rate,
+
+        "donor_response_rate": donor_response_rate,
+
+        "completion_rate": completion_rate,
+
+        "blood_group_demand": blood_group_demand,
+
+    }
+
+    return render(
+        request,
+        "admin/admin_analytics.html",
+        context
     )
 
 

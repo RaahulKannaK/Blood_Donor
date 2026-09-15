@@ -1,0 +1,1805 @@
+ html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SOS Monitoring | HemoHub</title>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+
+        body {
+            background: #f6f7f9;
+            color: #222;
+        }
+
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 250px;
+            height: 100vh;
+
+            background: #ffffff;
+
+            border-right: 1px solid #e5e5e5;
+
+            padding: 25px 18px;
+
+            z-index: 100;
+        }
+
+
+        .logo {
+            padding: 5px 12px 30px;
+        }
+
+
+        .logo h2 {
+            color: #c62828;
+            font-size: 24px;
+        }
+
+
+        .logo p {
+            color: #777;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+
+        .menu a {
+            text-decoration: none;
+            color: #555;
+
+            padding: 13px 15px;
+
+            border-radius: 9px;
+
+            font-size: 14px;
+
+            transition: 0.2s;
+        }
+
+
+        .menu a:hover {
+            background: #fff1f1;
+            color: #c62828;
+        }
+
+
+        .menu a.active {
+            background: #c62828;
+            color: white;
+        }
+
+
+        .menu-icon {
+            width: 22px;
+            display: inline-block;
+        }
+
+
+        .logout {
+            position: absolute;
+
+            bottom: 25px;
+            left: 18px;
+            right: 18px;
+        }
+
+
+        .logout a {
+            display: block;
+
+            text-align: center;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            text-decoration: none;
+
+            color: #c62828;
+
+            background: #fff1f1;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            margin-left: 250px;
+
+            padding: 28px 32px;
+
+            min-height: 100vh;
+        }
+
+
+        /* =========================
+           TOPBAR
+        ========================= */
+
+        .topbar {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 28px;
+        }
+
+
+        .heading h1 {
+            font-size: 27px;
+        }
+
+
+        .heading p {
+            color: #777;
+
+            font-size: 14px;
+
+            margin-top: 5px;
+        }
+
+
+        .admin-profile {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            background: white;
+
+            padding: 8px 14px;
+
+            border-radius: 10px;
+
+            border: 1px solid #e8e8e8;
+        }
+
+
+        .admin-avatar {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 50%;
+
+            background: #c62828;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-weight: bold;
+        }
+
+
+        .admin-info strong {
+            display: block;
+
+            font-size: 14px;
+        }
+
+
+        .admin-info span {
+            color: #888;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================
+           SOS STATISTICS
+        ========================= */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .stat {
+            background: white;
+
+            border: 1px solid #e8e8e8;
+
+            border-radius: 12px;
+
+            padding: 20px;
+        }
+
+
+        .stat p {
+            color: #777;
+
+            font-size: 13px;
+        }
+
+
+        .stat h2 {
+            margin-top: 8px;
+
+            font-size: 26px;
+        }
+
+
+        .critical-number {
+            color: #c62828;
+        }
+
+
+        .high-number {
+            color: #d26900;
+        }
+
+
+        .success-number {
+            color: #2e7d32;
+        }
+
+
+        .stat small {
+            color: #999;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================
+           PANEL
+        ========================= */
+
+        .panel {
+            background: white;
+
+            border: 1px solid #e8e8e8;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .panel-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 18px;
+        }
+
+
+        .panel-header h3 {
+            font-size: 17px;
+        }
+
+
+        .panel-header span {
+            color: #888;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           SOS TABLE
+        ========================= */
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            font-size: 13px;
+        }
+
+
+        th {
+            text-align: left;
+
+            color: #888;
+
+            font-weight: 500;
+
+            padding: 12px 9px;
+
+            border-bottom: 1px solid #e8e8e8;
+
+            white-space: nowrap;
+        }
+
+
+        td {
+            padding: 14px 9px;
+
+            border-bottom: 1px solid #f0f0f0;
+
+            white-space: nowrap;
+        }
+
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+
+        .request-id {
+            font-weight: 600;
+        }
+
+
+        .blood {
+            color: #c62828;
+
+            font-weight: 700;
+        }
+
+
+        .urgency {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            font-size: 10px;
+
+            font-weight: 600;
+        }
+
+
+        .critical {
+            background: #ffe5e5;
+
+            color: #c62828;
+        }
+
+
+        .high {
+            background: #fff0df;
+
+            color: #d26900;
+        }
+
+
+        .normal {
+            background: #e7f5e9;
+
+            color: #2e7d32;
+        }
+
+
+        .status {
+            font-size: 11px;
+
+            font-weight: 600;
+        }
+
+
+        .status-active {
+            color: #c62828;
+        }
+
+
+        .status-matched {
+            color: #2e7d32;
+        }
+
+
+        .status-waiting {
+            color: #d26900;
+        }
+
+
+        .monitor-btn {
+            border: none;
+
+            background: #fff1f1;
+
+            color: #c62828;
+
+            padding: 7px 10px;
+
+            border-radius: 6px;
+
+            font-size: 10px;
+
+            cursor: pointer;
+        }
+
+
+        .monitor-btn:hover {
+            background: #ffe1e1;
+        }
+
+
+        /* =========================
+           LOWER GRID
+        ========================= */
+
+        .lower-grid {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 20px;
+        }
+
+
+        /* =========================
+           MATCHING FLOW
+        ========================= */
+
+        .flow-step {
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            padding: 13px 0;
+
+            border-bottom: 1px solid #eeeeee;
+        }
+
+
+        .flow-step:last-child {
+            border-bottom: none;
+        }
+
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+
+            border-radius: 50%;
+
+            background: #fff1f1;
+
+            color: #c62828;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        .flow-content {
+            flex: 1;
+        }
+
+
+        .flow-content strong {
+            display: block;
+
+            font-size: 13px;
+        }
+
+
+        .flow-content span {
+            display: block;
+
+            color: #888;
+
+            font-size: 11px;
+
+            margin-top: 3px;
+        }
+
+
+        .flow-status {
+            color: #2e7d32;
+
+            font-size: 10px;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================
+           SUSPICIOUS REQUEST
+        ========================= */
+
+        .warning-box {
+            border: 1px solid #f0d6b0;
+
+            background: #fffaf3;
+
+            border-radius: 9px;
+
+            padding: 15px;
+
+            margin-bottom: 12px;
+        }
+
+
+        .warning-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 7px;
+        }
+
+
+        .warning-header strong {
+            color: #b45f00;
+
+            font-size: 13px;
+        }
+
+
+        .warning-badge {
+            background: #fff0d8;
+
+            color: #b45f00;
+
+            padding: 4px 8px;
+
+            border-radius: 15px;
+
+            font-size: 9px;
+
+            font-weight: 600;
+        }
+
+
+        .warning-box p {
+            color: #777;
+
+            font-size: 11px;
+
+            line-height: 1.5;
+        }
+
+
+        .review-btn {
+            margin-top: 10px;
+
+            border: none;
+
+            background: #c62828;
+
+            color: white;
+
+            padding: 7px 11px;
+
+            border-radius: 6px;
+
+            font-size: 10px;
+
+            cursor: pointer;
+        }
+
+
+        /* =========================
+           ESCALATION
+        ========================= */
+
+        .escalation-box {
+            border: 1px solid #eeeeee;
+
+            border-radius: 10px;
+
+            padding: 15px;
+
+            margin-top: 15px;
+        }
+
+
+        .escalation-box h4 {
+            font-size: 13px;
+
+            margin-bottom: 12px;
+        }
+
+
+        .range {
+            display: flex;
+
+            justify-content: space-between;
+
+            padding: 9px 0;
+
+            border-bottom: 1px solid #f0f0f0;
+
+            font-size: 11px;
+        }
+
+
+        .range:last-child {
+            border-bottom: none;
+        }
+
+
+        .range-distance {
+            font-weight: 600;
+        }
+
+
+        .range-status {
+            color: #2e7d32;
+
+            font-weight: 600;
+        }
+
+
+        .admin-escalation {
+            margin-top: 12px;
+
+            padding: 10px;
+
+            background: #fff1f1;
+
+            color: #c62828;
+
+            border-radius: 7px;
+
+            font-size: 11px;
+
+            text-align: center;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1100px) {
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+
+            .lower-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 70px;
+
+                padding: 20px 10px;
+            }
+
+
+            .logo {
+                text-align: center;
+            }
+
+
+            .logo h2 {
+                font-size: 0;
+            }
+
+
+            .logo h2::after {
+                content: "HH";
+
+                font-size: 18px;
+            }
+
+
+            .logo p {
+                display: none;
+            }
+
+
+            .menu a {
+                text-align: center;
+
+                padding: 13px 5px;
+
+                font-size: 0;
+            }
+
+
+            .menu-icon {
+                font-size: 17px;
+            }
+
+
+            .logout a {
+                font-size: 0;
+            }
+
+
+            .logout a::before {
+                content: "↪";
+
+                font-size: 18px;
+            }
+
+
+            .main {
+                margin-left: 70px;
+
+                padding: 22px;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+
+            .topbar {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+
+            .admin-profile {
+                width: 100%;
+            }
+
+
+            .main {
+                padding: 17px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+
+
+        <div class="logo">
+
+            <h2>HemoHub</h2>
+
+            <p>Smart Blood Emergency System</p>
+
+        </div>
+
+
+        <nav class="menu">
+
+
+            <a href="admin_dashboard">
+
+                <span class="menu-icon">▦</span>
+
+                Dashboard
+
+            </a>
+
+
+            <a href="admin_users">
+
+                <span class="menu-icon">♙</span>
+
+                Users
+
+            </a>
+
+
+            <a href="admin_sos"
+               class="active">
+
+                <span class="menu-icon">🚨</span>
+
+                SOS Monitoring
+
+            </a>
+
+
+            <a href="admin_analytics">
+
+                <span class="menu-icon">▥</span>
+
+                Analytics
+
+            </a>
+
+
+            <a href="admin_alerts">
+
+                <span class="menu-icon">🔔</span>
+
+                Alerts
+
+            </a>
+
+
+            <a href="admin_profile">
+
+                <span class="menu-icon">◉</span>
+
+                Profile
+
+            </a>
+
+
+        </nav>
+
+
+        <div class="logout">
+
+            <a href="logout">
+                Logout
+            </a>
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="main">
+
+
+        <!-- TOP BAR -->
+
+        <div class="topbar">
+
+
+            <div class="heading">
+
+                <h1>SOS Monitoring</h1>
+
+                <p>
+                    Monitor emergency requests, donor matching and escalation.
+                </p>
+
+            </div>
+
+
+            <div class="admin-profile">
+
+
+                <div class="admin-avatar">
+                    A
+                </div>
+
+
+                <div class="admin-info">
+
+                    <strong>
+                        {{ name or "Administrator" }}
+                    </strong>
+
+                    <span>
+                        System Administrator
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =========================
+             SOS STATISTICS
+        ========================== -->
+
+        <div class="stats">
+
+
+            <div class="stat">
+
+                <p>Active SOS</p>
+
+                <h2 class="critical-number">
+                    {{ active_sos or 0 }}
+                </h2>
+
+                <small>
+                    Currently active requests
+                </small>
+
+            </div>
+
+
+            <div class="stat">
+
+                <p>Critical Requests</p>
+
+                <h2 class="critical-number">
+                    {{ critical_sos or 0 }}
+                </h2>
+
+                <small>
+                    Immediate attention required
+                </small>
+
+            </div>
+
+
+            <div class="stat">
+
+                <p>Waiting for Donor</p>
+
+                <h2 class="high-number">
+                    {{ waiting_requests or 0 }}
+                </h2>
+
+                <small>
+                    No confirmed donor yet
+                </small>
+
+            </div>
+
+
+            <div class="stat">
+
+                <p>Successful Matches</p>
+
+                <h2 class="success-number">
+                    {{ successful_matches or 0 }}
+                </h2>
+
+                <small>
+                    Successfully matched requests
+                </small>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =========================
+             ACTIVE SOS TABLE
+        ========================== -->
+
+        <section class="panel">
+
+
+            <div class="panel-header">
+
+                <h3>
+                    Active Emergency Requests
+                </h3>
+
+                <span>
+                    Live SOS Monitoring
+                </span>
+
+            </div>
+
+
+            <div class="table-container">
+
+
+                <table>
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Request ID
+                            </th>
+
+                            <th>
+                                Blood Group
+                            </th>
+
+                            <th>
+                                Units
+                            </th>
+
+                            <th>
+                                Urgency
+                            </th>
+
+                            <th>
+                                Location
+                            </th>
+
+                            <th>
+                                Donors Notified
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for request in active_requests %}
+
+
+                        <tr>
+
+
+                            <td class="request-id">
+                                {{ request.id }}
+                            </td>
+
+
+                            <td class="blood">
+                                {{ request.blood_group }}
+                            </td>
+
+
+                            <td>
+                                {{ request.units }}
+                            </td>
+
+
+                            <td>
+
+
+                                {% if request.urgency == "Critical" %}
+
+                                <span class="urgency critical">
+                                    Critical
+                                </span>
+
+
+                                {% elif request.urgency == "High" %}
+
+                                <span class="urgency high">
+                                    High
+                                </span>
+
+
+                                {% else %}
+
+                                <span class="urgency normal">
+                                    Normal
+                                </span>
+
+                                {% endif %}
+
+
+                            </td>
+
+
+                            <td>
+                                {{ request.location }}
+                            </td>
+
+
+                            <td>
+                                {{ request.donors_notified or 0 }}
+                            </td>
+
+
+                            <td>
+
+
+                                {% if request.status == "Matched" %}
+
+                                <span class="status status-matched">
+                                    Matched
+                                </span>
+
+
+                                {% elif request.status == "Waiting" %}
+
+                                <span class="status status-waiting">
+                                    Waiting
+                                </span>
+
+
+                                {% else %}
+
+                                <span class="status status-active">
+                                    Active
+                                </span>
+
+                                {% endif %}
+
+
+                            </td>
+
+
+                            <td>
+
+                                <button
+                                    class="monitor-btn"
+                                    onclick="monitorRequest('{{ request.id }}')">
+
+                                    Monitor
+
+                                </button>
+
+                            </td>
+
+
+                        </tr>
+
+
+                        {% else %}
+
+
+                        <!-- DEMO DATA -->
+
+                        <tr>
+
+                            <td class="request-id">
+                                SOS-1024
+                            </td>
+
+                            <td class="blood">
+                                O+
+                            </td>
+
+                            <td>
+                                2
+                            </td>
+
+                            <td>
+
+                                <span class="urgency critical">
+                                    Critical
+                                </span>
+
+                            </td>
+
+                            <td>
+                                Coimbatore
+                            </td>
+
+                            <td>
+                                6
+                            </td>
+
+                            <td>
+
+                                <span class="status status-matched">
+                                    Matched
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="monitor-btn"
+                                    onclick="monitorRequest('SOS-1024')">
+
+                                    Monitor
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td class="request-id">
+                                SOS-1023
+                            </td>
+
+                            <td class="blood">
+                                B+
+                            </td>
+
+                            <td>
+                                1
+                            </td>
+
+                            <td>
+
+                                <span class="urgency high">
+                                    High
+                                </span>
+
+                            </td>
+
+                            <td>
+                                Tiruppur
+                            </td>
+
+                            <td>
+                                9
+                            </td>
+
+                            <td>
+
+                                <span class="status status-waiting">
+                                    Waiting
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="monitor-btn"
+                                    onclick="monitorRequest('SOS-1023')">
+
+                                    Monitor
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td class="request-id">
+                                SOS-1022
+                            </td>
+
+                            <td class="blood">
+                                A-
+                            </td>
+
+                            <td>
+                                2
+                            </td>
+
+                            <td>
+
+                                <span class="urgency normal">
+                                    Normal
+                                </span>
+
+                            </td>
+
+                            <td>
+                                Pollachi
+                            </td>
+
+                            <td>
+                                12
+                            </td>
+
+                            <td>
+
+                                <span class="status status-active">
+                                    Active
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="monitor-btn"
+                                    onclick="monitorRequest('SOS-1022')">
+
+                                    Monitor
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================
+             LOWER SECTION
+        ========================== -->
+
+        <div class="lower-grid">
+
+
+            <!-- SMART MATCHING -->
+
+            <section class="panel">
+
+
+                <div class="panel-header">
+
+                    <h3>
+                        Smart Matching
+                    </h3>
+
+                    <span>
+                        Current SOS
+                    </span>
+
+                </div>
+
+
+                <div class="flow-step">
+
+
+                    <div class="step-number">
+                        1
+                    </div>
+
+
+                    <div class="flow-content">
+
+                        <strong>
+                            Blood Group Match
+                        </strong>
+
+                        <span>
+                            Compatible blood group identified
+                        </span>
+
+                    </div>
+
+
+                    <div class="flow-status">
+                        Completed
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="flow-step">
+
+
+                    <div class="step-number">
+                        2
+                    </div>
+
+
+                    <div class="flow-content">
+
+                        <strong>
+                            Availability Check
+                        </strong>
+
+                        <span>
+                            Available donors identified
+                        </span>
+
+                    </div>
+
+
+                    <div class="flow-status">
+                        Completed
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="flow-step">
+
+
+                    <div class="step-number">
+                        3
+                    </div>
+
+
+                    <div class="flow-content">
+
+                        <strong>
+                            Distance Matching
+                        </strong>
+
+                        <span>
+                            Nearest suitable donors prioritized
+                        </span>
+
+                    </div>
+
+
+                    <div class="flow-status">
+                        Completed
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="flow-step">
+
+
+                    <div class="step-number">
+                        4
+                    </div>
+
+
+                    <div class="flow-content">
+
+                        <strong>
+                            Reliability Ranking
+                        </strong>
+
+                        <span>
+                            Donor response history considered
+                        </span>
+
+                    </div>
+
+
+                    <div class="flow-status">
+                        Completed
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="flow-step">
+
+
+                    <div class="step-number">
+                        5
+                    </div>
+
+
+                    <div class="flow-content">
+
+                        <strong>
+                            Urgency Priority
+                        </strong>
+
+                        <span>
+                            Critical requests receive priority
+                        </span>
+
+                    </div>
+
+
+                    <div class="flow-status">
+                        Active
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- SUSPICIOUS REQUESTS -->
+
+            <section class="panel">
+
+
+                <div class="panel-header">
+
+                    <h3>
+                        Suspicious Requests
+                    </h3>
+
+                    <span>
+                        Requires Review
+                    </span>
+
+                </div>
+
+
+                {% for alert in suspicious_requests %}
+
+
+                <div class="warning-box">
+
+
+                    <div class="warning-header">
+
+                        <strong>
+                            {{ alert.title }}
+                        </strong>
+
+                        <span class="warning-badge">
+                            Flagged
+                        </span>
+
+                    </div>
+
+
+                    <p>
+                        {{ alert.description }}
+                    </p>
+
+
+                    <button
+                        class="review-btn"
+                        onclick="reviewAlert('{{ alert.id }}')">
+
+                        Review Request
+
+                    </button>
+
+
+                </div>
+
+
+                {% else %}
+
+
+                <div class="warning-box">
+
+
+                    <div class="warning-header">
+
+                        <strong>
+                            Unusual Activity Detected
+                        </strong>
+
+                        <span class="warning-badge">
+                            Flagged
+                        </span>
+
+                    </div>
+
+
+                    <p>
+                        Same user created multiple emergency
+                        requests within a short period.
+                    </p>
+
+
+                    <button
+                        class="review-btn"
+                        onclick="reviewAlert('DEMO-001')">
+
+                        Review Request
+
+                    </button>
+
+
+                </div>
+
+
+                <div class="warning-box">
+
+
+                    <div class="warning-header">
+
+                        <strong>
+                            Repeated Request Pattern
+                        </strong>
+
+                        <span class="warning-badge">
+                            Review
+                        </span>
+
+                    </div>
+
+
+                    <p>
+                        Multiple requests were detected
+                        from the same location with similar details.
+                    </p>
+
+
+                    <button
+                        class="review-btn"
+                        onclick="reviewAlert('DEMO-002')">
+
+                        Review Request
+
+                    </button>
+
+
+                </div>
+
+
+                {% endfor %}
+
+
+                <!-- ESCALATION -->
+
+                <div class="escalation-box">
+
+
+                    <h4>
+                        Smart SOS Escalation
+                    </h4>
+
+
+                    <div class="range">
+
+                        <span class="range-distance">
+                            0 – 5 km
+                        </span>
+
+                        <span class="range-status">
+                            Notified
+                        </span>
+
+                    </div>
+
+
+                    <div class="range">
+
+                        <span class="range-distance">
+                            5 – 10 km
+                        </span>
+
+                        <span class="range-status">
+                            Standby
+                        </span>
+
+                    </div>
+
+
+                    <div class="range">
+
+                        <span class="range-distance">
+                            10 – 15 km
+                        </span>
+
+                        <span class="range-status">
+                            Standby
+                        </span>
+
+                    </div>
+
+
+                    <div class="admin-escalation">
+
+                        Admin Escalation
+                        → If no donor responds
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script>
+
+
+        function monitorRequest(id) {
+
+            alert(
+                "Monitoring SOS Request: " + id
+            );
+
+        }
+
+
+
+        function reviewAlert(id) {
+
+            alert(
+                "Opening suspicious request: " + id
+            );
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
+ 
