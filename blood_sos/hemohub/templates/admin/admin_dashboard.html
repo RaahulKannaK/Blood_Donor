@@ -1,4 +1,4 @@
- html
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -583,41 +583,6 @@
         }
 
 
-        .progress {
-            width: 100%;
-
-            height: 7px;
-
-            background: #eeeeee;
-
-            border-radius: 10px;
-
-            overflow: hidden;
-        }
-
-
-        .progress-bar {
-            height: 100%;
-
-            background: #c62828;
-
-            border-radius: 10px;
-        }
-
-
-        .match-footer {
-            display: flex;
-
-            justify-content: space-between;
-
-            margin-top: 6px;
-
-            font-size: 10px;
-
-            color: #888;
-        }
-
-
         /* =========================
            QUICK ACTIONS
         ========================= */
@@ -826,47 +791,58 @@
 
         <nav class="menu">
 
-            <a href="admin_dashboard" class="active">
+            <!-- DASHBOARD -->
+
+            <a href="{% url 'admin_dashboard' %}"
+               class="active">
+
                 <span class="menu-icon">▦</span>
+
                 Dashboard
+
             </a>
 
 
-            <a href="admin_users">
+            <!-- USERS -->
+
+            <a href="{% url 'admin_users' %}">
+
                 <span class="menu-icon">♙</span>
+
                 Users
+
             </a>
 
 
-            <a href="admin_sos">
+            <!-- SOS -->
+
+            <a href="{% url 'admin_sos' %}">
+
                 <span class="menu-icon">🚨</span>
+
                 SOS Monitoring
+
             </a>
 
 
-            <a href="admin_analytics">
+            <!-- ANALYTICS -->
+
+            <a href="{% url 'admin_analytics' %}">
+
                 <span class="menu-icon">▥</span>
+
                 Analytics
-            </a>
 
-
-            <a href="admin_alerts">
-                <span class="menu-icon">🔔</span>
-                Alerts
-            </a>
-
-
-            <a href="admin_profile">
-                <span class="menu-icon">◉</span>
-                Profile
             </a>
 
         </nav>
 
 
+        <!-- LOGOUT -->
+
         <div class="logout">
 
-            <a href="logout">
+            <a href="{% url 'logout_user' %}">
                 Logout
             </a>
 
@@ -889,7 +865,9 @@
 
             <div class="welcome">
 
-                <h1>Admin Dashboard</h1>
+                <h1>
+                    Admin Dashboard
+                </h1>
 
                 <p>
                     Monitor users, emergency requests and blood donation activity.
@@ -908,7 +886,7 @@
                 <div class="admin-info">
 
                     <strong>
-                        {{ name or "Administrator" }}
+                        {{ name|default:"Administrator" }}
                     </strong>
 
                     <span>
@@ -930,6 +908,8 @@
         <div class="stats-grid">
 
 
+            <!-- TOTAL USERS -->
+
             <div class="stat-card">
 
                 <div class="stat-top">
@@ -945,7 +925,7 @@
                 </div>
 
                 <h2>
-                    {{ total_users or 0 }}
+                    {{ total_users|default:0 }}
                 </h2>
 
                 <small>
@@ -956,12 +936,14 @@
 
 
 
+            <!-- DONORS -->
+
             <div class="stat-card">
 
                 <div class="stat-top">
 
                     <span class="stat-title">
-                        Verified Donors
+                        Donors
                     </span>
 
                     <div class="stat-icon">
@@ -971,16 +953,18 @@
                 </div>
 
                 <h2>
-                    {{ total_donors or 0 }}
+                    {{ total_donors|default:0 }}
                 </h2>
 
                 <small>
-                    Available donor accounts
+                    Registered donor accounts
                 </small>
 
             </div>
 
 
+
+            <!-- NEEDERS -->
 
             <div class="stat-card">
 
@@ -997,7 +981,7 @@
                 </div>
 
                 <h2>
-                    {{ total_needers or 0 }}
+                    {{ total_needers|default:0 }}
                 </h2>
 
                 <small>
@@ -1007,6 +991,8 @@
             </div>
 
 
+
+            <!-- ACTIVE SOS -->
 
             <div class="stat-card">
 
@@ -1023,7 +1009,7 @@
                 </div>
 
                 <h2>
-                    {{ active_sos or 0 }}
+                    {{ active_sos|default:0 }}
                 </h2>
 
                 <small>
@@ -1048,33 +1034,39 @@
         <div class="sos-grid">
 
 
+            <!-- EMERGENCY -->
+
             <div class="sos-card critical">
 
                 <span class="label">
-                    Critical SOS
+                    Emergency SOS
                 </span>
 
                 <div class="number">
-                    {{ critical_sos or 0 }}
+                    {{ critical_sos|default:0 }}
                 </div>
 
             </div>
 
 
+
+            <!-- URGENT -->
 
             <div class="sos-card high">
 
                 <span class="label">
-                    High Priority SOS
+                    Urgent SOS
                 </span>
 
                 <div class="number">
-                    {{ high_sos or 0 }}
+                    {{ high_sos|default:0 }}
                 </div>
 
             </div>
 
 
+
+            <!-- NORMAL -->
 
             <div class="sos-card normal">
 
@@ -1083,7 +1075,7 @@
                 </span>
 
                 <div class="number">
-                    {{ normal_sos or 0 }}
+                    {{ normal_sos|default:0 }}
                 </div>
 
             </div>
@@ -1109,9 +1101,11 @@
                         Recent SOS Requests
                     </h3>
 
-                    <a href="admin_sos"
+                    <a href="{% url 'admin_sos' %}"
                        class="view-link">
+
                         View All
+
                     </a>
 
                 </div>
@@ -1153,30 +1147,32 @@
                         <tbody>
 
 
-                            {% for request in recent_sos %}
+                            {% for blood_request in recent_sos %}
 
                             <tr>
 
                                 <td>
-                                    {{ request.id }}
+                                    #{{ blood_request.id }}
                                 </td>
 
+
                                 <td class="blood-group">
-                                    {{ request.blood_group }}
+                                    {{ blood_request.blood_group }}
                                 </td>
+
 
                                 <td>
 
-                                    {% if request.urgency == "Critical" %}
+                                    {% if blood_request.urgency == "Emergency" %}
 
                                     <span class="urgency urgency-critical">
-                                        Critical
+                                        Emergency
                                     </span>
 
-                                    {% elif request.urgency == "High" %}
+                                    {% elif blood_request.urgency == "Urgent" %}
 
                                     <span class="urgency urgency-high">
-                                        High
+                                        Urgent
                                     </span>
 
                                     {% else %}
@@ -1189,19 +1185,21 @@
 
                                 </td>
 
+
                                 <td>
-                                    {{ request.location }}
+                                    {{ blood_request.location }}
                                 </td>
 
+
                                 <td>
 
-                                    {% if request.status == "Matched" %}
+                                    {% if blood_request.status == "Matched" %}
 
                                     <span class="status status-matched">
                                         Matched
                                     </span>
 
-                                    {% elif request.status == "Waiting" %}
+                                    {% elif blood_request.status == "Waiting" %}
 
                                     <span class="status status-waiting">
                                         Waiting
@@ -1210,7 +1208,7 @@
                                     {% else %}
 
                                     <span class="status status-active">
-                                        Active
+                                        {{ blood_request.status }}
                                     </span>
 
                                     {% endif %}
@@ -1219,7 +1217,8 @@
 
                             </tr>
 
-                            {% else %}
+
+                            {% empty %}
 
                             <tr>
 
@@ -1257,14 +1256,18 @@
                         Emergency Matching
                     </h3>
 
-                    <a href="admin_analytics"
+                    <a href="{% url 'admin_analytics' %}"
                        class="view-link">
+
                         Analytics
+
                     </a>
 
                 </div>
 
 
+
+                <!-- SUCCESSFUL MATCHES -->
 
                 <div class="match-item">
 
@@ -1275,29 +1278,7 @@
                         </strong>
 
                         <span>
-                            {{ successful_matches or 0 }}
-                        </span>
-
-                    </div>
-
-
-                    <div class="progress">
-
-                        <div class="progress-bar"
-                             style="width: {{ match_percentage or 0 }}%;">
-                        </div>
-
-                    </div>
-
-
-                    <div class="match-footer">
-
-                        <span>
-                            Current performance
-                        </span>
-
-                        <span>
-                            {{ match_percentage or 0 }}%
+                            {{ successful_matches|default:0 }}
                         </span>
 
                     </div>
@@ -1305,17 +1286,19 @@
                 </div>
 
 
+
+                <!-- ACTIVE SOS -->
 
                 <div class="match-item">
 
                     <div class="match-header">
 
                         <strong>
-                            Avg. Matching Time
+                            Active SOS Requests
                         </strong>
 
                         <span>
-                            {{ average_matching_time or "—" }}
+                            {{ active_sos|default:0 }}
                         </span>
 
                     </div>
@@ -1324,23 +1307,7 @@
 
 
 
-                <div class="match-item">
-
-                    <div class="match-header">
-
-                        <strong>
-                            Avg. Donor Response
-                        </strong>
-
-                        <span>
-                            {{ average_response_time or "—" }}
-                        </span>
-
-                    </div>
-
-                </div>
-
-
+                <!-- DONATIONS -->
 
                 <div class="match-item">
 
@@ -1351,7 +1318,27 @@
                         </strong>
 
                         <span>
-                            {{ successful_donations or 0 }}
+                            {{ successful_donations|default:0 }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- EMERGENCY REQUESTS -->
+
+                <div class="match-item">
+
+                    <div class="match-header">
+
+                        <strong>
+                            Emergency Requests
+                        </strong>
+
+                        <span>
+                            {{ critical_sos|default:0 }}
                         </span>
 
                     </div>
@@ -1371,7 +1358,9 @@
         <div class="quick-actions">
 
 
-            <a href="admin_users"
+            <!-- MANAGE USERS -->
+
+            <a href="{% url 'admin_users' %}"
                class="quick-action">
 
                 <div class="icon">
@@ -1386,7 +1375,9 @@
 
 
 
-            <a href="admin_sos"
+            <!-- MONITOR SOS -->
+
+            <a href="{% url 'admin_sos' %}"
                class="quick-action">
 
                 <div class="icon">
@@ -1401,7 +1392,9 @@
 
 
 
-            <a href="admin_analytics"
+            <!-- ANALYTICS -->
+
+            <a href="{% url 'admin_analytics' %}"
                class="quick-action">
 
                 <div class="icon">
@@ -1423,4 +1416,3 @@
 </body>
 
 </html>
- 
