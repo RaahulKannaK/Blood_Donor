@@ -1,43 +1,27 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Donor Profile | HemoHub</title>
+  
+<title>Donor Profile | HemoHub</title>
 
 <style>
-    /* ==============================
-       RESET & GLOBAL
-    ============================== */
-
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: "Segoe UI", Arial, sans-serif;
+        font-family: "Segoe UI", sans-serif;
     }
 
     body {
         background: #f4f7fb;
         color: #1f2937;
-        min-height: 100vh;
     }
 
-    a {
-        text-decoration: none;
-    }
-
-    button,
-    input,
-    select {
-        font-family: inherit;
-    }
-
-
-    /* ==============================
-       SIDEBAR
-    ============================== */
+    /* ================= SIDEBAR ================= */
 
     .sidebar {
         position: fixed;
@@ -46,368 +30,160 @@
         width: 250px;
         height: 100vh;
         background: #0b3d91;
-        color: white;
+        padding: 25px 16px;
         display: flex;
         flex-direction: column;
         z-index: 1000;
-        box-shadow: 3px 0 15px rgba(0, 0, 0, 0.08);
+        box-shadow: 3px 0 12px rgba(0,0,0,0.08);
     }
 
-
-    /* LOGO */
-
-    .sidebar-logo {
-        height: 85px;
-        display: flex;
-        align-items: center;
-        padding: 0 25px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .logo-icon {
-        width: 42px;
-        height: 42px;
-        background: #e31b23;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 12px;
-        font-size: 21px;
+    .logo {
+        color: #ffffff;
+        font-size: 25px;
         font-weight: 700;
-        color: white;
+        padding: 5px 14px 28px;
+        border-bottom: 1px solid rgba(255,255,255,.18);
     }
 
-    .logo-text {
-        font-size: 17px;
-        font-weight: 700;
-        letter-spacing: 0.3px;
-    }
-
-    .logo-subtitle {
+    .logo span {
         display: block;
-        font-size: 10px;
-        color: #dbeafe;
-        margin-top: 2px;
+        color: #dbe7ff;
+        font-size: 11px;
         font-weight: 400;
+        margin-top: 4px;
+        line-height: 1.4;
     }
 
-
-    /* ==============================
-       SIDEBAR MENU
-    ============================== */
-
-    .sidebar-menu {
-        padding: 25px 14px;
-        flex: 1;
+    .nav {
+        margin-top: 25px;
     }
 
-    .menu-title {
-        color: #bfdbfe;
-        font-size: 10px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        padding: 0 12px;
-        margin-bottom: 10px;
-        font-weight: 600;
-    }
-
-    .sidebar-menu a {
-        display: flex;
-        align-items: center;
-        gap: 13px;
-        color: #e5efff;
-        padding: 12px 14px;
-        margin-bottom: 5px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 500;
-        transition: 0.2s ease;
-    }
-
-    .sidebar-menu a:hover {
-        background: rgba(255, 255, 255, 0.12);
-        color: white;
-    }
-
-    .sidebar-menu a.active {
-        background: white;
-        color: #0b3d91;
-        font-weight: 700;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-    }
-
-    .menu-icon {
-        width: 20px;
-        text-align: center;
-        font-size: 17px;
-    }
-
-
-    /* ==============================
-       SIDEBAR BOTTOM
-    ============================== */
-
-    .sidebar-bottom {
-        padding: 15px;
-        border-top: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .sidebar-profile {
-        display: flex;
-        align-items: center;
-        gap: 11px;
-        padding: 10px;
-        border-radius: 9px;
-        margin-bottom: 7px;
-    }
-
-    .sidebar-avatar {
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        background: #e31b23;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 700;
-        font-size: 15px;
-    }
-
-    .sidebar-user-name {
-        font-size: 13px;
-        font-weight: 600;
-        color: white;
-    }
-
-    .sidebar-user-role {
-        font-size: 10px;
-        color: #bfdbfe;
-        margin-top: 2px;
-    }
-
-    .logout-link {
+    .nav a {
         display: flex;
         align-items: center;
         gap: 12px;
-        padding: 10px 12px;
-        border-radius: 8px;
-        color: #fecaca;
-        font-size: 13px;
-        transition: 0.2s ease;
+        width: 100%;
+        padding: 13px 15px;
+        margin-bottom: 7px;
+        border-radius: 9px;
+        color: #e5edff;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: 0.2s;
     }
 
-    .logout-link:hover {
-        background: rgba(227, 27, 35, 0.18);
-        color: white;
+    .nav a:hover {
+        background: rgba(255,255,255,.12);
+        color: #ffffff;
     }
 
+    .nav a.active {
+        background: #ffffff;
+        color: #0b3d91;
+        font-weight: 700;
+    }
 
-    /* ==============================
-       MAIN CONTENT
-    ============================== */
+    .nav-icon {
+        width: 20px;
+        text-align: center;
+        font-size: 16px;
+    }
 
-    .main-content {
+    .logout {
+        margin-top: auto;
+    }
+
+    .logout a {
+        display: block;
+        text-align: center;
+        padding: 12px;
+        background: #d62828;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 9px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .logout a:hover {
+        background: #b71c1c;
+    }
+
+    /* ================= MAIN ================= */
+
+    .main {
         margin-left: 250px;
         min-height: 100vh;
+        padding: 30px 35px;
     }
 
-
-    /* ==============================
-       TOPBAR
-    ============================== */
-
-    .topbar {
-        height: 75px;
-        background: white;
-        border-bottom: 1px solid #e5e7eb;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 32px;
+    .page-header {
+        margin-bottom: 25px;
     }
 
-    .page-title h1 {
-        font-size: 22px;
-        color: #111827;
-        font-weight: 700;
-    }
-
-    .page-title p {
-        font-size: 12px;
-        color: #6b7280;
-        margin-top: 3px;
-    }
-
-    .topbar-right {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .notification-btn {
-        width: 38px;
-        height: 38px;
-        border: 1px solid #e5e7eb;
-        background: white;
-        border-radius: 9px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        color: #374151;
-        font-size: 17px;
-    }
-
-    .notification-btn:hover {
-        border-color: #0b3d91;
-        color: #0b3d91;
-    }
-
-    .top-profile {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        padding-left: 15px;
-        border-left: 1px solid #e5e7eb;
-    }
-
-    .top-avatar {
-        width: 37px;
-        height: 37px;
-        border-radius: 50%;
-        background: #e31b23;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 14px;
-    }
-
-    .top-profile-name {
-        font-size: 13px;
-        font-weight: 600;
+    .page-header h1 {
+        font-size: 28px;
+        margin-bottom: 6px;
         color: #1f2937;
     }
 
-    .top-profile-role {
-        font-size: 10px;
+    .page-header p {
         color: #6b7280;
-        margin-top: 2px;
+        font-size: 14px;
     }
 
+    /* ================= PROFILE CARD ================= */
 
-    /* ==============================
-       CONTENT
-    ============================== */
-
-    .content {
-        padding: 30px 32px;
-        max-width: 1100px;
+    .profile-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 30px;
+        max-width: 850px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.04);
     }
-
-
-    /* ==============================
-       PROFILE HEADER
-    ============================== */
 
     .profile-header {
-        background: linear-gradient(135deg, #0b3d91, #1557b0);
-        border-radius: 14px;
-        padding: 25px 28px;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 24px;
-        box-shadow: 0 6px 18px rgba(11, 61, 145, 0.15);
-    }
-
-    .profile-heading {
         display: flex;
         align-items: center;
         gap: 18px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid #eeeeee;
+        margin-bottom: 25px;
     }
 
-    .profile-avatar {
-        width: 65px;
-        height: 65px;
+    .avatar {
+        width: 70px;
+        height: 70px;
         border-radius: 50%;
-        background: #e31b23;
-        border: 3px solid rgba(255, 255, 255, 0.35);
+        background: #ffe5e5;
+        color: #d62828;
         display: flex;
-        align-items: center;
         justify-content: center;
-        font-size: 24px;
+        align-items: center;
+        font-size: 28px;
         font-weight: 700;
+        flex-shrink: 0;
     }
 
-    .profile-heading h2 {
-        font-size: 22px;
-        margin-bottom: 5px;
+    .profile-header h2 {
+        font-size: 21px;
+        margin-bottom: 4px;
+        color: #1f2937;
     }
 
-    .profile-heading p {
-        font-size: 12px;
-        color: #dbeafe;
+    .profile-header p {
+        color: #777777;
+        font-size: 13px;
     }
 
-    .blood-group-display {
-        background: white;
-        color: #e31b23;
-        min-width: 65px;
-        height: 65px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 19px;
-        font-weight: 800;
-    }
-
-
-    /* ==============================
-       PROFILE CARD
-    ============================== */
-
-    .profile-card {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.035);
-        overflow: hidden;
-    }
-
-    .card-header {
-        padding: 19px 22px;
-        border-bottom: 1px solid #edf0f4;
-    }
-
-    .card-header h3 {
-        font-size: 16px;
-        color: #111827;
-    }
-
-    .card-header p {
-        color: #6b7280;
-        font-size: 11px;
-        margin-top: 4px;
-    }
-
-    .form-content {
-        padding: 25px;
-    }
-
-
-    /* ==============================
-       FORM GRID
-    ============================== */
+    /* ================= FORM ================= */
 
     .form-grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr 1fr;
         gap: 20px;
     }
 
@@ -416,371 +192,191 @@
         flex-direction: column;
     }
 
-    .form-group.full-width {
+    .form-group.full {
         grid-column: 1 / -1;
     }
 
-    .form-group label {
-        font-size: 12px;
-        color: #374151;
+    label {
+        font-size: 13px;
         font-weight: 600;
         margin-bottom: 7px;
+        color: #374151;
     }
 
-    .form-group input,
-    .form-group select {
+    input,
+    select {
         width: 100%;
-        height: 43px;
-        border: 1px solid #d9dee7;
-        border-radius: 8px;
-        padding: 0 13px;
-        font-size: 13px;
-        color: #1f2937;
-        background: white;
+        padding: 12px 13px;
+        border: 1px solid #d9dde5;
+        border-radius: 9px;
         outline: none;
-        transition: 0.2s ease;
+        font-size: 14px;
+        background: #ffffff;
+        color: #1f2937;
+        transition: 0.2s;
     }
 
-    .form-group input:focus,
-    .form-group select:focus {
+    input:focus,
+    select:focus {
         border-color: #0b3d91;
-        box-shadow: 0 0 0 3px rgba(11, 61, 145, 0.08);
+        box-shadow: 0 0 0 3px rgba(11,61,145,0.08);
     }
 
-    .form-group input:read-only {
+    input[readonly] {
         background: #f3f4f6;
-        color: #6b7280;
+        color: #777777;
         cursor: not-allowed;
     }
 
-    .form-help {
-        font-size: 10px;
-        color: #9ca3af;
+    .hint {
+        font-size: 11px;
+        color: #888888;
         margin-top: 5px;
     }
 
+    /* ================= BUTTONS ================= */
 
-    /* ==============================
-       AVAILABILITY
-    ============================== */
+    .actions {
+        margin-top: 30px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+    }
 
-    .availability-section {
-        margin-top: 24px;
+    .cancel-btn {
+        padding: 12px 22px;
+        border: 1px solid #d9dde5;
+        background: #ffffff;
+        color: #555555;
+        border-radius: 9px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: 0.2s;
+    }
+
+    .cancel-btn:hover {
+        background: #f3f4f6;
+    }
+
+    .save-btn {
+        padding: 12px 24px;
+        border: none;
+        background: #d62828;
+        color: #ffffff;
+        border-radius: 9px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .save-btn:hover {
+        background: #b71c1c;
+    }
+
+    /* ================= STATUS ================= */
+
+    .status-box {
+        margin-top: 25px;
         padding: 18px;
         background: #f8fafc;
         border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        border-radius: 12px;
     }
 
-    .availability-info h4 {
-        font-size: 13px;
+    .status-box h3 {
+        font-size: 15px;
+        margin-bottom: 8px;
         color: #1f2937;
-        margin-bottom: 4px;
     }
 
-    .availability-info p {
-        font-size: 11px;
-        color: #6b7280;
-    }
-
-    .availability-control {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .availability-status {
-        font-size: 11px;
+    .available {
+        color: #218838;
         font-weight: 600;
+        font-size: 14px;
     }
 
-    .availability-status.available {
-        color: #16834a;
-    }
-
-    .availability-status.unavailable {
-        color: #e31b23;
-    }
-
-
-    /* ==============================
-       SWITCH
-    ============================== */
-
-    .switch {
-        position: relative;
-        width: 48px;
-        height: 26px;
-    }
-
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        inset: 0;
-        background: #d1d5db;
-        border-radius: 30px;
-        transition: 0.2s;
-    }
-
-    .slider:before {
-        content: "";
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        left: 3px;
-        top: 3px;
-        background: white;
-        border-radius: 50%;
-        transition: 0.2s;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    .switch input:checked + .slider {
-        background: #16834a;
-    }
-
-    .switch input:checked + .slider:before {
-        transform: translateX(22px);
-    }
-
-
-    /* ==============================
-       FORM ACTIONS
-    ============================== */
-
-    .form-actions {
-        margin-top: 25px;
-        padding-top: 20px;
-        border-top: 1px solid #edf0f4;
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-    }
-
-    .btn {
-        min-width: 100px;
-        height: 40px;
-        padding: 0 18px;
-        border-radius: 8px;
-        font-size: 12px;
+    .unavailable {
+        color: #c1121f;
         font-weight: 600;
-        cursor: pointer;
-        transition: 0.2s ease;
+        font-size: 14px;
     }
 
-    .btn-cancel {
-        background: white;
-        color: #4b5563;
-        border: 1px solid #d9dee7;
-    }
-
-    .btn-cancel:hover {
-        border-color: #0b3d91;
-        color: #0b3d91;
-    }
-
-    .btn-save {
-        background: #0b3d91;
-        color: white;
-        border: 1px solid #0b3d91;
-    }
-
-    .btn-save:hover {
-        background: #082f70;
-        border-color: #082f70;
-    }
-
-
-    /* ==============================
-       MESSAGE
-    ============================== */
-
-    .messages {
-        margin-bottom: 18px;
-    }
-
-    .message {
-        padding: 11px 14px;
-        border-radius: 8px;
+    .status-box p {
         font-size: 12px;
-        background: #eaf8ef;
-        color: #16834a;
-        border: 1px solid #ccebd8;
+        color: #777777;
+        margin-top: 6px;
     }
 
+    /* ================= RESPONSIVE ================= */
 
-    /* ==============================
-       MOBILE MENU
-    ============================== */
-
-    .mobile-menu {
-        display: none;
-        width: 38px;
-        height: 38px;
-        border: 1px solid #e5e7eb;
-        background: white;
-        border-radius: 8px;
-        cursor: pointer;
-        color: #0b3d91;
-        font-size: 18px;
-        align-items: center;
-        justify-content: center;
-    }
-
-
-    /* ==============================
-       RESPONSIVE - TABLET
-    ============================== */
-
-    @media (max-width: 1000px) {
+    @media (max-width: 800px) {
 
         .sidebar {
-            width: 220px;
+            width: 210px;
         }
 
-        .main-content {
-            margin-left: 220px;
-        }
-
-        .content {
-            padding: 25px;
-        }
-    }
-
-
-    /* ==============================
-       RESPONSIVE - MOBILE
-    ============================== */
-
-    @media (max-width: 700px) {
-
-        .sidebar {
-            width: 250px;
-            transform: translateX(-100%);
-            transition: transform 0.25s ease;
-        }
-
-        .sidebar.show {
-            transform: translateX(0);
-        }
-
-        .main-content {
-            margin-left: 0;
-        }
-
-        .topbar {
-            height: 65px;
-            padding: 0 18px;
-        }
-
-        .mobile-menu {
-            display: flex;
-        }
-
-        .page-title h1 {
-            font-size: 18px;
-        }
-
-        .page-title p {
-            display: none;
-        }
-
-        .top-profile-name,
-        .top-profile-role {
-            display: none;
-        }
-
-        .top-profile {
-            border-left: none;
-            padding-left: 0;
-        }
-
-        .content {
-            padding: 20px 15px;
-        }
-
-        .profile-header {
-            padding: 20px;
-        }
-
-        .profile-heading {
-            gap: 12px;
-        }
-
-        .profile-avatar {
-            width: 53px;
-            height: 53px;
-            font-size: 20px;
-        }
-
-        .profile-heading h2 {
-            font-size: 18px;
-        }
-
-        .blood-group-display {
-            min-width: 52px;
-            height: 52px;
-            font-size: 16px;
+        .main {
+            margin-left: 210px;
+            padding: 25px 20px;
         }
 
         .form-grid {
             grid-template-columns: 1fr;
         }
 
-        .form-group.full-width {
+        .form-group.full {
             grid-column: auto;
-        }
-
-        .availability-section {
-            align-items: flex-start;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .form-actions {
-            flex-direction: column-reverse;
-        }
-
-        .btn {
-            width: 100%;
         }
     }
 
+    @media (max-width: 600px) {
 
-    /* ==============================
-       SMALL MOBILE
-    ============================== */
+        .sidebar {
+            position: relative;
+            width: 100%;
+            height: auto;
+            padding: 20px 16px;
+        }
 
-    @media (max-width: 430px) {
+        .logo {
+            padding-bottom: 20px;
+        }
+
+        .nav {
+            margin-top: 20px;
+        }
+
+        .logout {
+            margin-top: 15px;
+        }
+
+        .main {
+            margin-left: 0;
+            padding: 20px 15px;
+        }
+
+        .profile-card {
+            padding: 20px;
+        }
 
         .profile-header {
-            flex-direction: column;
             align-items: flex-start;
-            gap: 15px;
         }
 
-        .blood-group-display {
+        .actions {
+            flex-direction: column;
+        }
+
+        .cancel-btn,
+        .save-btn {
             width: 100%;
-        }
-
-        .form-content {
-            padding: 18px;
-        }
-
-        .topbar-right {
-            gap: 8px;
+            text-align: center;
         }
     }
 </style>
+  
+
 </head>
 
 <body>
@@ -789,368 +385,375 @@
      SIDEBAR
 ===================================================== -->
 
-<div class="sidebar">
+<aside class="sidebar">
 
-    <div class="logo">
-        HemoHub
-        <span>Blood Donation & Emergency Response</span>
-    </div>
-
-    <div class="nav">
-
-        <a href="{% url 'donor_dashboard' %}">
-            Dashboard
-        </a>
-
-        <a href="{% url 'donor_profile' %}" class="active">
-            Profile
-        </a>
-
-        <a href="{% url 'blood_radar' %}">
-            Blood Radar
-        </a>
-
-        <a href="{% url 'donor_requests' %}">
-            Requests
-        </a>
-
-        <a href="{% url 'donor_alerts' %}">
-            Alerts
-        </a>
-
-        <a href="{% url 'donation_history' %}">
-            Donation History
-        </a>
-
-    </div>
-
-    <div class="logout">
-
-        <a href="{% url 'logout_user' %}">
-            Logout
-        </a>
-
-    </div>
-
+  
+<div class="logo">
+    HemoHub
+    <span>Blood Donation & Emergency Response</span>
 </div>
 
+<nav class="nav">
+
+    <a href="{% url 'donor_dashboard' %}">
+        <span class="nav-icon">▣</span>
+        <span>Dashboard</span>
+    </a>
+
+    <a href="{% url 'donor_profile' %}" class="active">
+        <span class="nav-icon">◉</span>
+        <span>Profile</span>
+    </a>
+
+    <a href="{% url 'blood_radar' %}">
+        <span class="nav-icon">⌖</span>
+        <span>Blood Radar</span>
+    </a>
+
+    <a href="{% url 'donor_requests' %}">
+        <span class="nav-icon">▤</span>
+        <span>Requests</span>
+    </a>
+
+    <a href="{% url 'donor_alerts' %}">
+        <span class="nav-icon">♢</span>
+        <span>Alerts</span>
+    </a>
+
+    <a href="{% url 'donation_history' %}">
+        <span class="nav-icon">◫</span>
+        <span>Donation History</span>
+    </a>
+
+</nav>
+
+<div class="logout">
+
+    <a href="{% url 'logout_user' %}">
+        Logout
+    </a>
+
+</div>
+  
+
+</aside>
 
 <!-- =====================================================
      MAIN CONTENT
 ===================================================== -->
 
-<div class="main">
+<main class="main">
 
-    <div class="page-header">
+  
+<div class="page-header">
 
-        <h1>
-            Donor Profile
-        </h1>
+    <h1>
+        Donor Profile
+    </h1>
 
-        <p>
-            View and update your donor information.
-        </p>
+    <p>
+        View and update your donor information.
+    </p>
 
-    </div>
+</div>
 
 
-    <!-- =================================================
-         PROFILE
-    ================================================== -->
+<!-- =================================================
+     PROFILE CARD
+================================================== -->
 
-    <div class="profile-card">
+<div class="profile-card">
 
-        <div class="profile-header">
+    <div class="profile-header">
 
-            <div class="avatar">
+        <div class="avatar">
 
-                {% if name %}
-                    {{ name|first|upper }}
-                {% else %}
-                    D
-                {% endif %}
-
-            </div>
-
-            <div>
-
-                <h2>
-                    {{ name }}
-                </h2>
-
-                <p>
-                    Donor Account
-                </p>
-
-            </div>
+            {% if name %}
+                {{ name|first|upper }}
+            {% else %}
+                D
+            {% endif %}
 
         </div>
 
+        <div>
 
-        <!-- =================================================
-             UPDATE FORM
-        ================================================== -->
+            <h2>
+                {{ name }}
+            </h2>
 
-        <form method="POST">
-
-            {% csrf_token %}
-
-            <div class="form-grid">
-
-
-                <!-- NAME -->
-
-                <div class="form-group">
-
-                    <label for="name">
-                        Full Name
-                    </label>
-
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value="{{ name }}"
-                        placeholder="Enter your name"
-                        required
-                    >
-
-                </div>
-
-
-                <!-- AGE -->
-
-                <div class="form-group">
-
-                    <label for="age">
-                        Age
-                    </label>
-
-                    <input
-                        type="number"
-                        id="age"
-                        name="age"
-                        value="{{ age }}"
-                        min="1"
-                        max="120"
-                        placeholder="Enter your age"
-                        required
-                    >
-
-                </div>
-
-
-                <!-- USERNAME -->
-
-                <div class="form-group">
-
-                    <label for="username">
-                        Username
-                    </label>
-
-                    <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        value="{{ username }}"
-                        readonly
-                    >
-
-                    <span class="hint">
-                        Username cannot be changed.
-                    </span>
-
-                </div>
-
-
-                <!-- BLOOD GROUP -->
-
-                <div class="form-group">
-
-                    <label for="blood">
-                        Blood Group
-                    </label>
-
-                    <select
-                        id="blood"
-                        name="blood"
-                        required
-                    >
-
-                        <option value="">
-                            Select Blood Group
-                        </option>
-
-                        <option value="A+"
-                            {% if blood_group == "A+" %}selected{% endif %}>
-                            A+
-                        </option>
-
-                        <option value="A-"
-                            {% if blood_group == "A-" %}selected{% endif %}>
-                            A-
-                        </option>
-
-                        <option value="B+"
-                            {% if blood_group == "B+" %}selected{% endif %}>
-                            B+
-                        </option>
-
-                        <option value="B-"
-                            {% if blood_group == "B-" %}selected{% endif %}>
-                            B-
-                        </option>
-
-                        <option value="AB+"
-                            {% if blood_group == "AB+" %}selected{% endif %}>
-                            AB+
-                        </option>
-
-                        <option value="AB-"
-                            {% if blood_group == "AB-" %}selected{% endif %}>
-                            AB-
-                        </option>
-
-                        <option value="O+"
-                            {% if blood_group == "O+" %}selected{% endif %}>
-                            O+
-                        </option>
-
-                        <option value="O-"
-                            {% if blood_group == "O-" %}selected{% endif %}>
-                            O-
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <!-- PHONE -->
-
-                <div class="form-group">
-
-                    <label for="phone">
-                        Phone Number
-                    </label>
-
-                    <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value="{{ phone }}"
-                        placeholder="Enter phone number"
-                    >
-
-                </div>
-
-
-                <!-- LOCATION -->
-
-                <div class="form-group">
-
-                    <label for="city">
-                        Location
-                    </label>
-
-                    <input
-                        type="text"
-                        id="city"
-                        name="city"
-                        value="{{ location }}"
-                        placeholder="Enter your location"
-                    >
-
-                </div>
-
-
-                <!-- LAST DONATION -->
-
-                <div class="form-group full">
-
-                    <label for="lastDonation">
-                        Last Donation Date
-                    </label>
-
-                    <input
-                        type="date"
-                        id="lastDonation"
-                        name="lastDonation"
-
-                        {% if last_donation_date %}
-                            value="{{ last_donation_date|date:'Y-m-d' }}"
-                        {% endif %}
-
-                    >
-
-                    <span class="hint">
-                        Leave empty if you have not donated before.
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <!-- =================================================
-                 ACTION BUTTONS
-            ================================================== -->
-
-            <div class="actions">
-
-                <a
-                    href="{% url 'donor_dashboard' %}"
-                    class="cancel-btn"
-                >
-                    Cancel
-                </a>
-
-                <button
-                    type="submit"
-                    class="save-btn"
-                >
-                    Save Changes
-                </button>
-
-            </div>
-
-        </form>
-
-
-        <!-- =================================================
-             AVAILABILITY STATUS
-        ================================================== -->
-
-        <div class="status-box">
-
-            <h3>
-                Donation Availability
-            </h3>
-
-            {% if is_available %}
-
-                <span class="available">
-                    ● Currently Available for Donation
-                </span>
-
-            {% else %}
-
-                <span class="unavailable">
-                    ● Currently Unavailable for Donation
-                </span>
-
-            {% endif %}
-
-            <p style="font-size:12px; color:#777; margin-top:6px;">
-                You can change your availability from the dashboard.
+            <p>
+                Donor Account
             </p>
 
         </div>
 
     </div>
 
-</div>
 
+    <!-- =================================================
+         UPDATE FORM
+    ================================================== -->
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class="form-grid">
+
+            <!-- NAME -->
+
+            <div class="form-group">
+
+                <label for="name">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value="{{ name }}"
+                    placeholder="Enter your name"
+                    required
+                >
+
+            </div>
+
+
+            <!-- AGE -->
+
+            <div class="form-group">
+
+                <label for="age">
+                    Age
+                </label>
+
+                <input
+                    type="number"
+                    id="age"
+                    name="age"
+                    value="{{ age }}"
+                    min="1"
+                    max="120"
+                    placeholder="Enter your age"
+                    required
+                >
+
+            </div>
+
+
+            <!-- USERNAME -->
+
+            <div class="form-group">
+
+                <label for="username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    value="{{ username }}"
+                    readonly
+                >
+
+                <span class="hint">
+                    Username cannot be changed.
+                </span>
+
+            </div>
+
+
+            <!-- BLOOD GROUP -->
+
+            <div class="form-group">
+
+                <label for="blood">
+                    Blood Group
+                </label>
+
+                <select
+                    id="blood"
+                    name="blood"
+                    required
+                >
+
+                    <option value="">
+                        Select Blood Group
+                    </option>
+
+                    <option value="A+"
+                        {% if blood_group == "A+" %}selected{% endif %}>
+                        A+
+                    </option>
+
+                    <option value="A-"
+                        {% if blood_group == "A-" %}selected{% endif %}>
+                        A-
+                    </option>
+
+                    <option value="B+"
+                        {% if blood_group == "B+" %}selected{% endif %}>
+                        B+
+                    </option>
+
+                    <option value="B-"
+                        {% if blood_group == "B-" %}selected{% endif %}>
+                        B-
+                    </option>
+
+                    <option value="AB+"
+                        {% if blood_group == "AB+" %}selected{% endif %}>
+                        AB+
+                    </option>
+
+                    <option value="AB-"
+                        {% if blood_group == "AB-" %}selected{% endif %}>
+                        AB-
+                    </option>
+
+                    <option value="O+"
+                        {% if blood_group == "O+" %}selected{% endif %}>
+                        O+
+                    </option>
+
+                    <option value="O-"
+                        {% if blood_group == "O-" %}selected{% endif %}>
+                        O-
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="form-group">
+
+                <label for="phone">
+                    Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value="{{ phone }}"
+                    placeholder="Enter phone number"
+                >
+
+            </div>
+
+
+            <!-- LOCATION -->
+
+            <div class="form-group">
+
+                <label for="city">
+                    Location
+                </label>
+
+                <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    value="{{ location }}"
+                    placeholder="Enter your location"
+                >
+
+            </div>
+
+
+            <!-- LAST DONATION -->
+
+            <div class="form-group full">
+
+                <label for="lastDonation">
+                    Last Donation Date
+                </label>
+
+                <input
+                    type="date"
+                    id="lastDonation"
+                    name="lastDonation"
+
+                    {% if last_donation_date %}
+                        value="{{ last_donation_date|date:'Y-m-d' }}"
+                    {% endif %}
+
+                >
+
+                <span class="hint">
+                    Leave empty if you have not donated before.
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ACTION BUTTONS
+        ================================================== -->
+
+        <div class="actions">
+
+            <a
+                href="{% url 'donor_dashboard' %}"
+                class="cancel-btn"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="save-btn"
+            >
+                Save Changes
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <!-- =================================================
+         AVAILABILITY STATUS
+    ================================================== -->
+
+    <div class="status-box">
+
+        <h3>
+            Donation Availability
+        </h3>
+
+        {% if is_available %}
+
+            <span class="available">
+                ● Currently Available for Donation
+            </span>
+
+        {% else %}
+
+            <span class="unavailable">
+                ● Currently Unavailable for Donation
+            </span>
+
+        {% endif %}
+
+        <p>
+            You can change your availability from the dashboard.
+        </p>
+
+    </div>
+
+</div>
+  
+
+</main>
 
 <!-- =====================================================
      DJANGO MESSAGES
@@ -1164,12 +767,11 @@
 
         alert("{{ message|escapejs }}");
 
-    {% endfor %};
+    {% endfor %}
 
 </script>
 
 {% endif %}
-
 
 </body>
 </html>

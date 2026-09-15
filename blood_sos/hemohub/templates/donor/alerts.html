@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,816 +10,496 @@
 
     <title>Alerts | HemoHub</title>
 
-<style>
-    /* ==============================
-       RESET & GLOBAL
-    ============================== */
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Segoe UI", Arial, sans-serif;
-    }
+    <style>
 
-    body {
-        background: #f4f7fb;
-        color: #1f2937;
-        min-height: 100vh;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
 
-    a {
-        text-decoration: none;
-    }
 
-    button,
-    input,
-    select {
-        font-family: inherit;
-    }
+        body {
+            background: #f4f7fb;
+            color: #1f2937;
+        }
 
 
-    /* ==============================
-       SIDEBAR
-    ============================== */
-
-    .sidebar {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 250px;
-        height: 100vh;
-        background: #0b3d91;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        z-index: 1000;
-        box-shadow: 3px 0 15px rgba(0, 0, 0, 0.08);
-    }
-
-
-    /* ==============================
-       LOGO
-    ============================== */
-
-    .sidebar-logo {
-        height: 85px;
-        display: flex;
-        align-items: center;
-        padding: 0 25px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .logo-icon {
-        width: 42px;
-        height: 42px;
-        background: #e31b23;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 12px;
-        font-size: 21px;
-        font-weight: 700;
-        color: white;
-    }
-
-    .logo-text {
-        font-size: 17px;
-        font-weight: 700;
-        letter-spacing: 0.3px;
-    }
-
-    .logo-subtitle {
-        display: block;
-        font-size: 10px;
-        color: #dbeafe;
-        margin-top: 2px;
-        font-weight: 400;
-    }
-
-
-    /* ==============================
-       SIDEBAR MENU
-    ============================== */
-
-    .sidebar-menu {
-        padding: 25px 14px;
-        flex: 1;
-    }
-
-    .menu-title {
-        color: #bfdbfe;
-        font-size: 10px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        padding: 0 12px;
-        margin-bottom: 10px;
-        font-weight: 600;
-    }
-
-    .sidebar-menu a {
-        display: flex;
-        align-items: center;
-        gap: 13px;
-        color: #e5efff;
-        padding: 12px 14px;
-        margin-bottom: 5px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 500;
-        transition: 0.2s ease;
-    }
-
-    .sidebar-menu a:hover {
-        background: rgba(255, 255, 255, 0.12);
-        color: white;
-    }
-
-    .sidebar-menu a.active {
-        background: white;
-        color: #0b3d91;
-        font-weight: 700;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-    }
-
-    .menu-icon {
-        width: 20px;
-        text-align: center;
-        font-size: 17px;
-    }
-
-
-    /* ==============================
-       SIDEBAR BOTTOM
-    ============================== */
-
-    .sidebar-bottom {
-        padding: 15px;
-        border-top: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .sidebar-profile {
-        display: flex;
-        align-items: center;
-        gap: 11px;
-        padding: 10px;
-        border-radius: 9px;
-        margin-bottom: 7px;
-    }
-
-    .sidebar-avatar {
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        background: #e31b23;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 700;
-        font-size: 15px;
-    }
-
-    .sidebar-user-name {
-        font-size: 13px;
-        font-weight: 600;
-        color: white;
-    }
-
-    .sidebar-user-role {
-        font-size: 10px;
-        color: #bfdbfe;
-        margin-top: 2px;
-    }
-
-    .logout-link {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 10px 12px;
-        border-radius: 8px;
-        color: #fecaca;
-        font-size: 13px;
-        transition: 0.2s ease;
-    }
-
-    .logout-link:hover {
-        background: rgba(227, 27, 35, 0.18);
-        color: white;
-    }
-
-
-    /* ==============================
-       MAIN CONTENT
-    ============================== */
-
-    .main-content {
-        margin-left: 250px;
-        min-height: 100vh;
-    }
-
-
-    /* ==============================
-       TOPBAR
-    ============================== */
-
-    .topbar {
-        height: 75px;
-        background: white;
-        border-bottom: 1px solid #e5e7eb;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 32px;
-    }
-
-    .page-title h1 {
-        font-size: 22px;
-        color: #111827;
-        font-weight: 700;
-    }
-
-    .page-title p {
-        font-size: 12px;
-        color: #6b7280;
-        margin-top: 3px;
-    }
-
-    .topbar-right {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .notification-btn {
-        width: 38px;
-        height: 38px;
-        border: 1px solid #e5e7eb;
-        background: white;
-        border-radius: 9px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        color: #374151;
-        font-size: 17px;
-        position: relative;
-    }
-
-    .notification-btn:hover {
-        border-color: #0b3d91;
-        color: #0b3d91;
-    }
-
-    .notification-dot {
-        position: absolute;
-        top: 6px;
-        right: 6px;
-        width: 7px;
-        height: 7px;
-        background: #e31b23;
-        border-radius: 50%;
-        border: 2px solid white;
-    }
-
-    .top-profile {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        padding-left: 15px;
-        border-left: 1px solid #e5e7eb;
-    }
-
-    .top-avatar {
-        width: 37px;
-        height: 37px;
-        border-radius: 50%;
-        background: #e31b23;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 14px;
-    }
-
-    .top-profile-name {
-        font-size: 13px;
-        font-weight: 600;
-        color: #1f2937;
-    }
-
-    .top-profile-role {
-        font-size: 10px;
-        color: #6b7280;
-        margin-top: 2px;
-    }
-
-
-    /* ==============================
-       CONTENT
-    ============================== */
-
-    .content {
-        padding: 30px 32px;
-    }
-
-
-    /* ==============================
-       ALERT HEADER
-    ============================== */
-
-    .alert-header {
-        background: linear-gradient(135deg, #0b3d91, #1557b0);
-        color: white;
-        border-radius: 14px;
-        padding: 24px 28px;
-        margin-bottom: 22px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 6px 18px rgba(11, 61, 145, 0.15);
-    }
-
-    .alert-title {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .alert-icon {
-        width: 52px;
-        height: 52px;
-        background: #e31b23;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-    }
-
-    .alert-title h2 {
-        font-size: 21px;
-        margin-bottom: 5px;
-    }
-
-    .alert-title p {
-        color: #dbeafe;
-        font-size: 12px;
-    }
-
-    .alert-count {
-        min-width: 70px;
-        text-align: center;
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 10px;
-        padding: 10px 15px;
-    }
-
-    .alert-count strong {
-        display: block;
-        font-size: 23px;
-    }
-
-    .alert-count span {
-        font-size: 10px;
-        color: #dbeafe;
-    }
-
-
-    /* ==============================
-       ALERT INFORMATION BAR
-    ============================== */
-
-    .alert-info {
-        background: #fff7ed;
-        border: 1px solid #fed7aa;
-        border-left: 4px solid #e31b23;
-        border-radius: 9px;
-        padding: 12px 15px;
-        margin-bottom: 22px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .alert-info-icon {
-        color: #e31b23;
-        font-size: 17px;
-    }
-
-    .alert-info p {
-        color: #9a3412;
-        font-size: 11px;
-        line-height: 1.5;
-    }
-
-
-    /* ==============================
-       ALERT LIST
-    ============================== */
-
-    .alerts-card {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.035);
-    }
-
-    .card-header {
-        padding: 18px 22px;
-        border-bottom: 1px solid #edf0f4;
-    }
-
-    .card-header h3 {
-        font-size: 16px;
-        color: #111827;
-    }
-
-    .card-header p {
-        font-size: 11px;
-        color: #6b7280;
-        margin-top: 3px;
-    }
-
-
-    /* ==============================
-       ALERT ITEM
-    ============================== */
-
-    .alert-item {
-        padding: 20px 22px;
-        border-bottom: 1px solid #edf0f4;
-        position: relative;
-    }
-
-    .alert-item:last-child {
-        border-bottom: none;
-    }
-
-    .alert-item.emergency {
-        border-left: 4px solid #e31b23;
-    }
-
-    .alert-item.urgent {
-        border-left: 4px solid #f97316;
-    }
-
-
-    /* ==============================
-       ALERT TOP
-    ============================== */
-
-    .alert-top {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 17px;
-    }
-
-    .alert-heading {
-        display: flex;
-        align-items: center;
-        gap: 13px;
-    }
-
-    .blood-badge {
-        width: 48px;
-        height: 48px;
-        border-radius: 10px;
-        background: #fff0f0;
-        color: #e31b23;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        font-weight: 800;
-    }
-
-    .alert-heading h4 {
-        font-size: 14px;
-        color: #111827;
-        margin-bottom: 3px;
-    }
-
-    .alert-heading p {
-        font-size: 11px;
-        color: #6b7280;
-    }
-
-
-    /* ==============================
-       URGENCY
-    ============================== */
-
-    .urgency {
-        padding: 5px 10px;
-        border-radius: 15px;
-        font-size: 10px;
-        font-weight: 700;
-    }
-
-    .urgency.emergency {
-        background: #fff0f0;
-        color: #e31b23;
-    }
-
-    .urgency.urgent {
-        background: #fff7ed;
-        color: #c2410c;
-    }
-
-
-    /* ==============================
-       ALERT DETAILS
-    ============================== */
-
-    .alert-details {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
-        background: #f8fafc;
-        border-radius: 9px;
-        padding: 14px;
-        margin-bottom: 14px;
-    }
-
-    .detail-box {
-        min-width: 0;
-    }
-
-    .detail-label {
-        color: #9ca3af;
-        font-size: 10px;
-        margin-bottom: 4px;
-    }
-
-    .detail-value {
-        color: #374151;
-        font-size: 11px;
-        font-weight: 600;
-        word-break: break-word;
-    }
-
-
-    /* ==============================
-       ADDITIONAL INFORMATION
-    ============================== */
-
-    .additional-info {
-        background: #f8fafc;
-        border-left: 3px solid #e31b23;
-        padding: 10px 12px;
-        margin-bottom: 14px;
-        color: #64748b;
-        font-size: 11px;
-        line-height: 1.5;
-        border-radius: 0 6px 6px 0;
-    }
-
-
-    /* ==============================
-       ALERT FOOTER
-    ============================== */
-
-    .alert-footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-    }
-
-    .alert-time {
-        color: #9ca3af;
-        font-size: 10px;
-    }
-
-    .respond-btn {
-        background: #e31b23;
-        border: none;
-        color: white;
-        padding: 9px 18px;
-        border-radius: 7px;
-        font-size: 11px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: 0.2s ease;
-    }
-
-    .respond-btn:hover {
-        background: #c81920;
-    }
-
-    .responded-btn {
-        background: #eaf8ef;
-        color: #16834a;
-        border: 1px solid #ccebd8;
-        padding: 8px 15px;
-        border-radius: 7px;
-        font-size: 11px;
-        font-weight: 600;
-        cursor: default;
-    }
-
-
-    /* ==============================
-       EMPTY STATE
-    ============================== */
-
-    .empty-state {
-        padding: 60px 20px;
-        text-align: center;
-    }
-
-    .empty-icon {
-        width: 60px;
-        height: 60px;
-        margin: 0 auto 15px;
-        border-radius: 50%;
-        background: #eaf2ff;
-        color: #0b3d91;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 26px;
-    }
-
-    .empty-state h3 {
-        font-size: 17px;
-        color: #374151;
-        margin-bottom: 6px;
-    }
-
-    .empty-state p {
-        color: #9ca3af;
-        font-size: 12px;
-    }
-
-
-    /* ==============================
-       MOBILE MENU
-    ============================== */
-
-    .mobile-menu {
-        display: none;
-        width: 38px;
-        height: 38px;
-        border: 1px solid #e5e7eb;
-        background: white;
-        border-radius: 8px;
-        cursor: pointer;
-        color: #0b3d91;
-        font-size: 18px;
-        align-items: center;
-        justify-content: center;
-    }
-
-
-    /* ==============================
-       RESPONSIVE - TABLET
-    ============================== */
-
-    @media (max-width: 1000px) {
+        /* =================================================
+           SIDEBAR
+        ================================================= */
 
         .sidebar {
-            width: 220px;
-        }
-
-        .main-content {
-            margin-left: 220px;
-        }
-
-        .content {
-            padding: 25px;
-        }
-
-        .alert-details {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-
-    /* ==============================
-       RESPONSIVE - MOBILE
-    ============================== */
-
-    @media (max-width: 700px) {
-
-        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
             width: 250px;
-            transform: translateX(-100%);
-            transition: transform 0.25s ease;
-        }
-
-        .sidebar.show {
-            transform: translateX(0);
-        }
-
-        .main-content {
-            margin-left: 0;
-        }
-
-        .topbar {
-            height: 65px;
-            padding: 0 18px;
-        }
-
-        .mobile-menu {
+            height: 100vh;
+            background: #0b3d91;
+            padding: 25px 16px;
             display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            box-shadow: 3px 0 12px rgba(0,0,0,0.08);
         }
 
-        .page-title h1 {
-            font-size: 18px;
+
+        .logo {
+            color: #fff;
+            font-size: 25px;
+            font-weight: 700;
+            padding: 5px 14px 28px;
+            border-bottom: 1px solid rgba(255,255,255,.18);
         }
 
-        .page-title p {
-            display: none;
+
+        .logo span {
+            display: block;
+            color: #dbe7ff;
+            font-size: 11px;
+            font-weight: 400;
+            margin-top: 4px;
         }
 
-        .top-profile-name,
-        .top-profile-role {
-            display: none;
+
+        /* =================================================
+           NAVIGATION
+        ================================================= */
+
+        .nav {
+            margin-top: 25px;
         }
 
-        .top-profile {
-            border-left: none;
-            padding-left: 0;
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 13px 15px;
+            margin-bottom: 7px;
+            border-radius: 9px;
+            color: #e5edff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
         }
 
-        .content {
-            padding: 20px 15px;
+
+        .nav a:hover {
+            background: rgba(255,255,255,.12);
+            color: #fff;
         }
 
-        .alert-header {
+
+        .nav a.active {
+            background: #fff;
+            color: #0b3d91;
+            font-weight: 700;
+        }
+
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+
+        /* =================================================
+           LOGOUT
+        ================================================= */
+
+        .logout {
+            margin-top: auto;
+        }
+
+
+        .logout a {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            background: #d62828;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 9px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+
+        .logout a:hover {
+            background: #b71c1c;
+        }
+
+
+        /* =================================================
+           MAIN
+        ================================================= */
+
+        .main {
+            margin-left: 250px;
+            min-height: 100vh;
+            padding: 30px 35px;
+        }
+
+
+        /* =================================================
+           PAGE HEADER
+        ================================================= */
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+
+        .page-header h1 {
+            font-size: 28px;
+            margin-bottom: 6px;
+            color: #111827;
+        }
+
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+
+        /* =================================================
+           SUMMARY
+        ================================================= */
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+
+        .summary-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 15px;
             padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.03);
         }
 
-        .alert-title h2 {
-            font-size: 18px;
+
+        .summary-title {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 8px;
         }
 
-        .alert-count {
-            padding: 8px 12px;
+
+        .summary-value {
+            font-size: 27px;
+            font-weight: 700;
+            color: #d62828;
         }
 
-        .alert-info {
-            align-items: flex-start;
+
+        /* =================================================
+           ALERT SECTION
+        ================================================= */
+
+        .alerts-section {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.03);
         }
 
-        .alert-details {
-            grid-template-columns: 1fr 1fr;
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        .alert-item {
-            padding: 18px 16px;
+
+        .section-header h2 {
+            font-size: 19px;
+            color: #111827;
         }
-    }
 
 
-    /* ==============================
-       SMALL MOBILE
-    ============================== */
+        .section-header span {
+            font-size: 12px;
+            color: #777;
+        }
 
-    @media (max-width: 430px) {
 
-        .alert-header {
-            align-items: flex-start;
-            flex-direction: column;
+        /* =================================================
+           ALERT CARD
+        ================================================= */
+
+        .alert-card {
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 13px;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            transition: 0.2s;
+        }
+
+
+        .alert-card:last-child {
+            margin-bottom: 0;
+        }
+
+
+        .alert-card:hover {
+            border-color: #d8dee9;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+        }
+
+
+        .alert-left {
+            display: flex;
             gap: 15px;
+            flex: 1;
         }
 
-        .alert-count {
-            width: 100%;
+
+        /* =================================================
+           ALERT ICON
+        ================================================= */
+
+        .alert-icon {
+            width: 45px;
+            height: 45px;
+            min-width: 45px;
+            border-radius: 50%;
+            background: #ffe5e5;
+            color: #d62828;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 21px;
+            font-weight: 700;
         }
 
-        .alert-top {
-            align-items: flex-start;
-            flex-direction: column;
-            gap: 10px;
+
+        /* =================================================
+           ALERT CONTENT
+        ================================================= */
+
+        .alert-content h3 {
+            font-size: 16px;
+            margin-bottom: 7px;
+            color: #111827;
         }
 
-        .alert-details {
-            grid-template-columns: 1fr;
+
+        .alert-content p {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
         }
 
-        .alert-footer {
-            align-items: stretch;
-            flex-direction: column;
+
+        .alert-content strong {
+            color: #374151;
         }
 
-        .respond-btn,
+
+        /* =================================================
+           BLOOD BADGE
+        ================================================= */
+
+        .blood-badge {
+            display: inline-block;
+            background: #ffe5e5;
+            color: #d62828;
+            padding: 5px 9px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-right: 5px;
+        }
+
+
+        /* =================================================
+           URGENCY
+        ================================================= */
+
+        .urgency {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-left: 5px;
+        }
+
+
+        .emergency {
+            background: #ffe0e0;
+            color: #c1121f;
+        }
+
+
+        .urgent {
+            background: #fff0d6;
+            color: #b26a00;
+        }
+
+
+        /* =================================================
+           TIME
+        ================================================= */
+
+        .alert-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 9px;
+        }
+
+
+        /* =================================================
+           ACTION
+        ================================================= */
+
+        .alert-action {
+            display: flex;
+            align-items: center;
+        }
+
+
+        .respond-btn {
+            border: none;
+            background: #d62828;
+            color: white;
+            padding: 10px 17px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+
+
+        .respond-btn:hover {
+            background: #b71c1c;
+        }
+
+
         .responded-btn {
-            width: 100%;
+            border: none;
+            background: #e7f6ea;
+            color: #218838;
+            padding: 10px 17px;
+            border-radius: 8px;
+            font-weight: 600;
+            white-space: nowrap;
         }
 
-        .topbar-right {
-            gap: 8px;
+
+        /* =================================================
+           EMPTY STATE
+        ================================================= */
+
+        .empty {
+            text-align: center;
+            padding: 55px 20px;
         }
-    }
-</style>
+
+
+        .empty-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            background: #e7f6ea;
+            color: #218838;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+
+        .empty h3 {
+            font-size: 19px;
+            margin-bottom: 7px;
+            color: #111827;
+        }
+
+
+        .empty p {
+            font-size: 13px;
+            color: #777;
+        }
+
+
+        /* =================================================
+           RESPONSIVE
+        ================================================= */
+
+        @media (max-width: 850px) {
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main {
+                margin-left: 200px;
+                padding: 20px;
+            }
+
+            .alert-card {
+                flex-direction: column;
+            }
+
+            .alert-action {
+                justify-content: flex-start;
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                padding: 20px 16px;
+            }
+
+            .logout {
+                margin-top: 20px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+
+        }
+
+    </style>
 
 </head>
 
@@ -832,7 +511,7 @@
      SIDEBAR
 ===================================================== -->
 
-<div class="sidebar">
+<aside class="sidebar">
 
 
     <div class="logo">
@@ -846,41 +525,47 @@
     </div>
 
 
-    <div class="nav">
+    <nav class="nav">
 
 
         <a href="{% url 'donor_dashboard' %}">
-            Dashboard
+            <span class="nav-icon">▣</span>
+            <span>Dashboard</span>
         </a>
 
 
         <a href="{% url 'donor_profile' %}">
-            Profile
+            <span class="nav-icon">◉</span>
+            <span>Profile</span>
         </a>
 
 
         <a href="{% url 'blood_radar' %}">
-            Blood Radar
+            <span class="nav-icon">⌖</span>
+            <span>Blood Radar</span>
         </a>
 
 
         <a href="{% url 'donor_requests' %}">
-            Requests
+            <span class="nav-icon">▤</span>
+            <span>Requests</span>
         </a>
 
 
         <a href="{% url 'donor_alerts' %}"
            class="active">
-            Alerts
+            <span class="nav-icon">♢</span>
+            <span>Alerts</span>
         </a>
 
 
         <a href="{% url 'donation_history' %}">
-            Donation History
+            <span class="nav-icon">◫</span>
+            <span>Donation History</span>
         </a>
 
 
-    </div>
+    </nav>
 
 
     <div class="logout">
@@ -892,7 +577,7 @@
     </div>
 
 
-</div>
+</aside>
 
 
 <!-- =====================================================
@@ -974,16 +659,13 @@
 
         <div class="section-header">
 
-
             <h2>
                 Emergency & Urgent Requests
             </h2>
 
-
             <span>
                 Matching your blood group
             </span>
-
 
         </div>
 
@@ -1004,25 +686,22 @@
                     <div class="alert-left">
 
 
-                        <!-- ICON -->
+                        <!-- ALERT ICON -->
 
                         <div class="alert-icon">
                             !
                         </div>
 
 
-                        <!-- CONTENT -->
+                        <!-- ALERT CONTENT -->
 
                         <div class="alert-content">
 
 
                             <h3>
 
-
                                 <span class="blood-badge">
-
                                     {{ blood_request.blood_group }}
-
                                 </span>
 
 
@@ -1042,7 +721,6 @@
                                     </span>
 
                                 {% endif %}
-
 
                             </h3>
 

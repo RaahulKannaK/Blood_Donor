@@ -1,15 +1,14 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Donor Dashboard | HemoHub</title>
-    <style>
-    /* ==============================
-       RESET & GLOBAL
-    ============================== */
 
+<title>Donor Dashboard | HemoHub</title>
+
+<style>
     * {
         margin: 0;
         padding: 0;
@@ -20,17 +19,11 @@
     body {
         background: #f4f7fb;
         color: #1f2937;
-        min-height: 100vh;
     }
 
-    a {
-        text-decoration: none;
-    }
-
-
-    /* ==============================
+    /* =====================================================
        SIDEBAR
-    ============================== */
+    ===================================================== */
 
     .sidebar {
         position: fixed;
@@ -39,330 +32,219 @@
         width: 250px;
         height: 100vh;
         background: #0b3d91;
-        color: white;
+        padding: 25px 16px;
         display: flex;
         flex-direction: column;
         z-index: 1000;
-        box-shadow: 3px 0 15px rgba(0, 0, 0, 0.08);
+        box-shadow: 3px 0 12px rgba(0, 0, 0, 0.08);
     }
 
-
-    /* LOGO */
-
-    .sidebar-logo {
-        height: 85px;
-        display: flex;
-        align-items: center;
-        padding: 0 25px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .logo-icon {
-        width: 42px;
-        height: 42px;
-        background: #e31b23;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 12px;
-        font-size: 21px;
-        font-weight: 700;
-        color: white;
-    }
-
-    .logo-text {
-        font-size: 17px;
+    .logo {
+        padding: 5px 14px 28px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+        color: #ffffff;
+        font-size: 25px;
         font-weight: 700;
         letter-spacing: 0.3px;
     }
 
-    .logo-subtitle {
+    .logo span {
         display: block;
-        font-size: 10px;
-        color: #dbeafe;
-        margin-top: 2px;
+        margin-top: 5px;
+        color: #dbe7ff;
+        font-size: 11px;
+        line-height: 1.5;
         font-weight: 400;
     }
 
-
-    /* ==============================
-       SIDEBAR NAVIGATION
-    ============================== */
-
-    .sidebar-menu {
-        padding: 25px 14px;
-        flex: 1;
+    .nav {
+        margin-top: 25px;
     }
 
-    .menu-title {
-        color: #bfdbfe;
-        font-size: 10px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        padding: 0 12px;
-        margin-bottom: 10px;
-        font-weight: 600;
-    }
-
-    .sidebar-menu a {
+    .nav a {
         display: flex;
         align-items: center;
-        gap: 13px;
-        color: #e5efff;
-        padding: 12px 14px;
-        margin-bottom: 5px;
-        border-radius: 8px;
+        gap: 12px;
+        width: 100%;
+        padding: 13px 15px;
+        margin-bottom: 7px;
+        border-radius: 9px;
+        color: #e5edff;
+        text-decoration: none;
         font-size: 14px;
         font-weight: 500;
         transition: 0.2s ease;
     }
 
-    .sidebar-menu a:hover {
+    .nav a:hover {
         background: rgba(255, 255, 255, 0.12);
-        color: white;
+        color: #ffffff;
     }
 
-    .sidebar-menu a.active {
-        background: white;
+    .nav a.active {
+        background: #ffffff;
         color: #0b3d91;
         font-weight: 700;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
     }
 
-    .menu-icon {
-        width: 20px;
+    .nav-icon {
+        width: 22px;
         text-align: center;
-        font-size: 17px;
+        font-size: 16px;
     }
 
-
-    /* ==============================
-       SIDEBAR BOTTOM
-    ============================== */
-
-    .sidebar-bottom {
-        padding: 15px;
-        border-top: 1px solid rgba(255, 255, 255, 0.15);
+    .logout {
+        margin-top: auto;
     }
 
-    .sidebar-profile {
-        display: flex;
-        align-items: center;
-        gap: 11px;
-        padding: 10px;
-        border-radius: 9px;
-        margin-bottom: 7px;
-    }
-
-    .sidebar-avatar {
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        background: #e31b23;
+    .logout a {
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
-        font-weight: 700;
-        font-size: 15px;
-    }
-
-    .sidebar-user-name {
-        font-size: 13px;
+        gap: 8px;
+        width: 100%;
+        padding: 12px;
+        background: #d62828;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 9px;
+        font-size: 14px;
         font-weight: 600;
-        color: white;
-    }
-
-    .sidebar-user-role {
-        font-size: 10px;
-        color: #bfdbfe;
-        margin-top: 2px;
-    }
-
-    .logout-link {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 10px 12px;
-        border-radius: 8px;
-        color: #fecaca;
-        font-size: 13px;
         transition: 0.2s ease;
     }
 
-    .logout-link:hover {
-        background: rgba(227, 27, 35, 0.18);
-        color: white;
+    .logout a:hover {
+        background: #b91c1c;
     }
 
+    /* =====================================================
+       MAIN
+    ===================================================== */
 
-    /* ==============================
-       MAIN CONTENT
-    ============================== */
-
-    .main-content {
+    .main {
         margin-left: 250px;
         min-height: 100vh;
+        padding: 30px 35px;
     }
 
-
-    /* ==============================
+    /* =====================================================
        TOP BAR
-    ============================== */
+    ===================================================== */
 
     .topbar {
-        height: 75px;
-        background: white;
-        border-bottom: 1px solid #e5e7eb;
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        padding: 0 32px;
+        align-items: center;
+        gap: 25px;
+        margin-bottom: 28px;
     }
 
-    .page-title h1 {
-        font-size: 22px;
-        color: #111827;
+    .welcome h1 {
+        color: #172033;
+        font-size: 28px;
         font-weight: 700;
-    }
-
-    .page-title p {
-        font-size: 12px;
-        color: #6b7280;
-        margin-top: 3px;
-    }
-
-    .topbar-right {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .notification-btn {
-        width: 38px;
-        height: 38px;
-        border: 1px solid #e5e7eb;
-        background: white;
-        border-radius: 9px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        color: #374151;
-        font-size: 17px;
-    }
-
-    .notification-btn:hover {
-        border-color: #0b3d91;
-        color: #0b3d91;
-    }
-
-    .top-profile {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        padding-left: 15px;
-        border-left: 1px solid #e5e7eb;
-    }
-
-    .top-avatar {
-        width: 37px;
-        height: 37px;
-        border-radius: 50%;
-        background: #e31b23;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 14px;
-    }
-
-    .top-profile-name {
-        font-size: 13px;
-        font-weight: 600;
-        color: #1f2937;
-    }
-
-    .top-profile-role {
-        font-size: 10px;
-        color: #6b7280;
-        margin-top: 2px;
-    }
-
-
-    /* ==============================
-       CONTENT AREA
-    ============================== */
-
-    .content {
-        padding: 30px 32px;
-    }
-
-
-    /* ==============================
-       WELCOME BANNER
-    ============================== */
-
-    .welcome-banner {
-        background: linear-gradient(135deg, #0b3d91, #1557b0);
-        color: white;
-        border-radius: 14px;
-        padding: 25px 28px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 25px;
-        box-shadow: 0 6px 18px rgba(11, 61, 145, 0.15);
-    }
-
-    .welcome-text h2 {
-        font-size: 23px;
         margin-bottom: 6px;
     }
 
-    .welcome-text p {
-        font-size: 13px;
-        color: #dbeafe;
+    .welcome p {
+        color: #6b7280;
+        font-size: 14px;
     }
 
-    .blood-badge-large {
-        background: #e31b23;
-        min-width: 68px;
-        height: 68px;
-        border-radius: 50%;
+    /* =====================================================
+       AVAILABILITY
+    ===================================================== */
+
+    .availability {
         display: flex;
         align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        font-weight: 800;
-        border: 4px solid rgba(255, 255, 255, 0.3);
+        gap: 16px;
+        background: #ffffff;
+        border: 1px solid #e1e7f0;
+        border-radius: 12px;
+        padding: 13px 18px;
+        box-shadow: 0 3px 10px rgba(20, 40, 80, 0.04);
     }
 
+    .availability-text strong {
+        display: block;
+        color: #1f2937;
+        font-size: 14px;
+        margin-bottom: 3px;
+    }
 
-    /* ==============================
+    .availability-text span {
+        color: #6b7280;
+        font-size: 12px;
+    }
+
+    /* =====================================================
+       SWITCH
+    ===================================================== */
+
+    .switch {
+        position: relative;
+        width: 48px;
+        height: 26px;
+        display: inline-block;
+    }
+
+    .switch input {
+        display: none;
+    }
+
+    .slider {
+        position: absolute;
+        inset: 0;
+        cursor: pointer;
+        background: #cbd5e1;
+        border-radius: 30px;
+        transition: 0.25s ease;
+    }
+
+    .slider:before {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        left: 3px;
+        bottom: 3px;
+        background: #ffffff;
+        border-radius: 50%;
+        transition: 0.25s ease;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+
+    input:checked + .slider {
+        background: #16803c;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(22px);
+    }
+
+    /* =====================================================
        STAT CARDS
-    ============================== */
+    ===================================================== */
 
-    .stats-grid {
+    .cards {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 18px;
         margin-bottom: 25px;
     }
 
-    .stat-card {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.035);
+    .card {
         position: relative;
+        background: #ffffff;
+        border: 1px solid #e1e7f0;
+        border-radius: 13px;
+        padding: 21px;
         overflow: hidden;
+        box-shadow: 0 3px 10px rgba(20, 40, 80, 0.035);
     }
 
-    .stat-card::before {
+    .card::before {
         content: "";
         position: absolute;
         left: 0;
@@ -372,520 +254,282 @@
         background: #0b3d91;
     }
 
-    .stat-card.red::before {
-        background: #e31b23;
+    .card.red::before {
+        background: #d62828;
     }
 
-    .stat-icon {
-        width: 38px;
-        height: 38px;
-        border-radius: 9px;
-        background: #eaf2ff;
-        color: #0b3d91;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 17px;
-        margin-bottom: 13px;
-    }
-
-    .stat-card.red .stat-icon {
-        background: #fff0f0;
-        color: #e31b23;
-    }
-
-    .stat-label {
+    .card-title {
         color: #6b7280;
         font-size: 12px;
-        margin-bottom: 5px;
+        font-weight: 600;
+        margin-bottom: 8px;
     }
 
-    .stat-value {
-        color: #111827;
-        font-size: 25px;
+    .card-value {
+        color: #172033;
+        font-size: 28px;
         font-weight: 700;
     }
 
-
-    /* ==============================
-       TWO COLUMN LAYOUT
-    ============================== */
-
-    .dashboard-grid {
-        display: grid;
-        grid-template-columns: 1.5fr 1fr;
-        gap: 22px;
-        margin-bottom: 25px;
-    }
-
-
-    /* ==============================
-       COMMON CARD
-    ============================== */
-
-    .card {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.035);
-        overflow: hidden;
-    }
-
-    .card-header {
-        padding: 18px 20px;
-        border-bottom: 1px solid #edf0f4;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .card-header h3 {
-        font-size: 16px;
-        color: #111827;
-    }
-
-    .card-header p {
-        color: #6b7280;
+    .card-small {
+        color: #8a94a6;
         font-size: 11px;
-        margin-top: 3px;
+        margin-top: 6px;
+        line-height: 1.4;
     }
 
-    .view-all {
+    /* =====================================================
+       SECTION
+    ===================================================== */
+
+    .section {
+        background: #ffffff;
+        border: 1px solid #e1e7f0;
+        border-radius: 13px;
+        padding: 23px;
+        margin-bottom: 25px;
+        box-shadow: 0 3px 10px rgba(20, 40, 80, 0.035);
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 18px;
+    }
+
+    .section-header h2 {
+        color: #172033;
+        font-size: 19px;
+        font-weight: 700;
+    }
+
+    .section-header a {
         color: #0b3d91;
-        font-size: 12px;
+        text-decoration: none;
+        font-size: 13px;
         font-weight: 600;
     }
 
-    .view-all:hover {
-        color: #e31b23;
+    .section-header a:hover {
+        color: #d62828;
     }
 
+    /* =====================================================
+       REQUEST
+    ===================================================== */
 
-    /* ==============================
-       REQUEST ITEMS
-    ============================== */
-
-    .request-list {
-        padding: 5px 20px;
-    }
-
-    .request-item {
-        padding: 17px 0;
-        border-bottom: 1px solid #edf0f4;
+    .request {
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        gap: 15px;
+        align-items: center;
+        gap: 20px;
+        padding: 17px;
+        background: #ffffff;
+        border: 1px solid #e6eaf0;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        transition: 0.2s ease;
     }
 
-    .request-item:last-child {
-        border-bottom: none;
+    .request:hover {
+        border-color: #cbd8ef;
+        background: #fbfcff;
+    }
+
+    .request:last-child {
+        margin-bottom: 0;
     }
 
     .request-info {
-        display: flex;
-        align-items: center;
-        gap: 12px;
+        min-width: 0;
     }
 
-    .blood-badge {
-        width: 43px;
-        height: 43px;
-        border-radius: 9px;
-        background: #fff0f0;
-        color: #e31b23;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 13px;
-        font-weight: 800;
-        flex-shrink: 0;
-    }
-
-    .request-name {
-        font-size: 13px;
-        font-weight: 600;
+    .request-info h3 {
         color: #1f2937;
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 8px;
     }
 
-    .request-location {
-        font-size: 11px;
+    .request-info p {
         color: #6b7280;
-        margin-top: 3px;
+        font-size: 12px;
+        margin-top: 4px;
     }
+
+    /* =====================================================
+       BLOOD BADGE
+    ===================================================== */
+
+    .blood {
+        display: inline-block;
+        background: #fff0f0;
+        color: #d62828;
+        border: 1px solid #ffd4d4;
+        padding: 5px 9px;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 12px;
+        margin-right: 7px;
+    }
+
+    /* =====================================================
+       URGENCY
+    ===================================================== */
+
+    .urgency {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        margin-left: 5px;
+    }
+
+    .emergency {
+        background: #ffe5e5;
+        color: #c1121f;
+    }
+
+    .urgent {
+        background: #fff1d9;
+        color: #a86200;
+    }
+
+    .normal {
+        background: #e8f6ec;
+        color: #218838;
+    }
+
+    /* =====================================================
+       RESPOND BUTTON
+    ===================================================== */
 
     .respond-btn {
-        background: #e31b23;
         border: none;
-        color: white;
-        padding: 8px 13px;
+        background: #d62828;
+        color: #ffffff;
+        padding: 9px 16px;
         border-radius: 7px;
-        font-size: 11px;
-        font-weight: 600;
         cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
         transition: 0.2s ease;
     }
 
     .respond-btn:hover {
-        background: #c81920;
+        background: #b91c1c;
     }
 
-
-    /* ==============================
-       LAST DONATION CARD
-    ============================== */
-
-    .donation-content {
-        padding: 22px;
-    }
-
-    .donation-main {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-
-    .donation-icon {
-        width: 52px;
-        height: 52px;
-        border-radius: 11px;
-        background: #fff0f0;
-        color: #e31b23;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 23px;
-    }
-
-    .donation-date {
-        font-size: 18px;
-        font-weight: 700;
-        color: #111827;
-    }
-
-    .donation-status {
-        display: inline-block;
-        margin-top: 5px;
-        padding: 4px 9px;
-        border-radius: 12px;
-        background: #eaf8ef;
-        color: #16834a;
-        font-size: 10px;
-        font-weight: 600;
-    }
-
-    .donation-details {
-        border-top: 1px solid #edf0f4;
-        padding-top: 16px;
-    }
-
-    .detail-row {
-        display: flex;
-        justify-content: space-between;
-        padding: 7px 0;
-        font-size: 12px;
-    }
-
-    .detail-label {
-        color: #6b7280;
-    }
-
-    .detail-value {
-        color: #1f2937;
-        font-weight: 600;
-        text-align: right;
-    }
-
-
-    /* ==============================
-       AVAILABILITY CARD
-    ============================== */
-
-    .availability-card {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 25px;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.035);
-    }
-
-    .availability-info h3 {
-        font-size: 15px;
-        margin-bottom: 4px;
-    }
-
-    .availability-info p {
-        color: #6b7280;
-        font-size: 11px;
-    }
-
-    .availability-control {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .availability-text {
-        font-size: 12px;
-        font-weight: 600;
-        color: #16834a;
-    }
-
-    .switch {
-        position: relative;
-        width: 48px;
-        height: 26px;
-    }
-
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        inset: 0;
-        background: #d1d5db;
-        border-radius: 30px;
-        transition: 0.2s;
-    }
-
-    .slider:before {
-        content: "";
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        left: 3px;
-        top: 3px;
-        background: white;
-        border-radius: 50%;
-        transition: 0.2s;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-    }
-
-    .switch input:checked + .slider {
-        background: #16834a;
-    }
-
-    .switch input:checked + .slider:before {
-        transform: translateX(22px);
-    }
-
-
-    /* ==============================
+    /* =====================================================
        EMPTY STATE
-    ============================== */
+    ===================================================== */
 
-    .empty-state {
-        padding: 35px 20px;
+    .empty {
         text-align: center;
+        padding: 38px 20px;
+        color: #6b7280;
     }
 
-    .empty-icon {
-        width: 48px;
-        height: 48px;
-        margin: 0 auto 12px;
-        border-radius: 50%;
-        background: #f1f5f9;
-        color: #94a3b8;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-    }
-
-    .empty-state h4 {
-        font-size: 14px;
+    .empty h3 {
         color: #374151;
-        margin-bottom: 5px;
+        font-size: 16px;
+        margin-bottom: 6px;
     }
 
-    .empty-state p {
-        font-size: 11px;
-        color: #9ca3af;
+    .empty p {
+        font-size: 13px;
     }
 
-
-    /* ==============================
-       MOBILE MENU BUTTON
-    ============================== */
-
-    .mobile-menu {
-        display: none;
-        width: 38px;
-        height: 38px;
-        border: 1px solid #e5e7eb;
-        background: white;
-        border-radius: 8px;
-        cursor: pointer;
-        color: #0b3d91;
-        font-size: 18px;
-    }
-
-
-    /* ==============================
-       RESPONSIVE - TABLET
-    ============================== */
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
 
     @media (max-width: 1100px) {
 
-        .sidebar {
-            width: 220px;
-        }
-
-        .main-content {
-            margin-left: 220px;
-        }
-
-        .stats-grid {
+        .cards {
             grid-template-columns: repeat(2, 1fr);
         }
 
-        .dashboard-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .content {
-            padding: 25px;
-        }
     }
 
-
-    /* ==============================
-       RESPONSIVE - MOBILE
-    ============================== */
-
-    @media (max-width: 700px) {
+    @media (max-width: 800px) {
 
         .sidebar {
-            width: 250px;
-            transform: translateX(-100%);
-            transition: transform 0.25s ease;
+            width: 210px;
         }
 
-        .sidebar.show {
-            transform: translateX(0);
-        }
-
-        .main-content {
-            margin-left: 0;
+        .main {
+            margin-left: 210px;
+            padding: 22px;
         }
 
         .topbar {
-            height: 65px;
-            padding: 0 18px;
-        }
-
-        .mobile-menu {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .page-title h1 {
-            font-size: 18px;
-        }
-
-        .page-title p {
-            display: none;
-        }
-
-        .top-profile-name,
-        .top-profile-role {
-            display: none;
-        }
-
-        .top-profile {
-            border-left: none;
-            padding-left: 0;
-        }
-
-        .content {
-            padding: 20px 15px;
-        }
-
-        .welcome-banner {
-            padding: 20px;
-        }
-
-        .welcome-text h2 {
-            font-size: 19px;
-        }
-
-        .blood-badge-large {
-            min-width: 55px;
-            height: 55px;
-            font-size: 17px;
-        }
-
-        .stats-grid {
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .stat-card {
-            padding: 16px;
-        }
-
-        .stat-value {
-            font-size: 21px;
-        }
-
-        .availability-card {
             align-items: flex-start;
-            gap: 15px;
             flex-direction: column;
         }
 
-        .request-item {
-            align-items: flex-start;
+        .availability {
+            width: 100%;
+            justify-content: space-between;
         }
 
-        .respond-btn {
-            flex-shrink: 0;
-        }
     }
 
+    @media (max-width: 600px) {
 
-    /* ==============================
-       SMALL MOBILE
-    ============================== */
+        .sidebar {
+            position: relative;
+            width: 100%;
+            height: auto;
+            min-height: auto;
+            padding: 18px;
+        }
 
-    @media (max-width: 430px) {
+        .logo {
+            padding-bottom: 18px;
+        }
 
-        .stats-grid {
+        .nav {
+            margin-top: 15px;
+        }
+
+        .nav a {
+            margin-bottom: 5px;
+        }
+
+        .logout {
+            margin-top: 10px;
+        }
+
+        .main {
+            margin-left: 0;
+            padding: 20px 15px;
+        }
+
+        .cards {
             grid-template-columns: 1fr;
         }
 
-        .welcome-banner {
-            gap: 15px;
+        .request {
+            align-items: flex-start;
+            flex-direction: column;
         }
 
-        .blood-badge-large {
-            min-width: 50px;
-            height: 50px;
+        .respond-btn {
+            width: 100%;
         }
 
-        .card-header {
-            padding: 16px;
+        .welcome h1 {
+            font-size: 24px;
         }
 
-        .request-list {
-            padding: 5px 16px;
-        }
-
-        .topbar-right {
-            gap: 8px;
-        }
     }
 </style>
+
 </head>
 
 <body>
@@ -894,411 +538,413 @@
      SIDEBAR
 ===================================================== -->
 
-<div class="sidebar">
+<aside class="sidebar">
 
-    <div class="logo">
-        HemoHub
-        <span>Blood Donation & Emergency Response</span>
+  
+<div class="logo">
+    HemoHub
+    <span>Blood Donation & Emergency Response</span>
+</div>
+
+<nav class="nav">
+
+    <a href="{% url 'donor_dashboard' %}" class="active">
+        <span class="nav-icon">▣</span>
+        <span>Dashboard</span>
+    </a>
+
+    <a href="{% url 'donor_profile' %}">
+        <span class="nav-icon">◉</span>
+        <span>Profile</span>
+    </a>
+
+    <a href="{% url 'blood_radar' %}">
+        <span class="nav-icon">⌖</span>
+        <span>Blood Radar</span>
+    </a>
+
+    <a href="{% url 'donor_requests' %}">
+        <span class="nav-icon">▤</span>
+        <span>Requests</span>
+    </a>
+
+    <a href="{% url 'donor_alerts' %}">
+        <span class="nav-icon">♢</span>
+        <span>Alerts</span>
+    </a>
+
+    <a href="{% url 'donation_history' %}">
+        <span class="nav-icon">◫</span>
+        <span>Donation History</span>
+    </a>
+
+</nav>
+
+<div class="logout">
+
+    <a href="{% url 'logout_user' %}">
+        Logout
+    </a>
+
+</div>
+  
+
+</aside>
+
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
+<main class="main">
+
+  
+<!-- TOP BAR -->
+
+<div class="topbar">
+
+    <div class="welcome">
+
+        <h1>
+            Welcome, {{ name }}
+        </h1>
+
+        <p>
+            Thank you for being a blood donor.
+        </p>
+
     </div>
 
-    <div class="nav">
 
-        <a href="{% url 'donor_dashboard' %}" class="active">
-            Dashboard
-        </a>
+    <!-- AVAILABILITY -->
 
-        <a href="{% url 'donor_profile' %}">
-            Profile
-        </a>
+    <div class="availability">
 
-        <a href="{% url 'blood_radar' %}">
-            Blood Radar
-        </a>
+        <div class="availability-text">
 
-        <a href="{% url 'donor_requests' %}">
-            Requests
-        </a>
+            <strong>
+                Donation Availability
+            </strong>
 
-        <a href="{% url 'donor_alerts' %}">
-            Alerts
-        </a>
+            {% if is_available %}
 
-        <a href="{% url 'donation_history' %}">
-            Donation History
-        </a>
+                <span>
+                    You are currently available
+                </span>
 
-    </div>
+            {% else %}
 
-    <div class="logout">
+                <span>
+                    You are currently unavailable
+                </span>
 
-        <a href="{% url 'logout_user' %}">
-            Logout
-        </a>
+            {% endif %}
+
+        </div>
+
+        <form
+            method="POST"
+            action="{% url 'update_availability' %}"
+        >
+
+            {% csrf_token %}
+
+            <label class="switch">
+
+                <input
+                    type="checkbox"
+                    name="availability"
+                    value="on"
+                    onchange="this.form.submit()"
+                    {% if is_available %}checked{% endif %}
+                >
+
+                <span class="slider"></span>
+
+            </label>
+
+        </form>
 
     </div>
 
 </div>
 
 
-<!-- =====================================================
-     MAIN CONTENT
-===================================================== -->
+<!-- =================================================
+     STATISTICS
+================================================== -->
 
-<div class="main">
+<div class="cards">
 
-    <!-- TOP BAR -->
+    <!-- BLOOD GROUP -->
 
-    <div class="topbar">
+    <div class="card red">
 
-        <div class="welcome">
+        <div class="card-title">
+            Blood Group
+        </div>
 
-            <h1>
-                Welcome, {{ name }}
-            </h1>
+        <div class="card-value">
+
+            {% if blood_group %}
+                {{ blood_group }}
+            {% else %}
+                Not Set
+            {% endif %}
+
+        </div>
+
+        <div class="card-small">
+            Your registered blood group
+        </div>
+
+    </div>
+
+
+    <!-- MATCHING REQUESTS -->
+
+    <div class="card">
+
+        <div class="card-title">
+            Matching Requests
+        </div>
+
+        <div class="card-value">
+            {{ nearby_count }}
+        </div>
+
+        <div class="card-small">
+            Active requests matching your blood group
+        </div>
+
+    </div>
+
+
+    <!-- TOTAL DONATIONS -->
+
+    <div class="card red">
+
+        <div class="card-title">
+            Total Donations
+        </div>
+
+        <div class="card-value">
+            {{ total_donations }}
+        </div>
+
+        <div class="card-small">
+            Completed donations
+        </div>
+
+    </div>
+
+
+    <!-- LIVES HELPED -->
+
+    <div class="card">
+
+        <div class="card-title">
+            Lives Helped
+        </div>
+
+        <div class="card-value">
+            {{ lives_helped }}
+        </div>
+
+        <div class="card-small">
+            Based on donation history
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =================================================
+     LAST DONATION
+================================================== -->
+
+{% if last_donation %}
+
+<section class="section">
+
+    <div class="section-header">
+
+        <h2>
+            Last Donation
+        </h2>
+
+        <a href="{% url 'donation_history' %}">
+            View History
+        </a>
+
+    </div>
+
+    <div class="request">
+
+        <div class="request-info">
+
+            <h3>
+                <span class="blood">
+                    {{ last_donation.blood_group }}
+                </span>
+
+                {{ last_donation.hospital }}
+            </h3>
 
             <p>
-                Thank you for being a blood donor.
+                Location:
+                {{ last_donation.location }}
+            </p>
+
+            <p>
+                Donation Date:
+                {{ last_donation.donation_date|date:"d M Y" }}
             </p>
 
         </div>
 
+        <span class="urgency normal">
+            {{ last_donation.status }}
+        </span>
 
-        <!-- AVAILABILITY -->
+    </div>
 
-        <div class="availability">
+</section>
 
-            <div class="availability-text">
-
-                <strong>
-                    Donation Availability
-                </strong>
-
-                {% if is_available %}
-
-                    <span>
-                        You are currently available
-                    </span>
-
-                {% else %}
-
-                    <span>
-                        You are currently unavailable
-                    </span>
-
-                {% endif %}
-
-            </div>
+{% endif %}
 
 
-            <form method="POST"
-                  action="{% url 'update_availability' %}">
+<!-- =================================================
+     MATCHING BLOOD REQUESTS
+================================================== -->
 
-                {% csrf_token %}
+<section class="section">
 
-                <label class="switch">
+    <div class="section-header">
 
-                    <input
-                        type="checkbox"
-                        name="availability"
-                        value="on"
-                        onchange="this.form.submit()"
+        <h2>
+            Blood Requests
+        </h2>
 
-                        {% if is_available %}
-                            checked
-                        {% endif %}
-                    >
-
-                    <span class="slider"></span>
-
-                </label>
-
-            </form>
-
-        </div>
+        <a href="{% url 'donor_requests' %}">
+            View All
+        </a>
 
     </div>
 
 
-    <!-- =================================================
-         STATISTICS
-    ================================================== -->
+    {% if nearby_requests %}
 
-    <div class="cards">
-
-        <!-- BLOOD GROUP -->
-
-        <div class="card">
-
-            <div class="card-title">
-                Blood Group
-            </div>
-
-            <div class="card-value">
-
-                {% if blood_group %}
-                    {{ blood_group }}
-                {% else %}
-                    Not Set
-                {% endif %}
-
-            </div>
-
-            <div class="card-small">
-                Your registered blood group
-            </div>
-
-        </div>
-
-
-        <!-- NEARBY REQUESTS -->
-
-        <div class="card">
-
-            <div class="card-title">
-                Matching Requests
-            </div>
-
-            <div class="card-value">
-                {{ nearby_count }}
-            </div>
-
-            <div class="card-small">
-                Active requests matching your blood group
-            </div>
-
-        </div>
-
-
-        <!-- DONATIONS -->
-
-        <div class="card">
-
-            <div class="card-title">
-                Total Donations
-            </div>
-
-            <div class="card-value">
-                {{ total_donations }}
-            </div>
-
-            <div class="card-small">
-                Completed donations
-            </div>
-
-        </div>
-
-
-        <!-- LIVES HELPED -->
-
-        <div class="card">
-
-            <div class="card-title">
-                Lives Helped
-            </div>
-
-            <div class="card-value">
-                {{ lives_helped }}
-            </div>
-
-            <div class="card-small">
-                Based on donation history
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =================================================
-         LAST DONATION
-    ================================================== -->
-
-    {% if last_donation %}
-
-    <div class="section" style="margin-bottom: 25px;">
-
-        <div class="section-header">
-
-            <h2>
-                Last Donation
-            </h2>
-
-        </div>
+        {% for blood_request in nearby_requests %}
 
         <div class="request">
 
             <div class="request-info">
 
                 <h3>
-                    {{ last_donation.hospital }}
+
+                    <span class="blood">
+                        {{ blood_request.blood_group }}
+                    </span>
+
+                    {{ blood_request.hospital }}
+
+                    {% if blood_request.urgency == "Emergency" %}
+
+                        <span class="urgency emergency">
+                            Emergency
+                        </span>
+
+                    {% elif blood_request.urgency == "Urgent" %}
+
+                        <span class="urgency urgent">
+                            Urgent
+                        </span>
+
+                    {% else %}
+
+                        <span class="urgency normal">
+                            Normal
+                        </span>
+
+                    {% endif %}
+
                 </h3>
 
                 <p>
-                    Blood Group:
-                    <strong>
-                        {{ last_donation.blood_group }}
-                    </strong>
+                    Patient:
+                    {{ blood_request.patient_name }}
+                </p>
+
+                <p>
+                    Patient Age:
+                    {{ blood_request.patient_age }}
+                </p>
+
+                <p>
+                    Units Required:
+                    {{ blood_request.units }}
                 </p>
 
                 <p>
                     Location:
-                    {{ last_donation.location }}
+                    {{ blood_request.location }}
                 </p>
 
                 <p>
-                    Donation Date:
-                    {{ last_donation.donation_date|date:"d M Y" }}
+                    Requested:
+                    {{ blood_request.created_at|date:"d M Y, h:i A" }}
                 </p>
 
             </div>
 
-            <span class="urgency normal">
-                {{ last_donation.status }}
-            </span>
+
+            <!-- RESPOND -->
+
+            <form
+                method="POST"
+                action="{% url 'respond_to_request' blood_request.id %}"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="respond-btn"
+                >
+                    Respond
+                </button>
+
+            </form>
 
         </div>
 
-    </div>
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty">
+
+            <h3>
+                No matching blood requests
+            </h3>
+
+            <p>
+                There are currently no active requests
+                matching your blood group.
+            </p>
+
+        </div>
 
     {% endif %}
 
+</section>
+  
 
-    <!-- =================================================
-         MATCHING BLOOD REQUESTS
-    ================================================== -->
-
-    <div class="section">
-
-        <div class="section-header">
-
-            <h2>
-                Blood Requests
-            </h2>
-
-            <a href="{% url 'donor_requests' %}">
-                View All
-            </a>
-
-        </div>
-
-
-        {% if nearby_requests %}
-
-            {% for blood_request in nearby_requests %}
-
-                <div class="request">
-
-                    <div class="request-info">
-
-                        <h3>
-
-                            <span class="blood">
-                                {{ blood_request.blood_group }}
-                            </span>
-
-                            {{ blood_request.hospital }}
-
-                            {% if blood_request.urgency == "Emergency" %}
-
-                                <span class="urgency emergency">
-                                    Emergency
-                                </span>
-
-                            {% elif blood_request.urgency == "Urgent" %}
-
-                                <span class="urgency urgent">
-                                    Urgent
-                                </span>
-
-                            {% else %}
-
-                                <span class="urgency normal">
-                                    Normal
-                                </span>
-
-                            {% endif %}
-
-                        </h3>
-
-
-                        <p>
-                            Patient:
-                            {{ blood_request.patient_name }}
-                        </p>
-
-
-                        <p>
-                            Patient Age:
-                            {{ blood_request.patient_age }}
-                        </p>
-
-
-                        <p>
-                            Units Required:
-                            {{ blood_request.units }}
-                        </p>
-
-
-                        <p>
-                            Location:
-                            {{ blood_request.location }}
-                        </p>
-
-
-                        <p>
-                            Requested:
-                            {{ blood_request.created_at|date:"d M Y, h:i A" }}
-                        </p>
-
-                    </div>
-
-
-                    <!-- RESPOND -->
-
-                    <form method="POST"
-                          action="{% url 'respond_to_request' blood_request.id %}">
-
-                        {% csrf_token %}
-
-                        <button
-                            type="submit"
-                            class="respond-btn">
-
-                            Respond
-
-                        </button>
-
-                    </form>
-
-                </div>
-
-            {% endfor %}
-
-
-        {% else %}
-
-            <div class="empty">
-
-                <h3>
-                    No matching blood requests
-                </h3>
-
-                <p>
-                    There are currently no active requests
-                    matching your blood group.
-                </p>
-
-            </div>
-
-        {% endif %}
-
-    </div>
-
-</div>
-
+</main>
 
 <!-- =====================================================
-     DJANGO MESSAGE DISPLAY
+     DJANGO MESSAGES
 ===================================================== -->
 
 {% if messages %}
@@ -1315,6 +961,6 @@
 
 {% endif %}
 
-
 </body>
 </html>
+  

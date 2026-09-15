@@ -1,425 +1,682 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donation History | SOS Blood Bank</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Segoe UI", sans-serif;
+  
+<title>Donation History | HemoHub</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+        background: #f4f7fb;
+        color: #1f2937;
+    }
+
+    /* =====================================================
+       SIDEBAR
+    ===================================================== */
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 250px;
+        height: 100vh;
+        background: #0b3d91;
+        padding: 25px 16px;
+        display: flex;
+        flex-direction: column;
+        z-index: 1000;
+        box-shadow: 3px 0 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .logo {
+        padding: 5px 14px 28px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+        color: #ffffff;
+        font-size: 25px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+    }
+
+    .logo span {
+        display: block;
+        margin-top: 5px;
+        color: #dbe7ff;
+        font-size: 11px;
+        line-height: 1.5;
+        font-weight: 400;
+    }
+
+    .nav {
+        margin-top: 25px;
+    }
+
+    .nav a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 13px 15px;
+        margin-bottom: 7px;
+        border-radius: 9px;
+        color: #e5edff;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: 0.2s ease;
+    }
+
+    .nav a:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: #ffffff;
+    }
+
+    .nav a.active {
+        background: #ffffff;
+        color: #0b3d91;
+        font-weight: 700;
+    }
+
+    .nav-icon {
+        width: 22px;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    .logout {
+        margin-top: auto;
+    }
+
+    .logout a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 12px;
+        background: #d62828;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 9px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.2s ease;
+    }
+
+    .logout a:hover {
+        background: #b91c1c;
+    }
+
+    /* =====================================================
+       MAIN
+    ===================================================== */
+
+    .main {
+        margin-left: 250px;
+        min-height: 100vh;
+        padding: 30px 35px;
+    }
+
+    /* =====================================================
+       PAGE HEADER
+    ===================================================== */
+
+    .page-header {
+        margin-bottom: 25px;
+    }
+
+    .page-header h1 {
+        color: #172033;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .page-header p {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    /* =====================================================
+       STAT CARDS
+    ===================================================== */
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 25px;
+    }
+
+    .stat-card {
+        position: relative;
+        background: #ffffff;
+        padding: 21px;
+        border-radius: 13px;
+        border: 1px solid #e1e7f0;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(20, 40, 80, 0.035);
+    }
+
+    .stat-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        background: #0b3d91;
+    }
+
+    .stat-card.red::before {
+        background: #d62828;
+    }
+
+    .stat-title {
+        color: #6b7280;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 9px;
+    }
+
+    .stat-value {
+        color: #172033;
+        font-size: 27px;
+        font-weight: 700;
+    }
+
+    .stat-value.date {
+        font-size: 20px;
+    }
+
+    /* =====================================================
+       HISTORY CARD
+    ===================================================== */
+
+    .history-card {
+        background: #ffffff;
+        border: 1px solid #e1e7f0;
+        border-radius: 13px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(20, 40, 80, 0.035);
+    }
+
+    .card-header {
+        padding: 22px 23px;
+        border-bottom: 1px solid #e6eaf0;
+    }
+
+    .card-header h2 {
+        color: #172033;
+        font-size: 19px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .card-header p {
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+    /* =====================================================
+       TABLE
+    ===================================================== */
+
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        min-width: 700px;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 15px 20px;
+        text-align: left;
+        border-bottom: 1px solid #edf0f4;
+        font-size: 13px;
+    }
+
+    th {
+        background: #f7f9fc;
+        color: #536174;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    td {
+        color: #374151;
+    }
+
+    tbody tr {
+        transition: 0.2s ease;
+    }
+
+    tbody tr:hover {
+        background: #fafcff;
+    }
+
+    tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* =====================================================
+       BLOOD BADGE
+    ===================================================== */
+
+    .blood-badge {
+        display: inline-block;
+        background: #fff0f0;
+        color: #d62828;
+        border: 1px solid #ffd4d4;
+        padding: 5px 9px;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 12px;
+    }
+
+    /* =====================================================
+       STATUS
+    ===================================================== */
+
+    .status {
+        display: inline-block;
+        background: #e8f6ec;
+        color: #218838;
+        padding: 5px 10px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    /* =====================================================
+       EMPTY STATE
+    ===================================================== */
+
+    .empty-state {
+        text-align: center;
+        padding: 55px 20px;
+    }
+
+    .empty-icon {
+        width: 58px;
+        height: 58px;
+        margin: 0 auto 17px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff0f0;
+        border-radius: 50%;
+        font-size: 27px;
+    }
+
+    .empty-state h3 {
+        color: #374151;
+        margin-bottom: 7px;
+        font-size: 18px;
+    }
+
+    .empty-state p {
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .back-btn {
+        display: inline-block;
+        margin-top: 20px;
+        text-decoration: none;
+        background: #d62828;
+        color: #ffffff;
+        padding: 10px 18px;
+        border-radius: 7px;
+        font-size: 13px;
+        font-weight: 600;
+        transition: 0.2s ease;
+    }
+
+    .back-btn:hover {
+        background: #b91c1c;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 950px) {
+
+        .stats {
+            grid-template-columns: 1fr;
         }
 
-        body {
-            background: #f5f7fb;
-            color: #222;
+    }
+
+    @media (max-width: 800px) {
+
+        .sidebar {
+            width: 210px;
         }
 
-        .navbar {
-            height: 70px;
-            background: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 40px;
-            border-bottom: 1px solid #e5e7eb;
+        .main {
+            margin-left: 210px;
+            padding: 22px;
+        }
+
+    }
+
+    @media (max-width: 600px) {
+
+        .sidebar {
+            position: relative;
+            width: 100%;
+            height: auto;
+            min-height: auto;
+            padding: 18px;
         }
 
         .logo {
-            font-size: 22px;
-            font-weight: 700;
-            color: #d62828;
+            padding-bottom: 18px;
         }
 
-        .logo span {
-            display: block;
-            font-size: 11px;
-            color: #777;
-            font-weight: 500;
+        .nav {
+            margin-top: 15px;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 25px;
-            align-items: center;
+        .logout {
+            margin-top: 10px;
         }
 
-        .nav-links a {
-            text-decoration: none;
-            color: #555;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: #d62828;
-        }
-
-        .profile-btn {
-            text-decoration: none;
-            background: #f3f4f6;
-            color: #333;
-            padding: 9px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 35px auto;
-            padding: 0 20px;
-        }
-
-        .page-header {
-            margin-bottom: 25px;
+        .main {
+            margin-left: 0;
+            padding: 20px 15px;
         }
 
         .page-header h1 {
-            font-size: 30px;
-            margin-bottom: 7px;
-        }
-
-        .page-header p {
-            color: #777;
-            font-size: 14px;
+            font-size: 24px;
         }
 
         .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: 1fr;
         }
 
-        .stat-card {
-            background: #ffffff;
-            padding: 22px;
-            border-radius: 14px;
-            border: 1px solid #e8e8e8;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-        }
+    }
+</style>
+  
 
-        .stat-title {
-            color: #777;
-            font-size: 13px;
-            margin-bottom: 10px;
-        }
-
-        .stat-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #d62828;
-        }
-
-        .history-card {
-            background: #ffffff;
-            border-radius: 14px;
-            border: 1px solid #e8e8e8;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-        }
-
-        .card-header {
-            padding: 20px 25px;
-            border-bottom: 1px solid #eeeeee;
-        }
-
-        .card-header h2 {
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
-
-        .card-header p {
-            color: #777;
-            font-size: 13px;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            padding: 16px 20px;
-            text-align: left;
-            border-bottom: 1px solid #eeeeee;
-            font-size: 14px;
-        }
-
-        th {
-            background: #fafafa;
-            color: #555;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        td {
-            color: #444;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        .blood-badge {
-            display: inline-block;
-            background: #fff0f0;
-            color: #d62828;
-            padding: 6px 10px;
-            border-radius: 7px;
-            font-weight: 700;
-            font-size: 13px;
-        }
-
-        .status {
-            display: inline-block;
-            background: #eaf8ef;
-            color: #18864b;
-            padding: 6px 11px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 55px 20px;
-        }
-
-        .empty-icon {
-            font-size: 45px;
-            margin-bottom: 15px;
-        }
-
-        .empty-state h3 {
-            margin-bottom: 8px;
-            font-size: 20px;
-        }
-
-        .empty-state p {
-            color: #777;
-            font-size: 14px;
-        }
-
-        .back-btn {
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-            background: #d62828;
-            color: white;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .back-btn:hover {
-            background: #b91f1f;
-        }
-
-        @media (max-width: 800px) {
-            .navbar {
-                padding: 0 20px;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
-            .container {
-                margin-top: 25px;
-            }
-
-            .page-header h1 {
-                font-size: 25px;
-            }
-        }
-    </style>
 </head>
 
 <body>
 
-    <!-- NAVBAR -->
-    <div class="navbar">
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
 
-        <div class="logo">
-            SOS BLOOD BANK
-            <span>Save Lives • Donate Blood</span>
+<aside class="sidebar">
+
+  
+<div class="logo">
+    HemoHub
+    <span>Blood Donation & Emergency Response</span>
+</div>
+
+<nav class="nav">
+
+    <a href="{% url 'donor_dashboard' %}">
+        <span class="nav-icon">▣</span>
+        <span>Dashboard</span>
+    </a>
+
+    <a href="{% url 'donor_profile' %}">
+        <span class="nav-icon">◉</span>
+        <span>Profile</span>
+    </a>
+
+    <a href="{% url 'blood_radar' %}">
+        <span class="nav-icon">⌖</span>
+        <span>Blood Radar</span>
+    </a>
+
+    <a href="{% url 'donor_requests' %}">
+        <span class="nav-icon">▤</span>
+        <span>Requests</span>
+    </a>
+
+    <a href="{% url 'donor_alerts' %}">
+        <span class="nav-icon">♢</span>
+        <span>Alerts</span>
+    </a>
+
+    <a href="{% url 'donation_history' %}" class="active">
+        <span class="nav-icon">◫</span>
+        <span>Donation History</span>
+    </a>
+
+</nav>
+
+<div class="logout">
+
+    <a href="{% url 'logout_user' %}">
+        Logout
+    </a>
+
+</div>
+  
+
+</aside>
+
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
+<main class="main">
+
+  
+<!-- PAGE HEADER -->
+
+<div class="page-header">
+
+    <h1>
+        Donation History
+    </h1>
+
+    <p>
+        View your completed blood donation records.
+    </p>
+
+</div>
+
+
+<!-- =================================================
+     STATISTICS
+================================================== -->
+
+<div class="stats">
+
+    <!-- TOTAL DONATIONS -->
+
+    <div class="stat-card red">
+
+        <div class="stat-title">
+            Total Donations
         </div>
 
-        <div class="nav-links">
-            <a href="{% url 'donor_dashboard' %}">Dashboard</a>
-            <a href="{% url 'blood_radar' %}">Blood Radar</a>
-            <a href="{% url 'donor_requests' %}">Requests</a>
-            <a href="{% url 'donor_alerts' %}">Alerts</a>
-            <a href="{% url 'donation_history' %}" class="active">History</a>
+        <div class="stat-value">
+            {{ total_donations }}
         </div>
-
-        <a href="{% url 'donor_profile' %}" class="profile-btn">
-            Profile
-        </a>
 
     </div>
 
 
-    <!-- MAIN CONTENT -->
-    <div class="container">
+    <!-- LIVES HELPED -->
 
-        <div class="page-header">
-            <h1>Donation History</h1>
-            <p>View your completed blood donation records.</p>
+    <div class="stat-card">
+
+        <div class="stat-title">
+            Estimated Lives Helped
         </div>
 
-
-        <!-- STATS -->
-        <div class="stats">
-
-            <div class="stat-card">
-                <div class="stat-title">
-                    Total Donations
-                </div>
-
-                <div class="stat-value">
-                    {{ total_donations }}
-                </div>
-            </div>
-
-
-            <div class="stat-card">
-                <div class="stat-title">
-                    Estimated Lives Helped
-                </div>
-
-                <div class="stat-value">
-                    {{ lives_helped }}
-                </div>
-            </div>
-
-
-            <div class="stat-card">
-                <div class="stat-title">
-                    Last Donation
-                </div>
-
-                <div class="stat-value" style="font-size: 20px;">
-
-                    {% if last_donation %}
-                        {{ last_donation.donation_date|date:"d M Y" }}
-                    {% else %}
-                        No Donations
-                    {% endif %}
-
-                </div>
-            </div>
-
+        <div class="stat-value">
+            {{ lives_helped }}
         </div>
 
-
-        <!-- HISTORY TABLE -->
-        <div class="history-card">
-
-            <div class="card-header">
-                <h2>Your Donation Records</h2>
-                <p>All donation records stored in your account.</p>
-            </div>
+    </div>
 
 
-            {% if history %}
+    <!-- LAST DONATION -->
 
-            <div class="table-wrapper">
+    <div class="stat-card red">
 
-                <table>
+        <div class="stat-title">
+            Last Donation
+        </div>
 
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Blood Group</th>
-                            <th>Hospital</th>
-                            <th>Location</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
+        <div class="stat-value date">
 
-                    <tbody>
+            {% if last_donation %}
 
-                        {% for donation in history %}
-
-                        <tr>
-
-                            <td>
-                                {{ donation.donation_date|date:"d M Y" }}
-                            </td>
-
-                            <td>
-                                <span class="blood-badge">
-                                    {{ donation.blood_group }}
-                                </span>
-                            </td>
-
-                            <td>
-                                {{ donation.hospital }}
-                            </td>
-
-                            <td>
-                                {{ donation.location }}
-                            </td>
-
-                            <td>
-                                <span class="status">
-                                    {{ donation.status }}
-                                </span>
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
+                {{ last_donation.donation_date|date:"d M Y" }}
 
             {% else %}
 
-            <!-- EMPTY STATE -->
-
-            <div class="empty-state">
-
-                <div class="empty-icon">
-                    🩸
-                </div>
-
-                <h3>No Donation History</h3>
-
-                <p>
-                    You haven't donated blood yet.
-                    Your completed donations will appear here.
-                </p>
-
-                <a href="{% url 'donor_dashboard' %}" class="back-btn">
-                    Back to Dashboard
-                </a>
-
-            </div>
+                No Donations
 
             {% endif %}
 
         </div>
 
     </div>
+
+</div>
+
+
+<!-- =================================================
+     DONATION HISTORY
+================================================== -->
+
+<section class="history-card">
+
+    <div class="card-header">
+
+        <h2>
+            Your Donation Records
+        </h2>
+
+        <p>
+            All donation records stored in your account.
+        </p>
+
+    </div>
+
+
+    {% if history %}
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Date</th>
+                    <th>Blood Group</th>
+                    <th>Hospital</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for donation in history %}
+
+                <tr>
+
+                    <td>
+                        {{ donation.donation_date|date:"d M Y" }}
+                    </td>
+
+                    <td>
+                        <span class="blood-badge">
+                            {{ donation.blood_group }}
+                        </span>
+                    </td>
+
+                    <td>
+                        {{ donation.hospital }}
+                    </td>
+
+                    <td>
+                        {{ donation.location }}
+                    </td>
+
+                    <td>
+                        <span class="status">
+                            {{ donation.status }}
+                        </span>
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <!-- EMPTY STATE -->
+
+    <div class="empty-state">
+
+        <div class="empty-icon">
+            🩸
+        </div>
+
+        <h3>
+            No Donation History
+        </h3>
+
+        <p>
+            You haven't donated blood yet.<br>
+            Your completed donations will appear here.
+        </p>
+
+        <a
+            href="{% url 'donor_dashboard' %}"
+            class="back-btn"
+        >
+            Back to Dashboard
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</section>
+  
+
+</main>
 
 </body>
 </html>
