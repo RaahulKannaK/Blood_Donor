@@ -7,97 +7,418 @@
     <title>Find Donor | SOS Blood Bank</title>
 
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
-        body { background: #f4f8ff; color: #172554; }
+        body {
+            background: #f4f8ff;
+            color: #172554;
+        }
 
-        .sidebar { position: fixed; left: 0; top: 0; width: 250px; height: 100vh; background: linear-gradient(180deg, #0d47a1, #1565c0); color: white; padding: 25px 18px; display: flex; flex-direction: column; z-index: 1000; box-shadow: 4px 0 15px rgba(13, 71, 161, 0.15); }
-        .logo { display: flex; align-items: center; gap: 12px; padding: 5px 10px 30px; }
-        .logo-icon { width: 43px; height: 43px; background: #e53935; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 23px; }
-        .logo-text h2 { font-size: 18px; }
-        .logo-text span { font-size: 11px; opacity: 0.75; }
-        .nav-menu { display: flex; flex-direction: column; gap: 7px; }
-        .nav-item { padding: 13px 14px; border-radius: 10px; color: #e3f2fd; text-decoration: none; display: flex; align-items: center; gap: 13px; font-size: 14px; cursor: pointer; transition: 0.2s; }
-        .nav-item:hover { background: rgba(255,255,255,0.12); }
-        .nav-item.active { background: white; color: #0d47a1; font-weight: 600; }
-        .nav-icon { width: 22px; text-align: center; }
-        .sidebar-bottom { margin-top: auto; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px; }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0d47a1, #1565c0);
+            color: white;
+            padding: 25px 18px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            box-shadow: 4px 0 15px rgba(13, 71, 161, 0.15);
+        }
 
-        .main { margin-left: 250px; padding: 25px 35px; min-height: 100vh; }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 10px 30px;
+        }
 
-        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .page-title h1 { color: #0d47a1; font-size: 27px; }
-        .page-title p { color: #64748b; font-size: 14px; margin-top: 5px; }
-        .mobile-menu { display: none; width: 42px; height: 42px; border: none; background: white; color: #1565c0; border-radius: 10px; font-size: 20px; cursor: pointer; }
+        .logo-icon {
+            width: 43px;
+            height: 43px;
+            background: #e53935;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+        }
 
-        .search-card { background: white; border-radius: 18px; padding: 22px; box-shadow: 0 3px 15px rgba(30,64,175,0.07); margin-bottom: 22px; }
-        .search-title { margin-bottom: 18px; }
-        .search-title h2 { color: #0d47a1; font-size: 18px; }
-        .search-title p { color: #64748b; font-size: 12px; margin-top: 4px; }
+        .logo-text h2 {
+            font-size: 18px;
+        }
 
-        .filter-grid { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 13px; align-items: end; }
-        .filter-group { display: flex; flex-direction: column; }
-        .filter-group label { font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 7px; }
-        .filter-group input, .filter-group select { padding: 11px 12px; border: 1px solid #dbe3ef; border-radius: 9px; outline: none; background: #fbfdff; color: #172554; font-size: 13px; }
-        .filter-group input:focus, .filter-group select:focus { border-color: #1976d2; }
-        .search-btn { border: none; background: #1565c0; color: white; padding: 11px 20px; border-radius: 9px; cursor: pointer; font-weight: 600; font-size: 13px; }
-        .search-btn:hover { background: #0d47a1; }
+        .logo-text span {
+            font-size: 11px;
+            opacity: 0.75;
+        }
 
-        .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .results-header h2 { color: #0d47a1; font-size: 18px; }
-        .results-count { color: #64748b; font-size: 12px; }
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
 
-        .donor-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
-        .donor-card { background: white; border-radius: 17px; padding: 20px; box-shadow: 0 3px 15px rgba(30,64,175,0.07); transition: 0.2s; }
-        .donor-card:hover { transform: translateY(-2px); }
-        .donor-top { display: flex; justify-content: space-between; align-items: center; }
-        .donor-profile { display: flex; align-items: center; gap: 12px; }
-        .donor-avatar { width: 48px; height: 48px; border-radius: 50%; background: #e3f2fd; color: #1565c0; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; }
-        .donor-name h3 { color: #172554; font-size: 14px; }
-        .donor-name p { color: #64748b; font-size: 11px; margin-top: 4px; }
-        .available { background: #e8f5e9; color: #2e7d32; padding: 6px 9px; border-radius: 15px; font-size: 10px; font-weight: 700; }
-        .unavailable { background: #f1f5f9; color: #64748b; padding: 6px 9px; border-radius: 15px; font-size: 10px; font-weight: 700; }
+        .nav-item {
+            padding: 13px 14px;
+            border-radius: 10px;
+            color: #e3f2fd;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-        .donor-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 18px 0; }
-        .detail { background: #f8fbff; border-radius: 9px; padding: 10px; }
-        .detail span { display: block; color: #94a3b8; font-size: 10px; margin-bottom: 4px; }
-        .detail strong { color: #334155; font-size: 12px; }
-        .blood-group { color: #d32f2f !important; font-weight: 800; }
+        .nav-item:hover {
+            background: rgba(255,255,255,0.12);
+        }
 
-        .donor-action { width: 100%; border: none; background: #e53935; color: white; padding: 11px; border-radius: 9px; cursor: pointer; font-weight: 700; }
-        .donor-action:hover { background: #c62828; }
+        .nav-item.active {
+            background: white;
+            color: #0d47a1;
+            font-weight: 600;
+        }
 
-        .no-result { background: white; border-radius: 18px; padding: 45px 20px; text-align: center; color: #64748b; }
-        .no-result-icon { font-size: 40px; margin-bottom: 10px; }
-        .no-result h3 { color: #334155; margin-bottom: 5px; }
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 15px;
+        }
+
+        .main {
+            margin-left: 250px;
+            padding: 25px 35px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            color: #0d47a1;
+            font-size: 27px;
+        }
+
+        .page-title p {
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .mobile-menu {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border: none;
+            background: white;
+            color: #1565c0;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .search-card {
+            background: white;
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 3px 15px rgba(30,64,175,0.07);
+            margin-bottom: 22px;
+        }
+
+        .search-title {
+            margin-bottom: 18px;
+        }
+
+        .search-title h2 {
+            color: #0d47a1;
+            font-size: 18px;
+        }
+
+        .search-title p {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 13px;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 7px;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 11px 12px;
+            border: 1px solid #dbe3ef;
+            border-radius: 9px;
+            outline: none;
+            background: #fbfdff;
+            color: #172554;
+            font-size: 13px;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            border-color: #1976d2;
+        }
+
+        .search-btn {
+            border: none;
+            background: #1565c0;
+            color: white;
+            padding: 11px 20px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .search-btn:hover {
+            background: #0d47a1;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .results-header h2 {
+            color: #0d47a1;
+            font-size: 18px;
+        }
+
+        .results-count {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .donor-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .donor-card {
+            background: white;
+            border-radius: 17px;
+            padding: 20px;
+            box-shadow: 0 3px 15px rgba(30,64,175,0.07);
+            transition: 0.2s;
+        }
+
+        .donor-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .donor-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .donor-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .donor-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #e3f2fd;
+            color: #1565c0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .donor-name h3 {
+            color: #172554;
+            font-size: 14px;
+        }
+
+        .donor-name p {
+            color: #64748b;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .available {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 6px 9px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .unavailable {
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 6px 9px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .donor-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 18px 0;
+        }
+
+        .detail {
+            background: #f8fbff;
+            border-radius: 9px;
+            padding: 10px;
+        }
+
+        .detail span {
+            display: block;
+            color: #94a3b8;
+            font-size: 10px;
+            margin-bottom: 4px;
+        }
+
+        .detail strong {
+            color: #334155;
+            font-size: 12px;
+        }
+
+        .blood-group {
+            color: #d32f2f !important;
+            font-weight: 800;
+        }
+
+        .donor-action {
+            width: 100%;
+            border: none;
+            background: #e53935;
+            color: white;
+            padding: 11px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .donor-action:hover {
+            background: #c62828;
+        }
+
+        .no-result {
+            background: white;
+            border-radius: 18px;
+            padding: 45px 20px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .no-result-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .no-result h3 {
+            color: #334155;
+            margin-bottom: 5px;
+        }
 
         @media (max-width: 1000px) {
-            .sidebar { transform: translateX(-100%); transition: 0.3s; }
-            .sidebar.open { transform: translateX(0); }
-            .main { margin-left: 0; padding: 20px; }
-            .mobile-menu { display: block; }
-            .filter-grid { grid-template-columns: 1fr 1fr; }
-            .donor-grid { grid-template-columns: 1fr; }
+            .sidebar {
+                transform: translateX(-100%);
+                transition: 0.3s;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .donor-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 600px) {
-            .main { padding: 15px; }
-            .page-title h1 { font-size: 21px; }
-            .filter-grid { grid-template-columns: 1fr; }
-            .donor-details { grid-template-columns: 1fr 1fr; }
-        }
+            .main {
+                padding: 15px;
+            }
 
+            .page-title h1 {
+                font-size: 21px;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .donor-details {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
     </style>
 </head>
 
 <body>
 
-    <!-- ================= SIDEBAR ================= -->
+    <!-- SIDEBAR -->
 
     <aside class="sidebar" id="sidebar">
 
         <div class="logo">
             <div class="logo-icon">🩸</div>
+
             <div class="logo-text">
                 <h2>SOS BLOOD BANK</h2>
                 <span>Save Lives • Donate Blood</span>
@@ -149,7 +470,7 @@
 
     </aside>
 
-    <!-- ================= MAIN ================= -->
+    <!-- MAIN -->
 
     <main class="main">
 
@@ -164,7 +485,7 @@
 
         </div>
 
-        <!-- ================= SEARCH (submits to Django view via GET) ================= -->
+        <!-- SEARCH -->
 
         <section class="search-card">
 
@@ -177,11 +498,19 @@
 
                 <div class="filter-grid">
 
-                    <!-- BLOOD GROUP -->
                     <div class="filter-group">
+
                         <label>Blood Group</label>
-                        <select name="blood_group" id="bloodFilter">
-                            <option value="all" {% if request.GET.blood_group == 'all' or not request.GET.blood_group %}selected{% endif %}>All Blood Groups</option>
+
+                        <select name="blood_group">
+
+                            <option value="all"
+                                {% if request.GET.blood_group == 'all' or not request.GET.blood_group %}
+                                    selected
+                                {% endif %}>
+                                All Blood Groups
+                            </option>
+
                             <option value="A+" {% if request.GET.blood_group == 'A+' %}selected{% endif %}>A+</option>
                             <option value="A-" {% if request.GET.blood_group == 'A-' %}selected{% endif %}>A-</option>
                             <option value="B+" {% if request.GET.blood_group == 'B+' %}selected{% endif %}>B+</option>
@@ -190,33 +519,56 @@
                             <option value="O-" {% if request.GET.blood_group == 'O-' %}selected{% endif %}>O-</option>
                             <option value="AB+" {% if request.GET.blood_group == 'AB+' %}selected{% endif %}>AB+</option>
                             <option value="AB-" {% if request.GET.blood_group == 'AB-' %}selected{% endif %}>AB-</option>
+
                         </select>
+
                     </div>
 
-                    <!-- LOCATION -->
                     <div class="filter-group">
+
                         <label>Location</label>
+
                         <input
                             type="text"
                             name="location"
-                            id="locationFilter"
                             placeholder="Enter area or city"
-                            value="{{ request.GET.location }}"
+                            value="{{ request.GET.location|default:'' }}"
                         >
+
                     </div>
 
-                    <!-- DISTANCE -->
                     <div class="filter-group">
+
                         <label>Maximum Distance</label>
-                        <select name="distance" id="distanceFilter">
-                            <option value="all" {% if request.GET.distance == 'all' or not request.GET.distance %}selected{% endif %}>Any Distance</option>
-                            <option value="5" {% if request.GET.distance == '5' %}selected{% endif %}>Within 5 km</option>
-                            <option value="10" {% if request.GET.distance == '10' %}selected{% endif %}>Within 10 km</option>
-                            <option value="20" {% if request.GET.distance == '20' %}selected{% endif %}>Within 20 km</option>
+
+                        <select name="distance">
+
+                            <option value="all"
+                                {% if request.GET.distance == 'all' or not request.GET.distance %}
+                                    selected
+                                {% endif %}>
+                                Any Distance
+                            </option>
+
+                            <option value="5" {% if request.GET.distance == '5' %}selected{% endif %}>
+                                Within 5 km
+                            </option>
+
+                            <option value="10" {% if request.GET.distance == '10' %}selected{% endif %}>
+                                Within 10 km
+                            </option>
+
+                            <option value="20" {% if request.GET.distance == '20' %}selected{% endif %}>
+                                Within 20 km
+                            </option>
+
                         </select>
+
                     </div>
 
-                    <button type="submit" class="search-btn">Search</button>
+                    <button type="submit" class="search-btn">
+                        Search
+                    </button>
 
                 </div>
 
@@ -224,7 +576,7 @@
 
         </section>
 
-        <!-- ================= RESULTS ================= -->
+        <!-- RESULTS -->
 
         <div class="results-header">
 
@@ -235,8 +587,6 @@
             </span>
 
         </div>
-
-        <!-- ================= DONOR CARDS (REAL DATA FROM DB) ================= -->
 
         <section class="donor-grid">
 
@@ -253,16 +603,31 @@
                         </div>
 
                         <div class="donor-name">
-                            <h3>{{ donor.user.name }}</h3>
-                            <p>Verified Donor</p>
+
+                            <h3>
+                                {{ donor.user.name }}
+                            </h3>
+
+                            <p>
+                                Age: {{ donor.user.age }}
+                            </p>
+
                         </div>
 
                     </div>
 
                     {% if donor.is_available %}
-                        <span class="available">● Available</span>
+
+                        <span class="available">
+                            ● Available
+                        </span>
+
                     {% else %}
-                        <span class="unavailable">Unavailable</span>
+
+                        <span class="unavailable">
+                            Unavailable
+                        </span>
+
                     {% endif %}
 
                 </div>
@@ -270,25 +635,55 @@
                 <div class="donor-details">
 
                     <div class="detail">
+
                         <span>Blood Group</span>
-                        <strong class="blood-group">{{ donor.blood_group }}</strong>
+
+                        <strong class="blood-group">
+                            {{ donor.blood_group }}
+                        </strong>
+
                     </div>
 
                     <div class="detail">
+
                         <span>Distance</span>
-                        <strong>{{ donor.distance_km }} km</strong>
+
+                        <strong>
+                            {{ donor.distance_km|floatformat:1 }} km
+                        </strong>
+
                     </div>
 
                     <div class="detail">
+
                         <span>Location</span>
-                        <strong>{{ donor.location }}</strong>
+
+                        <strong>
+                            {{ donor.location }}
+                        </strong>
+
                     </div>
 
                 </div>
 
-                <button class="donor-action" onclick="requestDonor('{{ donor.user.name }}')">
+                {% if donor.is_available %}
+
+                <button
+                    class="donor-action"
+                    onclick="requestDonor('{{ donor.user.name|escapejs }}')">
                     Request Donor
                 </button>
+
+                {% else %}
+
+                <button
+                    class="donor-action"
+                    disabled
+                    style="background:#cbd5e1; cursor:not-allowed;">
+                    Currently Unavailable
+                </button>
+
+                {% endif %}
 
             </div>
 
@@ -296,11 +691,17 @@
 
             <div class="no-result" style="grid-column: 1 / -1;">
 
-                <div class="no-result-icon">🔎</div>
+                <div class="no-result-icon">
+                    🔎
+                </div>
 
-                <h3>No suitable donors found</h3>
+                <h3>
+                    No suitable donors found
+                </h3>
 
-                <p>Try changing the blood group, location or distance.</p>
+                <p>
+                    Try changing the blood group, location or distance.
+                </p>
 
             </div>
 
@@ -309,8 +710,6 @@
         </section>
 
     </main>
-
-    <!-- ================= JAVASCRIPT ================= -->
 
     <script>
 
@@ -327,18 +726,25 @@
         }
 
         function requestDonor(donorName) {
+
             if (confirm("Send a blood donation request to " + donorName + "?")) {
+
                 alert("Request sent successfully to " + donorName + ".");
+
             }
+
         }
 
-        /* Close mobile sidebar when a link is clicked */
         document.querySelectorAll(".nav-item").forEach(function(item) {
+
             item.addEventListener("click", function() {
+
                 if (window.innerWidth <= 1000) {
                     document.getElementById("sidebar").classList.remove("open");
                 }
+
             });
+
         });
 
     </script>
