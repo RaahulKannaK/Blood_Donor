@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Donor Dashboard</title>
+
+<style>
+
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #f5f5f5;
+}
+
+.sidebar {
+    position: fixed;
+    width: 220px;
+    height: 100vh;
+    background: #8b0000;
+    color: white;
+    padding: 20px;
+}
+
+.sidebar p {
+    padding: 12px;
+}
+
+.main {
+    margin-left: 260px;
+    padding: 30px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px #ddd;
+}
+
+button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.accept {
+    background: green;
+    color: white;
+}
+
+.reject {
+    background: red;
+    color: white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h2>🩸 SOS</h2>
+
+<p>📊 Dashboard</p>
+<p>🚨 SOS Requests</p>
+<p>📜 Donation History</p>
+<p>🔔 Notifications</p>
+<p>👤 Profile</p>
+<p>🚪 Logout</p>
+
+</div>
+
+
+<div class="main">
+
+<h1>Donor Dashboard</h1>
+
+<div class="card">
+
+<h2>🚨 Emergency Blood Request</h2>
+
+<p><b>Blood Group:</b> O+</p>
+
+<p><b>Units:</b> 2</p>
+
+<p><b>Hospital:</b> ABC Hospital</p>
+
+<p><b>Distance:</b> 3.2 KM</p>
+
+<p><b>Urgency:</b> Critical</p>
+
+<button class="accept"
+onclick="acceptRequest()">
+ACCEPT
+</button>
+
+<button class="reject"
+onclick="rejectRequest()">
+REJECT
+</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>🧠 Smart Matching</h2>
+
+<p>Blood Group: ✔</p>
+<p>Availability: ✔</p>
+<p>Distance: ✔</p>
+<p>Reliability: ✔</p>
+<p>Urgency: ✔</p>
+
+</div>
+
+
+<div class="card">
+
+<h2>🔔 Notifications</h2>
+
+<p>🚨 New O+ emergency request near you.</p>
+
+</div>
+
+</div>
+
+
+<script>
+
+function acceptRequest() {
+    alert("You accepted the blood request.");
+}
+
+function rejectRequest() {
+    alert("Request rejected.");
+}
+
+</script>
+
+</body>
+</html>
+
