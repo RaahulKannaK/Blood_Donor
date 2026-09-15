@@ -1,4 +1,3 @@
- html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -350,65 +349,33 @@
 
 
         /* =========================
-           BAR CHART
+           INFO BOX
         ========================= */
 
-        .chart {
-            display: flex;
+        .info-box {
+            background: #fafafa;
 
-            align-items: flex-end;
+            border: 1px solid #eeeeee;
 
-            justify-content: space-around;
+            border-radius: 10px;
 
-            height: 220px;
-
-            padding: 20px 10px 0;
-
-            border-bottom: 1px solid #ddd;
+            padding: 20px;
         }
 
 
-        .bar-item {
-            height: 100%;
+        .info-box h4 {
+            font-size: 14px;
 
-            display: flex;
-
-            flex-direction: column;
-
-            justify-content: flex-end;
-
-            align-items: center;
-
-            width: 12%;
+            margin-bottom: 8px;
         }
 
 
-        .bar {
-            width: 32px;
-
-            background: #c62828;
-
-            border-radius: 5px 5px 0 0;
-
-            min-height: 10px;
-        }
-
-
-        .bar-label {
-            margin-top: 8px;
-
+        .info-box p {
             color: #777;
 
-            font-size: 10px;
-        }
+            font-size: 12px;
 
-
-        .bar-value {
-            font-size: 10px;
-
-            margin-bottom: 5px;
-
-            font-weight: 600;
+            line-height: 1.6;
         }
 
 
@@ -828,30 +795,12 @@
             </a>
 
 
-            <a href="admin_analytics"
+            <a href="{% url 'admin_analytics' %}"
                class="active">
 
                 <span class="menu-icon">▥</span>
 
                 Analytics
-
-            </a>
-
-
-            <a href="admin_alerts">
-
-                <span class="menu-icon">🔔</span>
-
-                Alerts
-
-            </a>
-
-
-            <a href="admin_profile">
-
-                <span class="menu-icon">◉</span>
-
-                Profile
 
             </a>
 
@@ -906,7 +855,7 @@
                 <div class="admin-info">
 
                     <strong>
-                        {{ name or "Administrator" }}
+                        {{ name|default:"Administrator" }}
                     </strong>
 
                     <span>
@@ -935,7 +884,7 @@
                 <p>Total SOS Requests</p>
 
                 <h2 class="red">
-                    {{ total_sos or 0 }}
+                    {{ total_sos|default:0 }}
                 </h2>
 
                 <small>
@@ -950,11 +899,11 @@
                 <p>Successful Matches</p>
 
                 <h2 class="green">
-                    {{ successful_matches or 0 }}
+                    {{ successful_matches|default:0 }}
                 </h2>
 
                 <small>
-                    Donor successfully matched
+                    Donor responses recorded
                 </small>
 
             </div>
@@ -965,11 +914,11 @@
                 <p>Failed Requests</p>
 
                 <h2 class="orange">
-                    {{ failed_requests or 0 }}
+                    {{ failed_requests|default:0 }}
                 </h2>
 
                 <small>
-                    Requests without successful match
+                    Requests without successful completion
                 </small>
 
             </div>
@@ -980,7 +929,7 @@
                 <p>Successful Donations</p>
 
                 <h2 class="green">
-                    {{ successful_donations or 0 }}
+                    {{ successful_donations|default:0 }}
                 </h2>
 
                 <small>
@@ -1004,60 +953,60 @@
             <div class="summary-card">
 
                 <h4>
-                    Average Matching Time
-                </h4>
-
-                <div class="summary-number">
-
-                    {{ average_matching_time or "—" }}
-
-                </div>
-
-                <p>
-                    Average time required to find
-                    a suitable donor.
-                </p>
-
-            </div>
-
-
-
-            <div class="summary-card">
-
-                <h4>
-                    Average Donor Response
-                </h4>
-
-                <div class="summary-number">
-
-                    {{ average_response_time or "—" }}
-
-                </div>
-
-                <p>
-                    Average time taken by donors
-                    to respond to SOS requests.
-                </p>
-
-            </div>
-
-
-
-            <div class="summary-card">
-
-                <h4>
                     Match Success Rate
                 </h4>
 
                 <div class="summary-number">
 
-                    {{ match_success_rate or 0 }}%
+                    {{ match_success_rate|default:0 }}%
 
                 </div>
 
                 <p>
-                    Percentage of emergency requests
-                    successfully matched.
+                    Percentage of SOS requests that received
+                    successful donor responses.
+                </p>
+
+            </div>
+
+
+
+            <div class="summary-card">
+
+                <h4>
+                    Donor Response Rate
+                </h4>
+
+                <div class="summary-number">
+
+                    {{ donor_response_rate|default:0 }}%
+
+                </div>
+
+                <p>
+                    Percentage of registered donors who
+                    responded to matching requests.
+                </p>
+
+            </div>
+
+
+
+            <div class="summary-card">
+
+                <h4>
+                    Completion Rate
+                </h4>
+
+                <div class="summary-number">
+
+                    {{ completion_rate|default:0 }}%
+
+                </div>
+
+                <p>
+                    Percentage of blood requests that were
+                    completed successfully.
                 </p>
 
             </div>
@@ -1077,7 +1026,7 @@
         <div class="two-column">
 
 
-            <!-- SOS TREND -->
+            <!-- SYSTEM OVERVIEW -->
 
             <section class="panel">
 
@@ -1085,137 +1034,46 @@
                 <div class="panel-header">
 
                     <h3>
-                        SOS Request Trend
+                        SOS Overview
                     </h3>
 
                     <span>
-                        Recent Period
+                        Current data
                     </span>
 
                 </div>
 
 
-                <div class="chart">
+                <div class="info-box">
+
+                    <h4>
+                        Emergency Response System
+                    </h4>
+
+                    <p>
+                        HemoHub monitors blood requests, donor
+                        responses and completed donations to
+                        measure the effectiveness of emergency
+                        blood matching.
+                    </p>
+
+                </div>
 
 
-                    <div class="bar-item">
-
-                        <div class="bar-value">
-                            18
-                        </div>
-
-                        <div class="bar"
-                             style="height: 45%;">
-                        </div>
-
-                        <div class="bar-label">
-                            Mon
-                        </div>
-
-                    </div>
+                <br>
 
 
-                    <div class="bar-item">
+                <div class="info-box">
 
-                        <div class="bar-value">
-                            25
-                        </div>
+                    <h4>
+                        Successful Matching
+                    </h4>
 
-                        <div class="bar"
-                             style="height: 62%;">
-                        </div>
-
-                        <div class="bar-label">
-                            Tue
-                        </div>
-
-                    </div>
-
-
-                    <div class="bar-item">
-
-                        <div class="bar-value">
-                            21
-                        </div>
-
-                        <div class="bar"
-                             style="height: 52%;">
-                        </div>
-
-                        <div class="bar-label">
-                            Wed
-                        </div>
-
-                    </div>
-
-
-                    <div class="bar-item">
-
-                        <div class="bar-value">
-                            32
-                        </div>
-
-                        <div class="bar"
-                             style="height: 80%;">
-                        </div>
-
-                        <div class="bar-label">
-                            Thu
-                        </div>
-
-                    </div>
-
-
-                    <div class="bar-item">
-
-                        <div class="bar-value">
-                            27
-                        </div>
-
-                        <div class="bar"
-                             style="height: 67%;">
-                        </div>
-
-                        <div class="bar-label">
-                            Fri
-                        </div>
-
-                    </div>
-
-
-                    <div class="bar-item">
-
-                        <div class="bar-value">
-                            36
-                        </div>
-
-                        <div class="bar"
-                             style="height: 90%;">
-                        </div>
-
-                        <div class="bar-label">
-                            Sat
-                        </div>
-
-                    </div>
-
-
-                    <div class="bar-item">
-
-                        <div class="bar-value">
-                            29
-                        </div>
-
-                        <div class="bar"
-                             style="height: 72%;">
-                        </div>
-
-                        <div class="bar-label">
-                            Sun
-                        </div>
-
-                    </div>
-
+                    <p>
+                        Successful matches are calculated from
+                        donor responses recorded against blood
+                        requests.
+                    </p>
 
                 </div>
 
@@ -1252,7 +1110,7 @@
                         </strong>
 
                         <span>
-                            {{ match_success_rate or 0 }}%
+                            {{ match_success_rate|default:0 }}%
                         </span>
 
                     </div>
@@ -1261,7 +1119,7 @@
                     <div class="progress">
 
                         <div class="progress-bar"
-                             style="width: {{ match_success_rate or 0 }}%;">
+                             style="width: {{ match_success_rate|default:0 }}%;">
                         </div>
 
                     </div>
@@ -1288,7 +1146,7 @@
                         </strong>
 
                         <span>
-                            {{ donor_response_rate or 0 }}%
+                            {{ donor_response_rate|default:0 }}%
                         </span>
 
                     </div>
@@ -1297,7 +1155,7 @@
                     <div class="progress">
 
                         <div class="progress-bar"
-                             style="width: {{ donor_response_rate or 0 }}%;">
+                             style="width: {{ donor_response_rate|default:0 }}%;">
                         </div>
 
                     </div>
@@ -1305,7 +1163,7 @@
 
                     <div class="performance-description">
 
-                        Donors responding to emergency notifications.
+                        Donor responses recorded for blood requests.
 
                     </div>
 
@@ -1324,7 +1182,7 @@
                         </strong>
 
                         <span>
-                            {{ completion_rate or 0 }}%
+                            {{ completion_rate|default:0 }}%
                         </span>
 
                     </div>
@@ -1333,7 +1191,7 @@
                     <div class="progress">
 
                         <div class="progress-bar"
-                             style="width: {{ completion_rate or 0 }}%;">
+                             style="width: {{ completion_rate|default:0 }}%;">
                         </div>
 
                     </div>
@@ -1341,7 +1199,7 @@
 
                     <div class="performance-description">
 
-                        Emergency requests completed successfully.
+                        Blood requests completed successfully.
 
                     </div>
 
@@ -1413,19 +1271,19 @@
                         <tr>
 
                             <td>
-                                Average Matching Time
+                                Match Success Rate
                             </td>
 
                             <td>
-                                {{ average_matching_time or "—" }}
+                                {{ match_success_rate|default:0 }}%
                             </td>
 
                             <td>
-                                Under 5 min
+                                Higher
                             </td>
 
                             <td class="success">
-                                Good
+                                Active
                             </td>
 
                         </tr>
@@ -1434,19 +1292,19 @@
                         <tr>
 
                             <td>
-                                Average Donor Response
+                                Donor Response Rate
                             </td>
 
                             <td>
-                                {{ average_response_time or "—" }}
+                                {{ donor_response_rate|default:0 }}%
                             </td>
 
                             <td>
-                                Under 2 min
+                                Higher
                             </td>
 
                             <td class="success">
-                                Good
+                                Active
                             </td>
 
                         </tr>
@@ -1459,7 +1317,7 @@
                             </td>
 
                             <td>
-                                {{ successful_matches or 0 }}
+                                {{ successful_matches|default:0 }}
                             </td>
 
                             <td>
@@ -1480,7 +1338,7 @@
                             </td>
 
                             <td>
-                                {{ failed_requests or 0 }}
+                                {{ failed_requests|default:0 }}
                             </td>
 
                             <td>
@@ -1501,7 +1359,7 @@
                             </td>
 
                             <td>
-                                {{ successful_donations or 0 }}
+                                {{ successful_donations|default:0 }}
                             </td>
 
                             <td>
@@ -1551,140 +1409,57 @@
             <div class="blood-grid">
 
 
-                <div class="blood-card">
+                {% for group, count in blood_group_demand.items %}
 
-                    <strong>
-                        O+
-                    </strong>
+                    <div class="blood-card">
 
-                    <span>
-                        42 Requests
-                    </span>
+                        <strong>
+                            {{ group }}
+                        </strong>
 
-                    <small>
-                        High demand
-                    </small>
+                        <span>
+                            {{ count }} Requests
+                        </span>
 
-                </div>
+                        {% if count >= 10 %}
 
+                            <small>
+                                High demand
+                            </small>
 
-                <div class="blood-card">
+                        {% elif count >= 5 %}
 
-                    <strong>
-                        B+
-                    </strong>
+                            <small>
+                                Moderate demand
+                            </small>
 
-                    <span>
-                        35 Requests
-                    </span>
+                        {% else %}
 
-                    <small>
-                        High demand
-                    </small>
+                            <small>
+                                Low demand
+                            </small>
 
-                </div>
+                        {% endif %}
 
+                    </div>
 
-                <div class="blood-card">
+                {% empty %}
 
-                    <strong>
-                        A+
-                    </strong>
+                    <div class="info-box">
 
-                    <span>
-                        29 Requests
-                    </span>
+                        <h4>
+                            No blood group data
+                        </h4>
 
-                    <small>
-                        Moderate demand
-                    </small>
+                        <p>
+                            Blood group demand information will
+                            appear here when blood requests are
+                            created.
+                        </p>
 
-                </div>
+                    </div>
 
-
-                <div class="blood-card">
-
-                    <strong>
-                        AB+
-                    </strong>
-
-                    <span>
-                        14 Requests
-                    </span>
-
-                    <small>
-                        Moderate demand
-                    </small>
-
-                </div>
-
-
-                <div class="blood-card">
-
-                    <strong>
-                        O-
-                    </strong>
-
-                    <span>
-                        9 Requests
-                    </span>
-
-                    <small>
-                        Rare group
-                    </small>
-
-                </div>
-
-
-                <div class="blood-card">
-
-                    <strong>
-                        B-
-                    </strong>
-
-                    <span>
-                        7 Requests
-                    </span>
-
-                    <small>
-                        Rare group
-                    </small>
-
-                </div>
-
-
-                <div class="blood-card">
-
-                    <strong>
-                        A-
-                    </strong>
-
-                    <span>
-                        6 Requests
-                    </span>
-
-                    <small>
-                        Rare group
-                    </small>
-
-                </div>
-
-
-                <div class="blood-card">
-
-                    <strong>
-                        AB-
-                    </strong>
-
-                    <span>
-                        3 Requests
-                    </span>
-
-                    <small>
-                        Rare group
-                    </small>
-
-                </div>
+                {% endfor %}
 
 
             </div>
@@ -1693,10 +1468,10 @@
         </section>
 
 
+
     </main>
 
 
 </body>
 
 </html>
- 

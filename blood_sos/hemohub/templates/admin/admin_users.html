@@ -1,4 +1,3 @@
- html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -415,19 +414,12 @@
         }
 
 
-        .user-email {
+        .user-username {
             color: #777;
 
             font-size: 11px;
 
             margin-top: 3px;
-        }
-
-
-        .blood {
-            color: #c62828;
-
-            font-weight: 700;
         }
 
 
@@ -459,13 +451,6 @@
             background: #fff3e0;
 
             color: #d26900;
-        }
-
-
-        .hospital {
-            background: #eeeefb;
-
-            color: #5555a5;
         }
 
 
@@ -555,7 +540,7 @@
             display: grid;
 
             grid-template-columns:
-                repeat(3, 1fr);
+                repeat(2, 1fr);
 
             gap: 15px;
         }
@@ -611,6 +596,21 @@
             cursor: pointer;
 
             font-size: 11px;
+        }
+
+
+        /* =========================
+           NO USERS
+        ========================= */
+
+        .no-users {
+            text-align: center;
+
+            padding: 30px;
+
+            color: #888;
+
+            font-size: 13px;
         }
 
 
@@ -746,7 +746,9 @@
 
             <h2>HemoHub</h2>
 
-            <p>Smart Blood Emergency System</p>
+            <p>
+                Smart Blood Emergency System
+            </p>
 
         </div>
 
@@ -763,7 +765,7 @@
             </a>
 
 
-            <a href="admin_users"
+            <a href="{% url 'admin_users' %}"
                class="active">
 
                 <span class="menu-icon">♙</span>
@@ -791,24 +793,6 @@
             </a>
 
 
-            <a href="admin_alerts">
-
-                <span class="menu-icon">🔔</span>
-
-                Alerts
-
-            </a>
-
-
-            <a href="admin_profile">
-
-                <span class="menu-icon">◉</span>
-
-                Profile
-
-            </a>
-
-
         </nav>
 
 
@@ -832,17 +816,21 @@
     <main class="main">
 
 
-        <!-- HEADER -->
+        <!-- =========================
+             HEADER
+        ========================== -->
 
         <div class="topbar">
 
 
             <div class="heading">
 
-                <h1>User Management</h1>
+                <h1>
+                    User Management
+                </h1>
 
                 <p>
-                    Manage donors, needers, hospitals and user verification.
+                    Manage donors, needers and user verification.
                 </p>
 
             </div>
@@ -859,7 +847,7 @@
                 <div class="admin-info">
 
                     <strong>
-                        {{ name or "Administrator" }}
+                        {{ name|default:"Administrator" }}
                     </strong>
 
                     <span>
@@ -885,10 +873,12 @@
 
             <div class="stat">
 
-                <p>Total Users</p>
+                <p>
+                    Total Users
+                </p>
 
                 <h2>
-                    {{ total_users or 0 }}
+                    {{ total_users|default:0 }}
                 </h2>
 
                 <small>
@@ -900,10 +890,12 @@
 
             <div class="stat">
 
-                <p>Donors</p>
+                <p>
+                    Donors
+                </p>
 
                 <h2>
-                    {{ total_donors or 0 }}
+                    {{ total_donors|default:0 }}
                 </h2>
 
                 <small>
@@ -915,10 +907,12 @@
 
             <div class="stat">
 
-                <p>Needers</p>
+                <p>
+                    Needers
+                </p>
 
                 <h2>
-                    {{ total_needers or 0 }}
+                    {{ total_needers|default:0 }}
                 </h2>
 
                 <small>
@@ -930,10 +924,12 @@
 
             <div class="stat">
 
-                <p>Pending Verification</p>
+                <p>
+                    Pending Verification
+                </p>
 
                 <h2>
-                    {{ pending_verification or 0 }}
+                    {{ pending_verification|default:0 }}
                 </h2>
 
                 <small>
@@ -962,7 +958,7 @@
                     <input
                         type="text"
                         id="searchInput"
-                        placeholder="Search by name, email or mobile..."
+                        placeholder="Search by name or username..."
                         onkeyup="searchUsers()">
 
                 </div>
@@ -975,16 +971,12 @@
                         All Users
                     </option>
 
-                    <option value="Donor">
+                    <option value="donor">
                         Donors
                     </option>
 
-                    <option value="Needer">
+                    <option value="needer">
                         Needers
-                    </option>
-
-                    <option value="Hospital">
-                        Hospitals
                     </option>
 
                 </select>
@@ -1036,7 +1028,7 @@
 
                 <span class="user-count">
 
-                    {{ total_users or 0 }} users
+                    {{ total_users|default:0 }} users
 
                 </span>
 
@@ -1064,11 +1056,7 @@
                             </th>
 
                             <th>
-                                Blood Group
-                            </th>
-
-                            <th>
-                                Location
+                                Age
                             </th>
 
                             <th>
@@ -1096,8 +1084,10 @@
 
                         <tr
                             data-role="{{ user.role }}"
-                            data-status="{{ user.status }}">
+                            data-status="{% if user.is_blocked %}Blocked{% elif user.is_verified %}Verified{% else %}Pending{% endif %}">
 
+
+                            <!-- USER -->
 
                             <td>
 
@@ -1107,37 +1097,34 @@
 
                                 </div>
 
-                                <div class="user-email">
+                                <div class="user-username">
 
-                                    {{ user.email }}
+                                    @{{ user.username }}
 
                                 </div>
 
                             </td>
 
 
+
+                            <!-- ROLE -->
+
                             <td>
 
 
-                                {% if user.role == "Donor" %}
+                                {% if user.role == "donor" %}
 
                                 <span class="badge donor">
                                     Donor
                                 </span>
 
 
-                                {% elif user.role == "Needer" %}
+                                {% elif user.role == "needer" %}
 
                                 <span class="badge needer">
                                     Needer
                                 </span>
 
-
-                                {% else %}
-
-                                <span class="badge hospital">
-                                    Hospital
-                                </span>
 
                                 {% endif %}
 
@@ -1145,24 +1132,23 @@
                             </td>
 
 
-                            <td class="blood">
 
-                                {{ user.blood_group or "—" }}
+                            <!-- AGE -->
+
+                            <td>
+
+                                {{ user.age }}
 
                             </td>
 
 
-                            <td>
 
-                                {{ user.location or "—" }}
-
-                            </td>
-
+                            <!-- VERIFICATION -->
 
                             <td>
 
 
-                                {% if user.verified %}
+                                {% if user.is_verified %}
 
                                 <span class="badge verified">
                                     Verified
@@ -1181,10 +1167,13 @@
                             </td>
 
 
+
+                            <!-- STATUS -->
+
                             <td>
 
 
-                                {% if user.blocked %}
+                                {% if user.is_blocked %}
 
                                 <span class="badge blocked">
                                     Blocked
@@ -1203,6 +1192,9 @@
                             </td>
 
 
+
+                            <!-- ACTIONS -->
+
                             <td>
 
 
@@ -1218,7 +1210,8 @@
                                     </button>
 
 
-                                    {% if not user.verified %}
+
+                                    {% if not user.is_verified %}
 
                                     <button
                                         class="btn verify-btn"
@@ -1231,7 +1224,8 @@
                                     {% endif %}
 
 
-                                    {% if user.blocked %}
+
+                                    {% if user.is_blocked %}
 
                                     <button
                                         class="btn verify-btn"
@@ -1264,206 +1258,15 @@
                         </tr>
 
 
-                        {% else %}
-
-
-                        <!-- DEMO ROWS -->
-
-                        <tr>
-
-                            <td>
-
-                                <div class="user-name">
-                                    Arjun Kumar
-                                </div>
-
-                                <div class="user-email">
-                                    arjun@example.com
-                                </div>
-
-                            </td>
-
-                            <td>
-
-                                <span class="badge donor">
-                                    Donor
-                                </span>
-
-                            </td>
-
-                            <td class="blood">
-                                O+
-                            </td>
-
-                            <td>
-                                Coimbatore
-                            </td>
-
-                            <td>
-
-                                <span class="badge verified">
-                                    Verified
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                <span class="badge verified">
-                                    Active
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                <div class="actions">
-
-                                    <button
-                                        class="btn view-btn">
-                                        View
-                                    </button>
-
-                                    <button
-                                        class="btn block-btn">
-                                        Block
-                                    </button>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
+                        {% empty %}
 
 
                         <tr>
 
-                            <td>
+                            <td colspan="6"
+                                class="no-users">
 
-                                <div class="user-name">
-                                    Priya S
-                                </div>
-
-                                <div class="user-email">
-                                    priya@example.com
-                                </div>
-
-                            </td>
-
-                            <td>
-
-                                <span class="badge needer">
-                                    Needer
-                                </span>
-
-                            </td>
-
-                            <td class="blood">
-                                B+
-                            </td>
-
-                            <td>
-                                Coimbatore
-                            </td>
-
-                            <td>
-
-                                <span class="badge pending">
-                                    Pending
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                <span class="badge verified">
-                                    Active
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                <div class="actions">
-
-                                    <button
-                                        class="btn view-btn">
-                                        View
-                                    </button>
-
-                                    <button
-                                        class="btn verify-btn">
-                                        Verify
-                                    </button>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td>
-
-                                <div class="user-name">
-                                    City Care Hospital
-                                </div>
-
-                                <div class="user-email">
-                                    hospital@example.com
-                                </div>
-
-                            </td>
-
-                            <td>
-
-                                <span class="badge hospital">
-                                    Hospital
-                                </span>
-
-                            </td>
-
-                            <td class="blood">
-                                —
-                            </td>
-
-                            <td>
-                                Coimbatore
-                            </td>
-
-                            <td>
-
-                                <span class="badge pending">
-                                    Pending
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                <span class="badge verified">
-                                    Active
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                <div class="actions">
-
-                                    <button
-                                        class="btn view-btn">
-                                        View
-                                    </button>
-
-                                    <button
-                                        class="btn verify-btn">
-                                        Verify
-                                    </button>
-
-                                </div>
+                                No registered users found.
 
                             </td>
 
@@ -1487,33 +1290,43 @@
 
 
         <!-- =========================
-             VERIFICATION
+             VERIFICATION OVERVIEW
         ========================== -->
 
         <section class="panel">
 
 
             <h3 class="verification-title">
+
                 Verification Overview
+
             </h3>
 
 
             <div class="verification-grid">
 
 
+                <!-- DONOR -->
+
                 <div class="verification-card">
+
 
                     <h4>
                         Donor Verification
                     </h4>
 
+
                     <p>
                         Blood donors waiting for identity verification.
                     </p>
 
+
                     <div class="number">
-                        {{ pending_donors or 0 }}
+
+                        {{ pending_donors|default:0 }}
+
                     </div>
+
 
                     <button
                         class="review-btn"
@@ -1523,23 +1336,32 @@
 
                     </button>
 
+
                 </div>
 
 
 
+                <!-- NEEDER -->
+
                 <div class="verification-card">
+
 
                     <h4>
                         Needer Verification
                     </h4>
 
+
                     <p>
                         Requesters requiring account verification.
                     </p>
 
+
                     <div class="number">
-                        {{ pending_needers or 0 }}
+
+                        {{ pending_needers|default:0 }}
+
                     </div>
+
 
                     <button
                         class="review-btn"
@@ -1549,31 +1371,6 @@
 
                     </button>
 
-                </div>
-
-
-
-                <div class="verification-card">
-
-                    <h4>
-                        Hospital Verification
-                    </h4>
-
-                    <p>
-                        Hospitals waiting for administrator approval.
-                    </p>
-
-                    <div class="number">
-                        {{ pending_hospitals or 0 }}
-                    </div>
-
-                    <button
-                        class="review-btn"
-                        onclick="reviewVerification('Hospital')">
-
-                        Review Hospitals
-
-                    </button>
 
                 </div>
 
@@ -1595,16 +1392,22 @@
     <script>
 
 
+        /* =========================
+           SEARCH USERS
+        ========================= */
+
         function searchUsers() {
 
             const input =
                 document.getElementById("searchInput")
                 .value
-                .toLowerCase();
+                .toLowerCase()
+                .trim();
+
 
             const rows =
                 document.querySelectorAll(
-                    "#usersTable tbody tr"
+                    "#usersTable tbody tr[data-role]"
                 );
 
 
@@ -1612,6 +1415,7 @@
 
                 const text =
                     row.innerText.toLowerCase();
+
 
                 if (text.includes(input)) {
 
@@ -1629,10 +1433,15 @@
 
 
 
+        /* =========================
+           FILTER USERS
+        ========================= */
+
         function filterUsers() {
 
             const role =
                 document.getElementById("roleFilter").value;
+
 
             const status =
                 document.getElementById("statusFilter").value;
@@ -1640,25 +1449,27 @@
 
             const rows =
                 document.querySelectorAll(
-                    "#usersTable tbody tr"
+                    "#usersTable tbody tr[data-role]"
                 );
 
 
             rows.forEach(function(row) {
 
+
                 const rowRole =
                     row.getAttribute("data-role");
+
 
                 const rowStatus =
                     row.getAttribute("data-status");
 
 
-                let roleMatch =
+                const roleMatch =
                     role === "all" ||
                     rowRole === role;
 
 
-                let statusMatch =
+                const statusMatch =
                     status === "all" ||
                     rowStatus === status;
 
@@ -1679,15 +1490,23 @@
 
 
 
+        /* =========================
+           VIEW USER
+        ========================= */
+
         function viewUser(id) {
 
             alert(
-                "Viewing user: " + id
+                "Viewing user ID: " + id
             );
 
         }
 
 
+
+        /* =========================
+           VERIFY USER
+        ========================= */
 
         function verifyUser(id) {
 
@@ -1698,7 +1517,9 @@
             ) {
 
                 alert(
-                    "User " + id + " verified successfully."
+                    "User " +
+                    id +
+                    " verification request selected."
                 );
 
             }
@@ -1706,6 +1527,10 @@
         }
 
 
+
+        /* =========================
+           BLOCK USER
+        ========================= */
 
         function blockUser(id) {
 
@@ -1716,7 +1541,9 @@
             ) {
 
                 alert(
-                    "User " + id + " has been blocked."
+                    "User " +
+                    id +
+                    " block request selected."
                 );
 
             }
@@ -1724,6 +1551,10 @@
         }
 
 
+
+        /* =========================
+           UNBLOCK USER
+        ========================= */
 
         function unblockUser(id) {
 
@@ -1734,7 +1565,9 @@
             ) {
 
                 alert(
-                    "User " + id + " has been unblocked."
+                    "User " +
+                    id +
+                    " unblock request selected."
                 );
 
             }
@@ -1743,10 +1576,14 @@
 
 
 
+        /* =========================
+           VERIFICATION REVIEW
+        ========================= */
+
         function reviewVerification(type) {
 
             alert(
-                "Opening " +
+                "Showing pending " +
                 type +
                 " verification requests."
             );
@@ -1760,4 +1597,3 @@
 </body>
 
 </html>
- 
