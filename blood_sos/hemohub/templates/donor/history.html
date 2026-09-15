@@ -1,411 +1,425 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation History | SOS Blood Bank</title>
 
-<meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+        body {
+            background: #f5f7fb;
+            color: #222;
+        }
 
-<title>HemoHub - Donation History</title>
+        .navbar {
+            height: 70px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            border-bottom: 1px solid #e5e7eb;
+        }
 
-<style>
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: #d62828;
+        }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial;
-}
+        .logo span {
+            display: block;
+            font-size: 11px;
+            color: #777;
+            font-weight: 500;
+        }
 
-body {
-    background: #f4f7fb;
-    color: #172b4d;
-}
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
 
-.sidebar {
-    position: fixed;
-    width: 240px;
-    height: 100vh;
-    background: #0b1f3a;
-    color: white;
-    padding: 25px 15px;
-}
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-size: 14px;
+            font-weight: 500;
+        }
 
-.logo {
-    text-align: center;
-    font-size: 25px;
-    font-weight: bold;
-    margin-bottom: 35px;
-}
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #d62828;
+        }
 
-.logo span {
-    color: #e53935;
-}
+        .profile-btn {
+            text-decoration: none;
+            background: #f3f4f6;
+            color: #333;
+            padding: 9px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
 
-.menu a {
-    display: block;
-    color: white;
-    text-decoration: none;
-    padding: 14px;
-    margin: 8px 0;
-    border-radius: 8px;
-}
+        .container {
+            max-width: 1200px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
 
-.menu a:hover,
-.menu .active {
-    background: #c62828;
-}
+        .page-header {
+            margin-bottom: 25px;
+        }
 
-.main {
-    margin-left: 240px;
-    padding: 30px;
-}
+        .page-header h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
 
-.stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin: 25px 0;
-}
+        .page-header p {
+            color: #777;
+            font-size: 14px;
+        }
 
-.stat {
-    background: white;
-    padding: 22px;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px #00000015;
-}
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
 
-.stat h3 {
-    color: #667085;
-}
+        .stat-card {
+            background: #ffffff;
+            padding: 22px;
+            border-radius: 14px;
+            border: 1px solid #e8e8e8;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
 
-.number {
-    font-size: 30px;
-    font-weight: bold;
-    margin-top: 10px;
-    color: #c62828;
-}
+        .stat-title {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
 
-.table-container {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px #00000015;
-    overflow-x: auto;
-}
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #d62828;
+        }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
+        .history-card {
+            background: #ffffff;
+            border-radius: 14px;
+            border: 1px solid #e8e8e8;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
 
-th,
-td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-}
+        .card-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid #eeeeee;
+        }
 
-th {
-    background: #f8f9fb;
-}
+        .card-header h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
 
-.success {
-    color: green;
-    font-weight: bold;
-}
+        .card-header p {
+            color: #777;
+            font-size: 13px;
+        }
 
-.view {
-    padding: 7px 12px;
-    background: #0b1f3a;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
+        .table-wrapper {
+            overflow-x: auto;
+        }
 
-@media(max-width:700px) {
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-    .sidebar {
-        display: none;
-    }
+        th,
+        td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid #eeeeee;
+            font-size: 14px;
+        }
 
-    .main {
-        margin-left: 0;
-    }
+        th {
+            background: #fafafa;
+            color: #555;
+            font-size: 13px;
+            font-weight: 600;
+        }
 
-    .stats {
-        grid-template-columns: 1fr;
-    }
+        td {
+            color: #444;
+        }
 
-}
+        tr:last-child td {
+            border-bottom: none;
+        }
 
-</style>
+        .blood-badge {
+            display: inline-block;
+            background: #fff0f0;
+            color: #d62828;
+            padding: 6px 10px;
+            border-radius: 7px;
+            font-weight: 700;
+            font-size: 13px;
+        }
 
+        .status {
+            display: inline-block;
+            background: #eaf8ef;
+            color: #18864b;
+            padding: 6px 11px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 55px 20px;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 8px;
+            font-size: 20px;
+        }
+
+        .empty-state p {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            background: #d62828;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .back-btn:hover {
+            background: #b91f1f;
+        }
+
+        @media (max-width: 800px) {
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                margin-top: 25px;
+            }
+
+            .page-header h1 {
+                font-size: 25px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
+    <!-- NAVBAR -->
+    <div class="navbar">
 
-<div class="sidebar">
+        <div class="logo">
+            SOS BLOOD BANK
+            <span>Save Lives • Donate Blood</span>
+        </div>
 
-<div class="logo">
-Hemo<span>Hub</span>
-</div>
+        <div class="nav-links">
+            <a href="{% url 'donor_dashboard' %}">Dashboard</a>
+            <a href="{% url 'blood_radar' %}">Blood Radar</a>
+            <a href="{% url 'donor_requests' %}">Requests</a>
+            <a href="{% url 'donor_alerts' %}">Alerts</a>
+            <a href="{% url 'donation_history' %}" class="active">History</a>
+        </div>
 
-<div class="menu">
+        <a href="{% url 'donor_profile' %}" class="profile-btn">
+            Profile
+        </a>
 
-<a href="dashboard.html">
-🏠 Dashboard
-</a>
+    </div>
 
-<a href="profile.html">
-👤 Profile
-</a>
 
-<a href="radar.html">
-📍 Blood Radar
-</a>
+    <!-- MAIN CONTENT -->
+    <div class="container">
 
-<a href="requests.html">
-🩸 Requests
-</a>
+        <div class="page-header">
+            <h1>Donation History</h1>
+            <p>View your completed blood donation records.</p>
+        </div>
 
-<a href="alerts.html">
-🔔 Alerts
-</a>
 
-<a href="#" class="active">
-📋 History
-</a>
+        <!-- STATS -->
+        <div class="stats">
 
-<a href="#">
-🚪 Logout
-</a>
+            <div class="stat-card">
+                <div class="stat-title">
+                    Total Donations
+                </div>
 
-</div>
+                <div class="stat-value">
+                    {{ total_donations }}
+                </div>
+            </div>
 
-</div>
 
+            <div class="stat-card">
+                <div class="stat-title">
+                    Estimated Lives Helped
+                </div>
 
-<div class="main">
+                <div class="stat-value">
+                    {{ lives_helped }}
+                </div>
+            </div>
 
-<h1>📋 Donation History</h1>
 
-<p>
-Track your previous blood donations.
-</p>
+            <div class="stat-card">
+                <div class="stat-title">
+                    Last Donation
+                </div>
 
+                <div class="stat-value" style="font-size: 20px;">
 
-<div class="stats">
+                    {% if last_donation %}
+                        {{ last_donation.donation_date|date:"d M Y" }}
+                    {% else %}
+                        No Donations
+                    {% endif %}
 
-<div class="stat">
+                </div>
+            </div>
 
-<h3>Total Donations</h3>
+        </div>
 
-<div class="number">
-5
-</div>
 
-</div>
+        <!-- HISTORY TABLE -->
+        <div class="history-card">
 
+            <div class="card-header">
+                <h2>Your Donation Records</h2>
+                <p>All donation records stored in your account.</p>
+            </div>
 
-<div class="stat">
 
-<h3>Lives Helped</h3>
+            {% if history %}
 
-<div class="number">
-15+
-</div>
+            <div class="table-wrapper">
 
-</div>
+                <table>
 
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Blood Group</th>
+                            <th>Hospital</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
 
-<div class="stat">
+                    <tbody>
 
-<h3>Last Donation</h3>
+                        {% for donation in history %}
 
-<div class="number"
-style="font-size:22px;">
+                        <tr>
 
-15 Aug 2026
+                            <td>
+                                {{ donation.donation_date|date:"d M Y" }}
+                            </td>
 
-</div>
+                            <td>
+                                <span class="blood-badge">
+                                    {{ donation.blood_group }}
+                                </span>
+                            </td>
 
-</div>
+                            <td>
+                                {{ donation.hospital }}
+                            </td>
 
-</div>
+                            <td>
+                                {{ donation.location }}
+                            </td>
 
+                            <td>
+                                <span class="status">
+                                    {{ donation.status }}
+                                </span>
+                            </td>
 
-<div class="table-container">
+                        </tr>
 
-<table>
+                        {% endfor %}
 
-<thead>
+                    </tbody>
 
-<tr>
+                </table>
 
-<th>Date</th>
+            </div>
 
-<th>Blood Group</th>
+            {% else %}
 
-<th>Hospital</th>
+            <!-- EMPTY STATE -->
 
-<th>Location</th>
+            <div class="empty-state">
 
-<th>Status</th>
+                <div class="empty-icon">
+                    🩸
+                </div>
 
-<th>Action</th>
+                <h3>No Donation History</h3>
 
-</tr>
+                <p>
+                    You haven't donated blood yet.
+                    Your completed donations will appear here.
+                </p>
 
-</thead>
+                <a href="{% url 'donor_dashboard' %}" class="back-btn">
+                    Back to Dashboard
+                </a>
 
+            </div>
 
-<tbody id="historyTable">
+            {% endif %}
 
+        </div>
 
-<tr>
-
-<td>15 Aug 2026</td>
-
-<td>O+</td>
-
-<td>KG Hospital</td>
-
-<td>Coimbatore</td>
-
-<td class="success">
-Completed
-</td>
-
-<td>
-
-<button
-class="view"
-onclick="viewDonation('15 Aug 2026','KG Hospital')">
-
-View
-
-</button>
-
-</td>
-
-</tr>
-
-
-<tr>
-
-<td>20 May 2026</td>
-
-<td>O+</td>
-
-<td>PSG Hospital</td>
-
-<td>Coimbatore</td>
-
-<td class="success">
-Completed
-</td>
-
-<td>
-
-<button
-class="view"
-onclick="viewDonation('20 May 2026','PSG Hospital')">
-
-View
-
-</button>
-
-</td>
-
-</tr>
-
-
-<tr>
-
-<td>10 Feb 2026</td>
-
-<td>O+</td>
-
-<td>KMCH</td>
-
-<td>Coimbatore</td>
-
-<td class="success">
-Completed
-</td>
-
-<td>
-
-<button
-class="view"
-onclick="viewDonation('10 Feb 2026','KMCH')">
-
-View
-
-</button>
-
-</td>
-
-</tr>
-
-
-<tr>
-
-<td>15 Nov 2025</td>
-
-<td>O+</td>
-
-<td>Government Hospital</td>
-
-<td>Coimbatore</td>
-
-<td class="success">
-Completed
-</td>
-
-<td>
-
-<button
-class="view"
-onclick="viewDonation('15 Nov 2025','Government Hospital')">
-
-View
-
-</button>
-
-</td>
-
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-
-<script>
-
-function viewDonation(date, hospital) {
-
-    alert(
-        "Donation Details\n\n" +
-        "Date: " + date +
-        "\nHospital: " + hospital +
-        "\nStatus: Completed"
-    );
-
-}
-
-</script>
+    </div>
 
 </body>
-
 </html>

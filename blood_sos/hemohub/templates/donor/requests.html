@@ -1,444 +1,919 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-<title>HemoHub - Blood Requests</title>
+    <title>Blood Requests | HemoHub</title>
 
-<style>
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial;
-}
+    <style>
 
-body {
-    background: #f4f7fb;
-    color: #172b4d;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
 
-.sidebar {
-    position: fixed;
-    width: 240px;
-    height: 100vh;
-    background: #0b1f3a;
-    color: white;
-    padding: 25px 15px;
-}
 
-.logo {
-    text-align: center;
-    font-size: 25px;
-    font-weight: bold;
-    margin-bottom: 35px;
-}
+        body {
+            background: #f5f7fb;
+            color: #222;
+        }
 
-.logo span {
-    color: #e53935;
-}
 
-.menu a {
-    display: block;
-    color: white;
-    text-decoration: none;
-    padding: 14px;
-    margin: 8px 0;
-    border-radius: 8px;
-}
+        /* =================================================
+           SIDEBAR
+        ================================================= */
 
-.menu a:hover,
-.menu .active {
-    background: #c62828;
-}
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            padding: 25px 18px;
+        }
 
-.main {
-    margin-left: 240px;
-    padding: 30px;
-}
 
-.filters {
-    margin: 20px 0;
-}
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #d62828;
+            margin-bottom: 35px;
+            padding-left: 12px;
+        }
 
-.filters button {
-    border: none;
-    padding: 10px 17px;
-    margin-right: 8px;
-    border-radius: 7px;
-    cursor: pointer;
-    background: white;
-    color: #172b4d;
-}
 
-.filters button.active,
-.filters button:hover {
-    background: #c62828;
-    color: white;
-}
+        .logo span {
+            display: block;
+            font-size: 12px;
+            color: #777;
+            font-weight: 400;
+            margin-top: 4px;
+        }
 
-.request-card {
-    background: white;
-    padding: 22px;
-    border-radius: 12px;
-    margin-bottom: 18px;
-    box-shadow: 0 3px 10px #00000015;
-}
 
-.header {
-    display: flex;
-    justify-content: space-between;
-}
+        .nav a {
+            display: block;
+            text-decoration: none;
+            color: #555;
+            padding: 13px 15px;
+            margin-bottom: 7px;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
 
-.blood {
-    font-size: 25px;
-    color: #c62828;
-    font-weight: bold;
-}
 
-.badge {
-    padding: 7px 12px;
-    border-radius: 15px;
-    font-size: 12px;
-    font-weight: bold;
-}
+        .nav a:hover,
+        .nav a.active {
+            background: #ffe5e5;
+            color: #d62828;
+        }
 
-.critical {
-    background: #ffe0e0;
-    color: #c62828;
-}
 
-.urgent {
-    background: #fff0d9;
-    color: #a05a00;
-}
+        .logout {
+            position: absolute;
+            bottom: 25px;
+            left: 18px;
+            right: 18px;
+        }
 
-.normal {
-    background: #e5f7e9;
-    color: green;
-}
 
-.info {
-    margin: 12px 0;
-    color: #667085;
-}
+        .logout a {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            background: #f3f4f6;
+            color: #555;
+            text-decoration: none;
+            border-radius: 10px;
+        }
 
-.respond {
-    background: #c62828;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 7px;
-    cursor: pointer;
-}
 
-.respond:hover {
-    background: #a91f1f;
-}
+        /* =================================================
+           MAIN
+        ================================================= */
 
-@media(max-width: 700px) {
+        .main {
+            margin-left: 250px;
+            padding: 35px;
+        }
 
-    .sidebar {
-        display: none;
-    }
 
-    .main {
-        margin-left: 0;
-    }
+        .page-header {
+            margin-bottom: 25px;
+        }
 
-}
 
-</style>
+        .page-header h1 {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+
+        .page-header p {
+            color: #777;
+        }
+
+
+        /* =================================================
+           FILTER BAR
+        ================================================= */
+
+        .filter-box {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 18px;
+            margin-bottom: 25px;
+        }
+
+
+        .filter-form {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+
+        .filter-form label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+        }
+
+
+        .filter-form select {
+            padding: 10px 13px;
+            border: 1px solid #d9dde5;
+            border-radius: 8px;
+            background: white;
+            outline: none;
+        }
+
+
+        .filter-form select:focus {
+            border-color: #d62828;
+        }
+
+
+        .filter-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #d62828;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+
+        .filter-btn:hover {
+            background: #b71c1c;
+        }
+
+
+        /* =================================================
+           REQUEST CARD
+        ================================================= */
+
+        .requests-list {
+            display: grid;
+            gap: 16px;
+        }
+
+
+        .request-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 22px;
+        }
+
+
+        .request-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+
+        .request-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+
+        .blood-badge {
+            background: #ffe5e5;
+            color: #d62828;
+            padding: 7px 11px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+
+        .request-title h2 {
+            font-size: 18px;
+        }
+
+
+        .urgency {
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+
+        .emergency {
+            background: #ffe0e0;
+            color: #c1121f;
+        }
+
+
+        .urgent {
+            background: #fff0d6;
+            color: #b26a00;
+        }
+
+
+        .normal {
+            background: #e7f6ea;
+            color: #218838;
+        }
+
+
+        /* =================================================
+           REQUEST DETAILS
+        ================================================= */
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 13px;
+            padding: 18px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+
+        .detail {
+            font-size: 13px;
+            color: #777;
+        }
+
+
+        .detail strong {
+            display: block;
+            color: #333;
+            margin-top: 3px;
+            font-size: 14px;
+        }
+
+
+        .additional {
+            margin-top: 15px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 9px;
+            font-size: 13px;
+            color: #666;
+        }
+
+
+        /* =================================================
+           BOTTOM
+        ================================================= */
+
+        .request-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 18px;
+            gap: 15px;
+        }
+
+
+        .created {
+            font-size: 12px;
+            color: #888;
+        }
+
+
+        .respond-btn {
+            border: none;
+            background: #d62828;
+            color: white;
+            padding: 11px 20px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+
+        .respond-btn:hover {
+            background: #b71c1c;
+        }
+
+
+        .responded-btn {
+            border: none;
+            background: #e7f6ea;
+            color: #218838;
+            padding: 11px 20px;
+            border-radius: 9px;
+            font-weight: 600;
+            cursor: default;
+        }
+
+
+        /* =================================================
+           EMPTY STATE
+        ================================================= */
+
+        .empty {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 15px;
+            text-align: center;
+            padding: 60px 25px;
+        }
+
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+
+        .empty h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+
+        .empty p {
+            color: #777;
+            font-size: 13px;
+        }
+
+
+        /* =================================================
+           RESPONSIVE
+        ================================================= */
+
+        @media (max-width: 950px) {
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main {
+                margin-left: 200px;
+                padding: 20px;
+            }
+
+            .details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .logout {
+                position: relative;
+                left: auto;
+                right: auto;
+                bottom: auto;
+                margin-top: 20px;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+
+            .request-top {
+                flex-direction: column;
+            }
+
+            .request-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+        }
+
+    </style>
 
 </head>
+
 
 <body>
 
 
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
 <div class="sidebar">
 
-<div class="logo">
-Hemo<span>Hub</span>
+
+    <div class="logo">
+
+        HemoHub
+
+        <span>
+            Blood Donation & Emergency Response
+        </span>
+
+    </div>
+
+
+    <div class="nav">
+
+
+        <a href="{% url 'donor_dashboard' %}">
+            Dashboard
+        </a>
+
+
+        <a href="{% url 'donor_profile' %}">
+            Profile
+        </a>
+
+
+        <a href="{% url 'blood_radar' %}">
+            Blood Radar
+        </a>
+
+
+        <a href="{% url 'donor_requests' %}"
+           class="active">
+            Requests
+        </a>
+
+
+        <a href="{% url 'donor_alerts' %}">
+            Alerts
+        </a>
+
+
+        <a href="{% url 'donation_history' %}">
+            Donation History
+        </a>
+
+
+    </div>
+
+
+    <div class="logout">
+
+        <a href="{% url 'logout_user' %}">
+            Logout
+        </a>
+
+    </div>
+
+
 </div>
 
-<div class="menu">
 
-<a href="dashboard.html">🏠 Dashboard</a>
-
-<a href="profile.html">👤 Profile</a>
-
-<a href="radar.html">📍 Blood Radar</a>
-
-<a href="#" class="active">
-🩸 Requests
-</a>
-
-<a href="alerts.html">🔔 Alerts</a>
-
-<a href="history.html">📋 History</a>
-
-<a href="#">🚪 Logout</a>
-
-</div>
-
-</div>
-
+<!-- =====================================================
+     MAIN
+===================================================== -->
 
 <div class="main">
 
-<h1>Blood Requests</h1>
 
-<p>
-View blood requirements and respond to requests.
-</p>
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <h1>
+            Blood Requests
+        </h1>
+
+        <p>
+            View active blood requests matching your donor profile.
+        </p>
+
+    </div>
 
 
-<div class="filters">
+    <!-- =================================================
+         FILTER
+    ================================================== -->
 
-<button
-class="active"
-onclick="filterRequests('all', this)">
-All
-</button>
+    <div class="filter-box">
 
-<button
-onclick="filterRequests('critical', this)">
-Critical
-</button>
 
-<button
-onclick="filterRequests('urgent', this)">
-Urgent
-</button>
+        <form method="GET"
+              class="filter-form">
 
-<button
-onclick="filterRequests('normal', this)">
-Normal
-</button>
+
+            <label for="status">
+                Filter:
+            </label>
+
+
+            <select
+                id="status"
+                name="status"
+            >
+
+                <option value="all"
+                    {% if status_filter == "all" %}
+                        selected
+                    {% endif %}
+                >
+                    All Requests
+                </option>
+
+
+                <option value="critical"
+                    {% if status_filter == "critical" %}
+                        selected
+                    {% endif %}
+                >
+                    Emergency
+                </option>
+
+
+                <option value="urgent"
+                    {% if status_filter == "urgent" %}
+                        selected
+                    {% endif %}
+                >
+                    Urgent
+                </option>
+
+
+                <option value="normal"
+                    {% if status_filter == "normal" %}
+                        selected
+                    {% endif %}
+                >
+                    Normal
+                </option>
+
+            </select>
+
+
+            <button
+                type="submit"
+                class="filter-btn"
+            >
+                Apply Filter
+            </button>
+
+
+        </form>
+
+    </div>
+
+
+    <!-- =================================================
+         REQUESTS
+    ================================================== -->
+
+    {% if requests_list %}
+
+
+        <div class="requests-list">
+
+
+            {% for blood_request in requests_list %}
+
+
+                <div class="request-card">
+
+
+                    <!-- REQUEST HEADER -->
+
+                    <div class="request-top">
+
+
+                        <div class="request-title">
+
+
+                            <span class="blood-badge">
+
+                                {{ blood_request.blood_group }}
+
+                            </span>
+
+
+                            <h2>
+
+                                {{ blood_request.hospital }}
+
+                            </h2>
+
+
+                            {% if blood_request.urgency == "Emergency" %}
+
+                                <span class="urgency emergency">
+                                    Emergency
+                                </span>
+
+
+                            {% elif blood_request.urgency == "Urgent" %}
+
+                                <span class="urgency urgent">
+                                    Urgent
+                                </span>
+
+
+                            {% else %}
+
+                                <span class="urgency normal">
+                                    Normal
+                                </span>
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- =================================================
+                         DETAILS
+                    ================================================== -->
+
+                    <div class="details">
+
+
+                        <div class="detail">
+
+                            Patient
+
+                            <strong>
+                                {{ blood_request.patient_name }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail">
+
+                            Patient Age
+
+                            <strong>
+                                {{ blood_request.patient_age }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail">
+
+                            Blood Group
+
+                            <strong>
+                                {{ blood_request.blood_group }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail">
+
+                            Units Required
+
+                            <strong>
+                                {{ blood_request.units }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail">
+
+                            Hospital
+
+                            <strong>
+                                {{ blood_request.hospital }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail">
+
+                            Location
+
+                            <strong>
+                                {{ blood_request.location }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail">
+
+                            Request Status
+
+                            <strong>
+                                {{ blood_request.status }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail">
+
+                            Requested On
+
+                            <strong>
+                                {{ blood_request.created_at|date:"d M Y, h:i A" }}
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- =================================================
+                         ADDITIONAL INFO
+                    ================================================== -->
+
+                    {% if blood_request.additional_info %}
+
+                        <div class="additional">
+
+                            <strong>
+                                Additional Information:
+                            </strong>
+
+                            {{ blood_request.additional_info }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- =================================================
+                         BOTTOM
+                    ================================================== -->
+
+                    <div class="request-bottom">
+
+
+                        <div class="created">
+
+                            Request ID:
+                            #{{ blood_request.id }}
+
+                        </div>
+
+
+                        <!-- ALREADY RESPONDED -->
+
+                        {% if blood_request.id in responded_request_ids %}
+
+
+                            <button
+                                type="button"
+                                class="responded-btn"
+                                disabled
+                            >
+
+                                ✓ Responded
+
+                            </button>
+
+
+                        {% else %}
+
+
+                            <!-- RESPOND -->
+
+                            <form
+                                method="POST"
+                                action="{% url 'respond_to_request' blood_request.id %}"
+                            >
+
+                                {% csrf_token %}
+
+
+                                <button
+                                    type="submit"
+                                    class="respond-btn"
+                                >
+
+                                    Respond to Request
+
+                                </button>
+
+
+                            </form>
+
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+    {% else %}
+
+
+        <!-- =================================================
+             EMPTY STATE
+        ================================================== -->
+
+        <div class="empty">
+
+
+            <div class="empty-icon">
+                🩸
+            </div>
+
+
+            <h3>
+                No Blood Requests Found
+            </h3>
+
+
+            <p>
+
+                There are currently no active blood requests
+                matching your selected filter.
+
+            </p>
+
+
+        </div>
+
+
+    {% endif %}
+
 
 </div>
 
 
-<div id="requests">
-
-
-<div class="request-card"
-data-status="critical">
-
-<div class="header">
-
-<div>
-
-<div class="blood">
-O+ Blood Required
-</div>
-
-<h3>KG Hospital</h3>
-
-</div>
-
-<div class="badge critical">
-CRITICAL
-</div>
-
-</div>
-
-<div class="info">
-
-📍 2.3 km away
-
-<br>
-
-👤 Patient: Emergency Case
-
-<br>
-
-🕐 Required: Immediately
-
-</div>
-
-<button
-class="respond"
-onclick="respond('KG Hospital','O+')">
-
-I Can Donate
-
-</button>
-
-</div>
-
-
-<div class="request-card"
-data-status="urgent">
-
-<div class="header">
-
-<div>
-
-<div class="blood">
-A+ Blood Required
-</div>
-
-<h3>PSG Hospital</h3>
-
-</div>
-
-<div class="badge urgent">
-URGENT
-</div>
-
-</div>
-
-<div class="info">
-
-📍 4.1 km away
-
-<br>
-
-👤 Patient: Surgery
-
-<br>
-
-🕐 Required: Today
-
-</div>
-
-<button
-class="respond"
-onclick="respond('PSG Hospital','A+')">
-
-I Can Donate
-
-</button>
-
-</div>
-
-
-<div class="request-card"
-data-status="normal">
-
-<div class="header">
-
-<div>
-
-<div class="blood">
-B+ Blood Required
-</div>
-
-<h3>KMCH</h3>
-
-</div>
-
-<div class="badge normal">
-NORMAL
-</div>
-
-</div>
-
-<div class="info">
-
-📍 8.2 km away
-
-<br>
-
-👤 Patient: Treatment
-
-<br>
-
-🕐 Required: Tomorrow
-
-</div>
-
-<button
-class="respond"
-onclick="respond('KMCH','B+')">
-
-I Can Donate
-
-</button>
-
-</div>
-
-
-</div>
-
-</div>
-
+<!-- =====================================================
+     DJANGO MESSAGES
+===================================================== -->
+
+{% if messages %}
 
 <script>
 
-function filterRequests(status, button) {
+    {% for message in messages %}
 
-    let cards =
-    document.querySelectorAll(".request-card");
+        alert("{{ message|escapejs }}");
 
-    let buttons =
-    document.querySelectorAll(".filters button");
-
-    buttons.forEach(function(btn) {
-
-        btn.classList.remove("active");
-
-    });
-
-    button.classList.add("active");
-
-
-    cards.forEach(function(card) {
-
-        let cardStatus =
-        card.getAttribute("data-status");
-
-        if (
-            status === "all" ||
-            status === cardStatus
-        ) {
-
-            card.style.display = "block";
-
-        } else {
-
-            card.style.display = "none";
-
-        }
-
-    });
-
-}
-
-
-function respond(hospital, blood) {
-
-    let answer =
-    confirm(
-        "Do you want to respond to the " +
-        blood +
-        " blood request at " +
-        hospital +
-        "?"
-    );
-
-    if (answer) {
-
-        alert(
-            "Thank you for volunteering!\n\n" +
-            "Hospital: " +
-            hospital +
-            "\nBlood Group: " +
-            blood
-        );
-
-    }
-
-}
+    {% endfor %}
 
 </script>
 
+{% endif %}
+
+
 </body>
+
 </html>
