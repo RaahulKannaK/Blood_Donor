@@ -1,0 +1,1702 @@
+ html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Analytics | HemoHub</title>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+
+        body {
+            background: #f6f7f9;
+            color: #222;
+        }
+
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 250px;
+            height: 100vh;
+
+            background: #ffffff;
+
+            border-right: 1px solid #e5e5e5;
+
+            padding: 25px 18px;
+
+            z-index: 100;
+        }
+
+
+        .logo {
+            padding: 5px 12px 30px;
+        }
+
+
+        .logo h2 {
+            color: #c62828;
+            font-size: 24px;
+        }
+
+
+        .logo p {
+            color: #777;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+
+        .menu a {
+            text-decoration: none;
+            color: #555;
+
+            padding: 13px 15px;
+
+            border-radius: 9px;
+
+            font-size: 14px;
+
+            transition: 0.2s;
+        }
+
+
+        .menu a:hover {
+            background: #fff1f1;
+            color: #c62828;
+        }
+
+
+        .menu a.active {
+            background: #c62828;
+            color: white;
+        }
+
+
+        .menu-icon {
+            width: 22px;
+            display: inline-block;
+        }
+
+
+        .logout {
+            position: absolute;
+
+            bottom: 25px;
+            left: 18px;
+            right: 18px;
+        }
+
+
+        .logout a {
+            display: block;
+
+            text-align: center;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            text-decoration: none;
+
+            color: #c62828;
+
+            background: #fff1f1;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            margin-left: 250px;
+
+            padding: 28px 32px;
+
+            min-height: 100vh;
+        }
+
+
+        /* =========================
+           TOPBAR
+        ========================= */
+
+        .topbar {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 28px;
+        }
+
+
+        .heading h1 {
+            font-size: 27px;
+        }
+
+
+        .heading p {
+            color: #777;
+
+            font-size: 14px;
+
+            margin-top: 5px;
+        }
+
+
+        .admin-profile {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            background: white;
+
+            padding: 8px 14px;
+
+            border-radius: 10px;
+
+            border: 1px solid #e8e8e8;
+        }
+
+
+        .admin-avatar {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 50%;
+
+            background: #c62828;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-weight: bold;
+        }
+
+
+        .admin-info strong {
+            display: block;
+
+            font-size: 14px;
+        }
+
+
+        .admin-info span {
+            color: #888;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================
+           ANALYTICS CARDS
+        ========================= */
+
+        .stats-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .stat-card {
+            background: white;
+
+            border: 1px solid #e8e8e8;
+
+            border-radius: 12px;
+
+            padding: 20px;
+        }
+
+
+        .stat-card p {
+            color: #777;
+
+            font-size: 13px;
+        }
+
+
+        .stat-card h2 {
+            font-size: 27px;
+
+            margin-top: 8px;
+        }
+
+
+        .stat-card small {
+            display: block;
+
+            color: #999;
+
+            font-size: 11px;
+
+            margin-top: 4px;
+        }
+
+
+        .red {
+            color: #c62828;
+        }
+
+
+        .green {
+            color: #2e7d32;
+        }
+
+
+        .orange {
+            color: #d26900;
+        }
+
+
+        /* =========================
+           PANEL
+        ========================= */
+
+        .panel {
+            background: white;
+
+            border: 1px solid #e8e8e8;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .panel-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+
+        .panel-header h3 {
+            font-size: 17px;
+        }
+
+
+        .panel-header span {
+            color: #888;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           TWO COLUMN
+        ========================= */
+
+        .two-column {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 20px;
+        }
+
+
+        /* =========================
+           BAR CHART
+        ========================= */
+
+        .chart {
+            display: flex;
+
+            align-items: flex-end;
+
+            justify-content: space-around;
+
+            height: 220px;
+
+            padding: 20px 10px 0;
+
+            border-bottom: 1px solid #ddd;
+        }
+
+
+        .bar-item {
+            height: 100%;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: flex-end;
+
+            align-items: center;
+
+            width: 12%;
+        }
+
+
+        .bar {
+            width: 32px;
+
+            background: #c62828;
+
+            border-radius: 5px 5px 0 0;
+
+            min-height: 10px;
+        }
+
+
+        .bar-label {
+            margin-top: 8px;
+
+            color: #777;
+
+            font-size: 10px;
+        }
+
+
+        .bar-value {
+            font-size: 10px;
+
+            margin-bottom: 5px;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================
+           PERFORMANCE
+        ========================= */
+
+        .performance-item {
+            margin-bottom: 22px;
+        }
+
+
+        .performance-item:last-child {
+            margin-bottom: 0;
+        }
+
+
+        .performance-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 8px;
+        }
+
+
+        .performance-header strong {
+            font-size: 13px;
+        }
+
+
+        .performance-header span {
+            font-size: 12px;
+
+            color: #777;
+        }
+
+
+        .progress {
+            height: 9px;
+
+            background: #eeeeee;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+        }
+
+
+        .progress-bar {
+            height: 100%;
+
+            background: #c62828;
+
+            border-radius: 10px;
+        }
+
+
+        .performance-description {
+            color: #999;
+
+            font-size: 10px;
+
+            margin-top: 6px;
+        }
+
+
+        /* =========================
+           MATCHING TABLE
+        ========================= */
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            font-size: 13px;
+        }
+
+
+        th {
+            text-align: left;
+
+            color: #888;
+
+            font-weight: 500;
+
+            padding: 12px 9px;
+
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+
+        td {
+            padding: 14px 9px;
+
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+
+        .success {
+            color: #2e7d32;
+
+            font-weight: 600;
+        }
+
+
+        .failed {
+            color: #c62828;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================
+           BLOOD GROUP ANALYSIS
+        ========================= */
+
+        .blood-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 12px;
+        }
+
+
+        .blood-card {
+            border: 1px solid #eeeeee;
+
+            border-radius: 9px;
+
+            padding: 15px;
+
+            text-align: center;
+        }
+
+
+        .blood-card strong {
+            display: block;
+
+            color: #c62828;
+
+            font-size: 18px;
+        }
+
+
+        .blood-card span {
+            display: block;
+
+            color: #777;
+
+            font-size: 11px;
+
+            margin-top: 5px;
+        }
+
+
+        .blood-card small {
+            display: block;
+
+            color: #999;
+
+            font-size: 10px;
+
+            margin-top: 4px;
+        }
+
+
+        /* =========================
+           SUMMARY
+        ========================= */
+
+        .summary-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+        }
+
+
+        .summary-card {
+            background: #fafafa;
+
+            border-radius: 10px;
+
+            padding: 17px;
+
+            border: 1px solid #eeeeee;
+        }
+
+
+        .summary-card h4 {
+            font-size: 13px;
+
+            margin-bottom: 7px;
+        }
+
+
+        .summary-card p {
+            color: #777;
+
+            font-size: 11px;
+
+            line-height: 1.5;
+        }
+
+
+        .summary-number {
+            font-size: 23px;
+
+            font-weight: 700;
+
+            color: #c62828;
+
+            margin: 8px 0;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1100px) {
+
+            .stats-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+
+            .blood-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 900px) {
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 70px;
+
+                padding: 20px 10px;
+            }
+
+
+            .logo {
+                text-align: center;
+            }
+
+
+            .logo h2 {
+                font-size: 0;
+            }
+
+
+            .logo h2::after {
+                content: "HH";
+
+                font-size: 18px;
+            }
+
+
+            .logo p {
+                display: none;
+            }
+
+
+            .menu a {
+                text-align: center;
+
+                padding: 13px 5px;
+
+                font-size: 0;
+            }
+
+
+            .menu-icon {
+                font-size: 17px;
+            }
+
+
+            .logout a {
+                font-size: 0;
+            }
+
+
+            .logout a::before {
+                content: "↪";
+
+                font-size: 18px;
+            }
+
+
+            .main {
+                margin-left: 70px;
+
+                padding: 22px;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .topbar {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+
+            .admin-profile {
+                width: 100%;
+            }
+
+
+            .blood-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+
+            .main {
+                padding: 17px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+
+
+        <div class="logo">
+
+            <h2>HemoHub</h2>
+
+            <p>Smart Blood Emergency System</p>
+
+        </div>
+
+
+        <nav class="menu">
+
+
+            <a href="admin_dashboard">
+
+                <span class="menu-icon">▦</span>
+
+                Dashboard
+
+            </a>
+
+
+            <a href="admin_users">
+
+                <span class="menu-icon">♙</span>
+
+                Users
+
+            </a>
+
+
+            <a href="admin_sos">
+
+                <span class="menu-icon">🚨</span>
+
+                SOS Monitoring
+
+            </a>
+
+
+            <a href="admin_analytics"
+               class="active">
+
+                <span class="menu-icon">▥</span>
+
+                Analytics
+
+            </a>
+
+
+            <a href="admin_alerts">
+
+                <span class="menu-icon">🔔</span>
+
+                Alerts
+
+            </a>
+
+
+            <a href="admin_profile">
+
+                <span class="menu-icon">◉</span>
+
+                Profile
+
+            </a>
+
+
+        </nav>
+
+
+        <div class="logout">
+
+            <a href="logout">
+                Logout
+            </a>
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- =========================
+         MAIN
+    ========================== -->
+
+    <main class="main">
+
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+
+            <div class="heading">
+
+                <h1>Emergency Analytics</h1>
+
+                <p>
+                    Analyze SOS requests, donor responses and successful donations.
+                </p>
+
+            </div>
+
+
+            <div class="admin-profile">
+
+
+                <div class="admin-avatar">
+                    A
+                </div>
+
+
+                <div class="admin-info">
+
+                    <strong>
+                        {{ name or "Administrator" }}
+                    </strong>
+
+                    <span>
+                        System Administrator
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =========================
+             MAIN ANALYTICS
+        ========================== -->
+
+        <div class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <p>Total SOS Requests</p>
+
+                <h2 class="red">
+                    {{ total_sos or 0 }}
+                </h2>
+
+                <small>
+                    Emergency requests received
+                </small>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <p>Successful Matches</p>
+
+                <h2 class="green">
+                    {{ successful_matches or 0 }}
+                </h2>
+
+                <small>
+                    Donor successfully matched
+                </small>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <p>Failed Requests</p>
+
+                <h2 class="orange">
+                    {{ failed_requests or 0 }}
+                </h2>
+
+                <small>
+                    Requests without successful match
+                </small>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <p>Successful Donations</p>
+
+                <h2 class="green">
+                    {{ successful_donations or 0 }}
+                </h2>
+
+                <small>
+                    Completed blood donations
+                </small>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =========================
+             PERFORMANCE SUMMARY
+        ========================== -->
+
+        <div class="summary-grid">
+
+
+            <div class="summary-card">
+
+                <h4>
+                    Average Matching Time
+                </h4>
+
+                <div class="summary-number">
+
+                    {{ average_matching_time or "—" }}
+
+                </div>
+
+                <p>
+                    Average time required to find
+                    a suitable donor.
+                </p>
+
+            </div>
+
+
+
+            <div class="summary-card">
+
+                <h4>
+                    Average Donor Response
+                </h4>
+
+                <div class="summary-number">
+
+                    {{ average_response_time or "—" }}
+
+                </div>
+
+                <p>
+                    Average time taken by donors
+                    to respond to SOS requests.
+                </p>
+
+            </div>
+
+
+
+            <div class="summary-card">
+
+                <h4>
+                    Match Success Rate
+                </h4>
+
+                <div class="summary-number">
+
+                    {{ match_success_rate or 0 }}%
+
+                </div>
+
+                <p>
+                    Percentage of emergency requests
+                    successfully matched.
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <br>
+
+
+
+        <!-- =========================
+             TWO COLUMN
+        ========================== -->
+
+        <div class="two-column">
+
+
+            <!-- SOS TREND -->
+
+            <section class="panel">
+
+
+                <div class="panel-header">
+
+                    <h3>
+                        SOS Request Trend
+                    </h3>
+
+                    <span>
+                        Recent Period
+                    </span>
+
+                </div>
+
+
+                <div class="chart">
+
+
+                    <div class="bar-item">
+
+                        <div class="bar-value">
+                            18
+                        </div>
+
+                        <div class="bar"
+                             style="height: 45%;">
+                        </div>
+
+                        <div class="bar-label">
+                            Mon
+                        </div>
+
+                    </div>
+
+
+                    <div class="bar-item">
+
+                        <div class="bar-value">
+                            25
+                        </div>
+
+                        <div class="bar"
+                             style="height: 62%;">
+                        </div>
+
+                        <div class="bar-label">
+                            Tue
+                        </div>
+
+                    </div>
+
+
+                    <div class="bar-item">
+
+                        <div class="bar-value">
+                            21
+                        </div>
+
+                        <div class="bar"
+                             style="height: 52%;">
+                        </div>
+
+                        <div class="bar-label">
+                            Wed
+                        </div>
+
+                    </div>
+
+
+                    <div class="bar-item">
+
+                        <div class="bar-value">
+                            32
+                        </div>
+
+                        <div class="bar"
+                             style="height: 80%;">
+                        </div>
+
+                        <div class="bar-label">
+                            Thu
+                        </div>
+
+                    </div>
+
+
+                    <div class="bar-item">
+
+                        <div class="bar-value">
+                            27
+                        </div>
+
+                        <div class="bar"
+                             style="height: 67%;">
+                        </div>
+
+                        <div class="bar-label">
+                            Fri
+                        </div>
+
+                    </div>
+
+
+                    <div class="bar-item">
+
+                        <div class="bar-value">
+                            36
+                        </div>
+
+                        <div class="bar"
+                             style="height: 90%;">
+                        </div>
+
+                        <div class="bar-label">
+                            Sat
+                        </div>
+
+                    </div>
+
+
+                    <div class="bar-item">
+
+                        <div class="bar-value">
+                            29
+                        </div>
+
+                        <div class="bar"
+                             style="height: 72%;">
+                        </div>
+
+                        <div class="bar-label">
+                            Sun
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- SYSTEM PERFORMANCE -->
+
+            <section class="panel">
+
+
+                <div class="panel-header">
+
+                    <h3>
+                        System Performance
+                    </h3>
+
+                    <span>
+                        Current
+                    </span>
+
+                </div>
+
+
+                <div class="performance-item">
+
+
+                    <div class="performance-header">
+
+                        <strong>
+                            Successful Matching
+                        </strong>
+
+                        <span>
+                            {{ match_success_rate or 0 }}%
+                        </span>
+
+                    </div>
+
+
+                    <div class="progress">
+
+                        <div class="progress-bar"
+                             style="width: {{ match_success_rate or 0 }}%;">
+                        </div>
+
+                    </div>
+
+
+                    <div class="performance-description">
+
+                        Requests successfully matched with donors.
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="performance-item">
+
+
+                    <div class="performance-header">
+
+                        <strong>
+                            Donor Response
+                        </strong>
+
+                        <span>
+                            {{ donor_response_rate or 0 }}%
+                        </span>
+
+                    </div>
+
+
+                    <div class="progress">
+
+                        <div class="progress-bar"
+                             style="width: {{ donor_response_rate or 0 }}%;">
+                        </div>
+
+                    </div>
+
+
+                    <div class="performance-description">
+
+                        Donors responding to emergency notifications.
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="performance-item">
+
+
+                    <div class="performance-header">
+
+                        <strong>
+                            Request Completion
+                        </strong>
+
+                        <span>
+                            {{ completion_rate or 0 }}%
+                        </span>
+
+                    </div>
+
+
+                    <div class="progress">
+
+                        <div class="progress-bar"
+                             style="width: {{ completion_rate or 0 }}%;">
+                        </div>
+
+                    </div>
+
+
+                    <div class="performance-description">
+
+                        Emergency requests completed successfully.
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+        </div>
+
+
+
+        <!-- =========================
+             MATCHING PERFORMANCE
+        ========================== -->
+
+        <section class="panel">
+
+
+            <div class="panel-header">
+
+                <h3>
+                    Emergency Matching Performance
+                </h3>
+
+                <span>
+                    System overview
+                </span>
+
+            </div>
+
+
+            <div class="table-container">
+
+
+                <table>
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Metric
+                            </th>
+
+                            <th>
+                                Value
+                            </th>
+
+                            <th>
+                                Target
+                            </th>
+
+                            <th>
+                                Performance
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        <tr>
+
+                            <td>
+                                Average Matching Time
+                            </td>
+
+                            <td>
+                                {{ average_matching_time or "—" }}
+                            </td>
+
+                            <td>
+                                Under 5 min
+                            </td>
+
+                            <td class="success">
+                                Good
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Average Donor Response
+                            </td>
+
+                            <td>
+                                {{ average_response_time or "—" }}
+                            </td>
+
+                            <td>
+                                Under 2 min
+                            </td>
+
+                            <td class="success">
+                                Good
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Successful Matches
+                            </td>
+
+                            <td>
+                                {{ successful_matches or 0 }}
+                            </td>
+
+                            <td>
+                                Higher
+                            </td>
+
+                            <td class="success">
+                                Active
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Failed Requests
+                            </td>
+
+                            <td>
+                                {{ failed_requests or 0 }}
+                            </td>
+
+                            <td>
+                                Lower
+                            </td>
+
+                            <td class="failed">
+                                Monitor
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Successful Donations
+                            </td>
+
+                            <td>
+                                {{ successful_donations or 0 }}
+                            </td>
+
+                            <td>
+                                Higher
+                            </td>
+
+                            <td class="success">
+                                Active
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================
+             BLOOD GROUP ANALYTICS
+        ========================== -->
+
+        <section class="panel">
+
+
+            <div class="panel-header">
+
+                <h3>
+                    Blood Group Demand
+                </h3>
+
+                <span>
+                    Emergency requests
+                </span>
+
+            </div>
+
+
+            <div class="blood-grid">
+
+
+                <div class="blood-card">
+
+                    <strong>
+                        O+
+                    </strong>
+
+                    <span>
+                        42 Requests
+                    </span>
+
+                    <small>
+                        High demand
+                    </small>
+
+                </div>
+
+
+                <div class="blood-card">
+
+                    <strong>
+                        B+
+                    </strong>
+
+                    <span>
+                        35 Requests
+                    </span>
+
+                    <small>
+                        High demand
+                    </small>
+
+                </div>
+
+
+                <div class="blood-card">
+
+                    <strong>
+                        A+
+                    </strong>
+
+                    <span>
+                        29 Requests
+                    </span>
+
+                    <small>
+                        Moderate demand
+                    </small>
+
+                </div>
+
+
+                <div class="blood-card">
+
+                    <strong>
+                        AB+
+                    </strong>
+
+                    <span>
+                        14 Requests
+                    </span>
+
+                    <small>
+                        Moderate demand
+                    </small>
+
+                </div>
+
+
+                <div class="blood-card">
+
+                    <strong>
+                        O-
+                    </strong>
+
+                    <span>
+                        9 Requests
+                    </span>
+
+                    <small>
+                        Rare group
+                    </small>
+
+                </div>
+
+
+                <div class="blood-card">
+
+                    <strong>
+                        B-
+                    </strong>
+
+                    <span>
+                        7 Requests
+                    </span>
+
+                    <small>
+                        Rare group
+                    </small>
+
+                </div>
+
+
+                <div class="blood-card">
+
+                    <strong>
+                        A-
+                    </strong>
+
+                    <span>
+                        6 Requests
+                    </span>
+
+                    <small>
+                        Rare group
+                    </small>
+
+                </div>
+
+
+                <div class="blood-card">
+
+                    <strong>
+                        AB-
+                    </strong>
+
+                    <span>
+                        3 Requests
+                    </span>
+
+                    <small>
+                        Rare group
+                    </small>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</body>
+
+</html>
+ 
