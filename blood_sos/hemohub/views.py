@@ -601,7 +601,7 @@ def donor_dashboard(request):
 
     return render(
         request,
-        "hemohub/donor_dashboard.html",
+        "donor/dashboard.html",
         context
     )
 
