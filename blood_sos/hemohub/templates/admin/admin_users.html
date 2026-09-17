@@ -2,1598 +2,351 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | HemoHub</title>
 
-    <title>User Management | HemoHub</title>
-
+    <!-- Bootstrap 5.3.3 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
 
     <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Segoe UI", sans-serif;
-        }
-
-
         body {
-            background: #f6f7f9;
-            color: #222;
+            background-color: #f6f7f9;
         }
-
-
-        /* =========================
-           SIDEBAR
-        ========================= */
 
         .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-
-            width: 250px;
-            height: 100vh;
-
-            background: #ffffff;
-
+            min-height: 100vh;
+            background-color: white;
             border-right: 1px solid #e5e5e5;
-
-            padding: 25px 18px;
-
-            z-index: 100;
         }
-
 
         .logo {
-            padding: 5px 12px 30px;
-        }
-
-
-        .logo h2 {
             color: #c62828;
-            font-size: 24px;
-        }
-
-
-        .logo p {
-            color: #777;
-            font-size: 12px;
-            margin-top: 4px;
-        }
-
-
-        .menu {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-        }
-
-
-        .menu a {
-            text-decoration: none;
-            color: #555;
-
-            padding: 13px 15px;
-
-            border-radius: 9px;
-
-            font-size: 14px;
-
-            transition: 0.2s;
-        }
-
-
-        .menu a:hover {
-            background: #fff1f1;
-            color: #c62828;
-        }
-
-
-        .menu a.active {
-            background: #c62828;
-            color: white;
-        }
-
-
-        .menu-icon {
-            width: 22px;
-            display: inline-block;
-        }
-
-
-        .logout {
-            position: absolute;
-
-            bottom: 25px;
-            left: 18px;
-            right: 18px;
-        }
-
-
-        .logout a {
-            display: block;
-
-            text-align: center;
-
-            padding: 12px;
-
-            border-radius: 8px;
-
-            text-decoration: none;
-
-            color: #c62828;
-
-            background: #fff1f1;
-
-            font-size: 14px;
-        }
-
-
-        /* =========================
-           MAIN
-        ========================= */
-
-        .main {
-            margin-left: 250px;
-
-            padding: 28px 32px;
-
-            min-height: 100vh;
-        }
-
-
-        /* =========================
-           HEADER
-        ========================= */
-
-        .topbar {
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-            margin-bottom: 28px;
-        }
-
-
-        .heading h1 {
-            font-size: 27px;
-        }
-
-
-        .heading p {
-            color: #777;
-
-            font-size: 14px;
-
-            margin-top: 5px;
-        }
-
-
-        .admin-profile {
-            display: flex;
-
-            align-items: center;
-
-            gap: 12px;
-
-            background: white;
-
-            padding: 8px 14px;
-
-            border-radius: 10px;
-
-            border: 1px solid #e8e8e8;
-        }
-
-
-        .admin-avatar {
-            width: 38px;
-            height: 38px;
-
-            border-radius: 50%;
-
-            background: #c62828;
-
-            color: white;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
             font-weight: bold;
         }
 
-
-        .admin-info strong {
-            display: block;
-
-            font-size: 14px;
-        }
-
-
-        .admin-info span {
-            color: #888;
-
-            font-size: 11px;
-        }
-
-
-        /* =========================
-           USER SUMMARY
-        ========================= */
-
-        .stats {
-            display: grid;
-
-            grid-template-columns:
-                repeat(4, 1fr);
-
-            gap: 18px;
-
-            margin-bottom: 25px;
-        }
-
-
-        .stat {
-            background: white;
-
-            border: 1px solid #e8e8e8;
-
-            border-radius: 12px;
-
-            padding: 20px;
-        }
-
-
-        .stat p {
-            color: #777;
-
-            font-size: 13px;
-        }
-
-
-        .stat h2 {
-            margin-top: 8px;
-
-            font-size: 26px;
-        }
-
-
-        .stat small {
-            color: #999;
-
-            font-size: 11px;
-        }
-
-
-        /* =========================
-           FILTER PANEL
-        ========================= */
-
-        .panel {
-            background: white;
-
-            border: 1px solid #e8e8e8;
-
-            border-radius: 12px;
-
-            padding: 20px;
-
-            margin-bottom: 20px;
-        }
-
-
-        .filter-row {
-            display: flex;
-
-            gap: 12px;
-
-            align-items: center;
-
-            flex-wrap: wrap;
-        }
-
-
-        .search-box {
-            flex: 1;
-
-            min-width: 220px;
-        }
-
-
-        .search-box input,
-        .filter-row select {
-            width: 100%;
-
-            padding: 11px 13px;
-
-            border: 1px solid #ddd;
-
-            border-radius: 8px;
-
-            outline: none;
-
-            font-size: 13px;
-
-            background: white;
-        }
-
-
-        .search-box input:focus,
-        .filter-row select:focus {
-            border-color: #c62828;
-        }
-
-
-        .filter-row select {
-            width: 160px;
-        }
-
-
-        /* =========================
-           TABLE
-        ========================= */
-
-        .table-header {
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-            margin-bottom: 18px;
-        }
-
-
-        .table-header h3 {
-            font-size: 17px;
-        }
-
-
-        .user-count {
-            color: #888;
-
-            font-size: 12px;
-        }
-
-
-        .table-container {
-            overflow-x: auto;
-        }
-
-
-        table {
-            width: 100%;
-
-            border-collapse: collapse;
-
-            font-size: 13px;
-        }
-
-
-        th {
-            text-align: left;
-
-            color: #888;
-
-            font-weight: 500;
-
-            padding: 12px 9px;
-
-            border-bottom: 1px solid #e8e8e8;
-
-            white-space: nowrap;
-        }
-
-
-        td {
-            padding: 14px 9px;
-
-            border-bottom: 1px solid #f0f0f0;
-
-            white-space: nowrap;
-        }
-
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-
-        .user-name {
-            font-weight: 600;
-        }
-
-
-        .user-username {
-            color: #777;
-
-            font-size: 11px;
-
-            margin-top: 3px;
-        }
-
-
-        /* =========================
-           BADGES
-        ========================= */
-
-        .badge {
-            display: inline-block;
-
-            padding: 5px 9px;
-
-            border-radius: 20px;
-
-            font-size: 10px;
-
-            font-weight: 600;
-        }
-
-
-        .donor {
-            background: #fff0f0;
-
-            color: #c62828;
-        }
-
-
-        .needer {
-            background: #fff3e0;
-
-            color: #d26900;
-        }
-
-
-        .verified {
-            background: #e8f5e9;
-
-            color: #2e7d32;
-        }
-
-
-        .pending {
-            background: #fff3e0;
-
-            color: #d26900;
-        }
-
-
-        .blocked {
-            background: #eeeeee;
-
-            color: #666;
-        }
-
-
-        /* =========================
-           ACTION BUTTONS
-        ========================= */
-
-        .actions {
-            display: flex;
-
-            gap: 7px;
-        }
-
-
-        .btn {
-            border: none;
-
-            padding: 7px 10px;
-
-            border-radius: 6px;
-
-            font-size: 10px;
-
-            cursor: pointer;
-        }
-
-
-        .verify-btn {
-            background: #e8f5e9;
-
-            color: #2e7d32;
-        }
-
-
-        .block-btn {
-            background: #fff0f0;
-
-            color: #c62828;
-        }
-
-
-        .view-btn {
-            background: #f1f1f1;
-
+        .sidebar a {
             color: #555;
+            text-decoration: none;
+            padding: 12px 15px;
+            display: block;
+            border-radius: 8px;
+            margin-bottom: 8px;
         }
 
-
-        .btn:hover {
-            opacity: 0.8;
-        }
-
-
-        /* =========================
-           VERIFICATION SECTION
-        ========================= */
-
-        .verification-title {
-            font-size: 17px;
-
-            margin-bottom: 16px;
-        }
-
-
-        .verification-grid {
-            display: grid;
-
-            grid-template-columns:
-                repeat(2, 1fr);
-
-            gap: 15px;
-        }
-
-
-        .verification-card {
-            border: 1px solid #eeeeee;
-
-            border-radius: 10px;
-
-            padding: 17px;
-        }
-
-
-        .verification-card h4 {
-            font-size: 14px;
-
-            margin-bottom: 6px;
-        }
-
-
-        .verification-card p {
-            color: #888;
-
-            font-size: 12px;
-
-            line-height: 1.5;
-        }
-
-
-        .verification-card .number {
-            font-size: 24px;
-
-            font-weight: 700;
-
-            color: #c62828;
-
-            margin: 8px 0;
-        }
-
-
-        .review-btn {
-            border: none;
-
-            background: #c62828;
-
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #c62828;
             color: white;
-
-            padding: 8px 12px;
-
-            border-radius: 6px;
-
-            cursor: pointer;
-
-            font-size: 11px;
         }
 
-
-        /* =========================
-           NO USERS
-        ========================= */
-
-        .no-users {
-            text-align: center;
-
-            padding: 30px;
-
-            color: #888;
-
-            font-size: 13px;
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #c62828;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
         }
 
-
-        /* =========================
-           RESPONSIVE
-        ========================= */
-
-        @media (max-width: 1100px) {
-
-            .stats {
-                grid-template-columns:
-                    repeat(2, 1fr);
-            }
-
-
-            .verification-grid {
-                grid-template-columns:
-                    1fr;
-            }
-
+        .stat-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
 
-
-        @media (max-width: 800px) {
-
-            .sidebar {
-                width: 70px;
-
-                padding: 20px 10px;
-            }
-
-
-            .logo {
-                text-align: center;
-            }
-
-
-            .logo h2 {
-                font-size: 0;
-            }
-
-
-            .logo h2::after {
-                content: "HH";
-
-                font-size: 18px;
-            }
-
-
-            .logo p {
-                display: none;
-            }
-
-
-            .menu a {
-                text-align: center;
-
-                padding: 13px 5px;
-
-                font-size: 0;
-            }
-
-
-            .menu-icon {
-                font-size: 17px;
-            }
-
-
-            .logout a {
-                font-size: 0;
-            }
-
-
-            .logout a::before {
-                content: "↪";
-
-                font-size: 18px;
-            }
-
-
-            .main {
-                margin-left: 70px;
-
-                padding: 22px;
-            }
-
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
         }
 
-
-        @media (max-width: 600px) {
-
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
-
-            .topbar {
-                flex-direction: column;
-
-                align-items: flex-start;
-
-                gap: 15px;
-            }
-
-
-            .admin-profile {
-                width: 100%;
-            }
-
-
-            .main {
-                padding: 17px;
-            }
-
+        .section-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
 
+        .blood-group {
+            color: #c62828;
+            font-weight: bold;
+        }
+
+        .status-active {
+            color: #c62828;
+            font-weight: bold;
+        }
+
+        .status-matched {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-waiting {
+            color: orange;
+            font-weight: bold;
+        }
     </style>
-
 </head>
-
 
 <body>
 
+    <div class="container-fluid">
+        <div class="row">
 
-    <!-- =========================
-         SIDEBAR
-    ========================== -->
+            <!-- Sidebar -->
+            <aside class="col-lg-2 col-md-3 sidebar p-4">
 
-    <aside class="sidebar">
+                <h3 class="logo mb-2">HemoHub</h3>
 
-
-        <div class="logo">
-
-            <h2>HemoHub</h2>
-
-            <p>
-                Smart Blood Emergency System
-            </p>
-
-        </div>
-
-
-        <nav class="menu">
-
-
-            <a href="{% url 'admin_dashboard' %}">
-
-                <span class="menu-icon">▦</span>
-
-                Dashboard
-
-            </a>
-
-
-            <a href="{% url 'admin_users' %}"
-               class="active">
-
-                <span class="menu-icon">♙</span>
-
-                Users
-
-            </a>
-
-
-            <a href="{% url 'admin_sos' %}">
-
-                <span class="menu-icon">🚨</span>
-
-                SOS Monitoring
-
-            </a>
-
-
-            <a href="{% url 'admin_analytics' %}">
-
-                <span class="menu-icon">▥</span>
-
-                Analytics
-
-            </a>
-
-
-        </nav>
-
-
-        <div class="logout">
-
-            <a href="{% url 'logout_user' %}">
-                Logout
-            </a>
-
-        </div>
-
-
-    </aside>
-
-
-
-    <!-- =========================
-         MAIN CONTENT
-    ========================== -->
-
-    <main class="main">
-
-
-        <!-- =========================
-             HEADER
-        ========================== -->
-
-        <div class="topbar">
-
-
-            <div class="heading">
-
-                <h1>
-                    User Management
-                </h1>
-
-                <p>
-                    Manage donors, needers and user verification.
+                <p class="text-muted small">
+                    Smart Blood Emergency System
                 </p>
 
-            </div>
+                <hr>
 
+                <nav>
+                    <a href="admin-dashboard.html" class="active">
+                        📊 Dashboard
+                    </a>
 
-            <div class="admin-profile">
+                    <a href="admin-users.html">
+                        👥 Users
+                    </a>
 
+                    <a href="admin-sos.html">
+                        🚨 SOS Monitoring
+                    </a>
 
-                <div class="admin-avatar">
-                    A
-                </div>
+                    <a href="admin-analytics.html">
+                        📈 Analytics
+                    </a>
 
+                    <a href="index.html">
+                        ↩ Logout
+                    </a>
+                </nav>
 
-                <div class="admin-info">
+            </aside>
 
-                    <strong>
-                        {{ name|default:"Administrator" }}
-                    </strong>
+            <!-- Main Content -->
+            <main class="col-lg-10 col-md-9 p-4">
 
-                    <span>
-                        System Administrator
-                    </span>
+                <!-- Top Bar -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
 
-                </div>
+                    <div>
+                        <h1 class="fw-bold">Admin Dashboard</h1>
 
+                        <p class="text-muted">
+                            Monitor users, emergency requests and blood donation activity.
+                        </p>
+                    </div>
 
-            </div>
+                    <div class="d-flex align-items-center gap-2 bg-white p-2 rounded shadow-sm">
 
+                        <div class="admin-avatar">
+                            A
+                        </div>
 
-        </div>
-
-
-
-        <!-- =========================
-             USER STATISTICS
-        ========================== -->
-
-        <div class="stats">
-
-
-            <div class="stat">
-
-                <p>
-                    Total Users
-                </p>
-
-                <h2>
-                    {{ total_users|default:0 }}
-                </h2>
-
-                <small>
-                    All registered accounts
-                </small>
-
-            </div>
-
-
-            <div class="stat">
-
-                <p>
-                    Donors
-                </p>
-
-                <h2>
-                    {{ total_donors|default:0 }}
-                </h2>
-
-                <small>
-                    Registered blood donors
-                </small>
-
-            </div>
-
-
-            <div class="stat">
-
-                <p>
-                    Needers
-                </p>
-
-                <h2>
-                    {{ total_needers|default:0 }}
-                </h2>
-
-                <small>
-                    Blood request users
-                </small>
-
-            </div>
-
-
-            <div class="stat">
-
-                <p>
-                    Pending Verification
-                </p>
-
-                <h2>
-                    {{ pending_verification|default:0 }}
-                </h2>
-
-                <small>
-                    Accounts awaiting review
-                </small>
-
-            </div>
-
-
-        </div>
-
-
-
-        <!-- =========================
-             SEARCH & FILTER
-        ========================== -->
-
-        <section class="panel">
-
-
-            <div class="filter-row">
-
-
-                <div class="search-box">
-
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Search by name or username..."
-                        onkeyup="searchUsers()">
-
-                </div>
-
-
-                <select id="roleFilter"
-                        onchange="filterUsers()">
-
-                    <option value="all">
-                        All Users
-                    </option>
-
-                    <option value="donor">
-                        Donors
-                    </option>
-
-                    <option value="needer">
-                        Needers
-                    </option>
-
-                </select>
-
-
-                <select id="statusFilter"
-                        onchange="filterUsers()">
-
-                    <option value="all">
-                        All Status
-                    </option>
-
-                    <option value="Verified">
-                        Verified
-                    </option>
-
-                    <option value="Pending">
-                        Pending
-                    </option>
-
-                    <option value="Blocked">
-                        Blocked
-                    </option>
-
-                </select>
-
-
-            </div>
-
-
-        </section>
-
-
-
-        <!-- =========================
-             USERS TABLE
-        ========================== -->
-
-        <section class="panel">
-
-
-            <div class="table-header">
-
-
-                <h3>
-                    Registered Users
-                </h3>
-
-
-                <span class="user-count">
-
-                    {{ total_users|default:0 }} users
-
-                </span>
-
-
-            </div>
-
-
-
-            <div class="table-container">
-
-
-                <table id="usersTable">
-
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                User
-                            </th>
-
-                            <th>
-                                Role
-                            </th>
-
-                            <th>
-                                Age
-                            </th>
-
-                            <th>
-                                Verification
-                            </th>
-
-                            <th>
-                                Status
-                            </th>
-
-                            <th>
-                                Action
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-
-                        {% for user in users %}
-
-
-                        <tr
-                            data-role="{{ user.role }}"
-                            data-status="{% if user.is_blocked %}Blocked{% elif user.is_verified %}Verified{% else %}Pending{% endif %}">
-
-
-                            <!-- USER -->
-
-                            <td>
-
-                                <div class="user-name">
-
-                                    {{ user.name }}
-
-                                </div>
-
-                                <div class="user-username">
-
-                                    @{{ user.username }}
-
-                                </div>
-
-                            </td>
-
-
-
-                            <!-- ROLE -->
-
-                            <td>
-
-
-                                {% if user.role == "donor" %}
-
-                                <span class="badge donor">
-                                    Donor
-                                </span>
-
-
-                                {% elif user.role == "needer" %}
-
-                                <span class="badge needer">
-                                    Needer
-                                </span>
-
-
-                                {% endif %}
-
-
-                            </td>
-
-
-
-                            <!-- AGE -->
-
-                            <td>
-
-                                {{ user.age }}
-
-                            </td>
-
-
-
-                            <!-- VERIFICATION -->
-
-                            <td>
-
-
-                                {% if user.is_verified %}
-
-                                <span class="badge verified">
-                                    Verified
-                                </span>
-
-
-                                {% else %}
-
-                                <span class="badge pending">
-                                    Pending
-                                </span>
-
-                                {% endif %}
-
-
-                            </td>
-
-
-
-                            <!-- STATUS -->
-
-                            <td>
-
-
-                                {% if user.is_blocked %}
-
-                                <span class="badge blocked">
-                                    Blocked
-                                </span>
-
-
-                                {% else %}
-
-                                <span class="badge verified">
-                                    Active
-                                </span>
-
-                                {% endif %}
-
-
-                            </td>
-
-
-
-                            <!-- ACTIONS -->
-
-                            <td>
-
-
-                                <div class="actions">
-
-
-                                    <button
-                                        class="btn view-btn"
-                                        onclick="viewUser('{{ user.id }}')">
-
-                                        View
-
-                                    </button>
-
-
-
-                                    {% if not user.is_verified %}
-
-                                    <button
-                                        class="btn verify-btn"
-                                        onclick="verifyUser('{{ user.id }}')">
-
-                                        Verify
-
-                                    </button>
-
-                                    {% endif %}
-
-
-
-                                    {% if user.is_blocked %}
-
-                                    <button
-                                        class="btn verify-btn"
-                                        onclick="unblockUser('{{ user.id }}')">
-
-                                        Unblock
-
-                                    </button>
-
-
-                                    {% else %}
-
-                                    <button
-                                        class="btn block-btn"
-                                        onclick="blockUser('{{ user.id }}')">
-
-                                        Block
-
-                                    </button>
-
-                                    {% endif %}
-
-
-                                </div>
-
-
-                            </td>
-
-
-                        </tr>
-
-
-                        {% empty %}
-
-
-                        <tr>
-
-                            <td colspan="6"
-                                class="no-users">
-
-                                No registered users found.
-
-                            </td>
-
-                        </tr>
-
-
-                        {% endfor %}
-
-
-                    </tbody>
-
-
-                </table>
-
-
-            </div>
-
-
-        </section>
-
-
-
-        <!-- =========================
-             VERIFICATION OVERVIEW
-        ========================== -->
-
-        <section class="panel">
-
-
-            <h3 class="verification-title">
-
-                Verification Overview
-
-            </h3>
-
-
-            <div class="verification-grid">
-
-
-                <!-- DONOR -->
-
-                <div class="verification-card">
-
-
-                    <h4>
-                        Donor Verification
-                    </h4>
-
-
-                    <p>
-                        Blood donors waiting for identity verification.
-                    </p>
-
-
-                    <div class="number">
-
-                        {{ pending_donors|default:0 }}
+                        <div>
+                            <strong>Administrator</strong>
+                            <small class="d-block text-muted">
+                                System Admin
+                            </small>
+                        </div>
 
                     </div>
 
+                </div>
 
-                    <button
-                        class="review-btn"
-                        onclick="reviewVerification('Donor')">
+                <!-- Statistics Cards -->
+                <div class="row g-4 mb-4">
 
-                        Review Donors
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card stat-card p-3">
+                            <p class="text-muted mb-1">Total Users</p>
+                            <div class="stat-number">250</div>
+                            <small class="text-muted">
+                                Registered users
+                            </small>
+                        </div>
+                    </div>
 
-                    </button>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card stat-card p-3">
+                            <p class="text-muted mb-1">Donors</p>
+                            <div class="stat-number">150</div>
+                            <small class="text-muted">
+                                Registered donors
+                            </small>
+                        </div>
+                    </div>
 
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card stat-card p-3">
+                            <p class="text-muted mb-1">Needers</p>
+                            <div class="stat-number">100</div>
+                            <small class="text-muted">
+                                Blood request users
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card stat-card p-3">
+                            <p class="text-muted mb-1">Active SOS</p>
+                            <div class="stat-number text-danger">12</div>
+                            <small class="text-muted">
+                                Emergency requests
+                            </small>
+                        </div>
+                    </div>
 
                 </div>
 
+                <!-- SOS Overview -->
+                <h4 class="fw-bold mb-3">SOS Overview</h4>
 
+                <div class="row g-4 mb-4">
 
-                <!-- NEEDER -->
+                    <div class="col-md-4">
+                        <div class="card section-card p-4">
+                            <p class="text-muted mb-1">Emergency SOS</p>
+                            <h2 class="text-danger">5</h2>
+                        </div>
+                    </div>
 
-                <div class="verification-card">
+                    <div class="col-md-4">
+                        <div class="card section-card p-4">
+                            <p class="text-muted mb-1">Urgent SOS</p>
+                            <h2 class="text-warning">4</h2>
+                        </div>
+                    </div>
 
+                    <div class="col-md-4">
+                        <div class="card section-card p-4">
+                            <p class="text-muted mb-1">Normal Requests</p>
+                            <h2 class="text-success">3</h2>
+                        </div>
+                    </div>
 
-                    <h4>
-                        Needer Verification
-                    </h4>
+                </div>
 
+                <!-- Recent SOS Requests -->
+                <div class="card section-card p-4">
 
-                    <p>
-                        Requesters requiring account verification.
-                    </p>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
 
+                        <h4 class="mb-0">
+                            Recent SOS Requests
+                        </h4>
 
-                    <div class="number">
-
-                        {{ pending_needers|default:0 }}
+                        <a href="admin-sos.html"
+                           class="text-danger text-decoration-none">
+                            View All
+                        </a>
 
                     </div>
 
+                    <div class="table-responsive">
 
-                    <button
-                        class="review-btn"
-                        onclick="reviewVerification('Needer')">
+                        <table class="table table-hover align-middle">
 
-                        Review Needers
+                            <thead>
+                                <tr>
+                                    <th>Request ID</th>
+                                    <th>Blood Group</th>
+                                    <th>Urgency</th>
+                                    <th>Location</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
 
-                    </button>
+                            <tbody>
 
+                                <tr>
+                                    <td>#HH1001</td>
+
+                                    <td class="blood-group">
+                                        O+
+                                    </td>
+
+                                    <td>
+                                        <span class="badge bg-danger">
+                                            Emergency
+                                        </span>
+                                    </td>
+
+                                    <td>Coimbatore</td>
+
+                                    <td class="status-active">
+                                        Active
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>#HH1002</td>
+
+                                    <td class="blood-group">
+                                        A+
+                                    </td>
+
+                                    <td>
+                                        <span class="badge bg-warning text-dark">
+                                            Urgent
+                                        </span>
+                                    </td>
+
+                                    <td>Chennai</td>
+
+                                    <td class="status-matched">
+                                        Matched
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>#HH1003</td>
+
+                                    <td class="blood-group">
+                                        B+
+                                    </td>
+
+                                    <td>
+                                        <span class="badge bg-success">
+                                            Normal
+                                        </span>
+                                    </td>
+
+                                    <td>Madurai</td>
+
+                                    <td class="status-waiting">
+                                        Waiting
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
 
                 </div>
 
+            </main>
 
-            </div>
+        </div>
+    </div>
 
-
-        </section>
-
-
-    </main>
-
-
-
-    <!-- =========================
-         JAVASCRIPT
-    ========================== -->
-
-    <script>
-
-
-        /* =========================
-           SEARCH USERS
-        ========================= */
-
-        function searchUsers() {
-
-            const input =
-                document.getElementById("searchInput")
-                .value
-                .toLowerCase()
-                .trim();
-
-
-            const rows =
-                document.querySelectorAll(
-                    "#usersTable tbody tr[data-role]"
-                );
-
-
-            rows.forEach(function(row) {
-
-                const text =
-                    row.innerText.toLowerCase();
-
-
-                if (text.includes(input)) {
-
-                    row.style.display = "";
-
-                } else {
-
-                    row.style.display = "none";
-
-                }
-
-            });
-
-        }
-
-
-
-        /* =========================
-           FILTER USERS
-        ========================= */
-
-        function filterUsers() {
-
-            const role =
-                document.getElementById("roleFilter").value;
-
-
-            const status =
-                document.getElementById("statusFilter").value;
-
-
-            const rows =
-                document.querySelectorAll(
-                    "#usersTable tbody tr[data-role]"
-                );
-
-
-            rows.forEach(function(row) {
-
-
-                const rowRole =
-                    row.getAttribute("data-role");
-
-
-                const rowStatus =
-                    row.getAttribute("data-status");
-
-
-                const roleMatch =
-                    role === "all" ||
-                    rowRole === role;
-
-
-                const statusMatch =
-                    status === "all" ||
-                    rowStatus === status;
-
-
-                if (roleMatch && statusMatch) {
-
-                    row.style.display = "";
-
-                } else {
-
-                    row.style.display = "none";
-
-                }
-
-            });
-
-        }
-
-
-
-        /* =========================
-           VIEW USER
-        ========================= */
-
-        function viewUser(id) {
-
-            alert(
-                "Viewing user ID: " + id
-            );
-
-        }
-
-
-
-        /* =========================
-           VERIFY USER
-        ========================= */
-
-        function verifyUser(id) {
-
-            if (
-                confirm(
-                    "Are you sure you want to verify this user?"
-                )
-            ) {
-
-                alert(
-                    "User " +
-                    id +
-                    " verification request selected."
-                );
-
-            }
-
-        }
-
-
-
-        /* =========================
-           BLOCK USER
-        ========================= */
-
-        function blockUser(id) {
-
-            if (
-                confirm(
-                    "Are you sure you want to block this user?"
-                )
-            ) {
-
-                alert(
-                    "User " +
-                    id +
-                    " block request selected."
-                );
-
-            }
-
-        }
-
-
-
-        /* =========================
-           UNBLOCK USER
-        ========================= */
-
-        function unblockUser(id) {
-
-            if (
-                confirm(
-                    "Are you sure you want to unblock this user?"
-                )
-            ) {
-
-                alert(
-                    "User " +
-                    id +
-                    " unblock request selected."
-                );
-
-            }
-
-        }
-
-
-
-        /* =========================
-           VERIFICATION REVIEW
-        ========================= */
-
-        function reviewVerification(type) {
-
-            alert(
-                "Showing pending " +
-                type +
-                " verification requests."
-            );
-
-        }
-
-
+    <!-- Bootstrap JavaScript -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     </script>
 
-
 </body>
-
 </html>
