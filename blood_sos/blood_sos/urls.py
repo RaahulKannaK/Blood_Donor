@@ -1,8 +1,8 @@
-
 from django.contrib import admin
 from django.urls import path
 
 from hemohub.views import (
+
     # =====================================================
     # AUTHENTICATION
     # =====================================================
@@ -13,6 +13,7 @@ from hemohub.views import (
     forgot_password,
     reset_password,
 
+
     # =====================================================
     # DASHBOARDS
     # =====================================================
@@ -20,6 +21,14 @@ from hemohub.views import (
     donor_dashboard,
     needer_dashboard,
     admin_dashboard,
+
+
+    # =====================================================
+    # LOCATION
+    # =====================================================
+
+    save_location,
+
 
     # =====================================================
     # ADMIN
@@ -31,6 +40,7 @@ from hemohub.views import (
     admin_verify_user,
     admin_block_user,
     admin_unblock_user,
+
 
     # =====================================================
     # DONOR
@@ -44,14 +54,15 @@ from hemohub.views import (
     donation_history,
     donor_alerts,
 
+
     # =====================================================
     # NEEDER
     # =====================================================
 
     create_request,
     cancel_request,
-    my_requests,
     find_donor,
+
 
     # =====================================================
     # OTHER
@@ -62,6 +73,7 @@ from hemohub.views import (
 
 
 urlpatterns = [
+
 
     # =====================================================
     # DJANGO BUILT-IN ADMIN
@@ -114,31 +126,17 @@ urlpatterns = [
     # DASHBOARDS
     # =====================================================
 
-    # -----------------------------------------------------
-    # Donor Dashboard
-    # -----------------------------------------------------
-
     path(
         "donor-dashboard/",
         donor_dashboard,
         name="donor_dashboard"
     ),
 
-
-    # -----------------------------------------------------
-    # Needer Dashboard
-    # -----------------------------------------------------
-
     path(
         "needer-dashboard/",
         needer_dashboard,
         name="needer_dashboard"
     ),
-
-
-    # -----------------------------------------------------
-    # Admin Dashboard
-    # -----------------------------------------------------
 
     path(
         "admin-dashboard/",
@@ -148,12 +146,19 @@ urlpatterns = [
 
 
     # =====================================================
-    # HEMOHUB ADMIN
+    # LOCATION
     # =====================================================
 
-    # -----------------------------------------------------
-    # Admin Users
-    # -----------------------------------------------------
+    path(
+        "save-location/",
+        save_location,
+        name="save_location"
+    ),
+
+
+    # =====================================================
+    # HEMOHUB ADMIN
+    # =====================================================
 
     path(
         "admin/users/",
@@ -161,21 +166,11 @@ urlpatterns = [
         name="admin_users"
     ),
 
-
-    # -----------------------------------------------------
-    # Admin SOS Monitoring
-    # -----------------------------------------------------
-
     path(
         "admin/sos/",
         admin_sos,
         name="admin_sos"
     ),
-
-
-    # -----------------------------------------------------
-    # Admin Analytics
-    # -----------------------------------------------------
 
     path(
         "admin/analytics/",
@@ -183,32 +178,17 @@ urlpatterns = [
         name="admin_analytics"
     ),
 
-
-    # -----------------------------------------------------
-    # Verify User
-    # -----------------------------------------------------
-
     path(
         "admin/users/<int:user_id>/verify/",
         admin_verify_user,
         name="admin_verify_user"
     ),
 
-
-    # -----------------------------------------------------
-    # Block User
-    # -----------------------------------------------------
-
     path(
         "admin/users/<int:user_id>/block/",
         admin_block_user,
         name="admin_block_user"
     ),
-
-
-    # -----------------------------------------------------
-    # Unblock User
-    # -----------------------------------------------------
 
     path(
         "admin/users/<int:user_id>/unblock/",
@@ -221,20 +201,11 @@ urlpatterns = [
     # DONOR
     # =====================================================
 
-    # -----------------------------------------------------
-    # Donor Profile
-    # -----------------------------------------------------
-
     path(
         "donor/profile/",
         donor_profile,
         name="donor_profile"
     ),
-
-
-    # -----------------------------------------------------
-    # Donor Availability
-    # -----------------------------------------------------
 
     path(
         "donor/update-availability/",
@@ -242,21 +213,11 @@ urlpatterns = [
         name="update_availability"
     ),
 
-
-    # -----------------------------------------------------
-    # Blood Radar
-    # -----------------------------------------------------
-
     path(
         "donor/radar/",
         blood_radar,
         name="blood_radar"
     ),
-
-
-    # -----------------------------------------------------
-    # Donor Blood Requests
-    # -----------------------------------------------------
 
     path(
         "donor/requests/",
@@ -264,32 +225,17 @@ urlpatterns = [
         name="donor_requests"
     ),
 
-
-    # -----------------------------------------------------
-    # Respond to Blood Request
-    # -----------------------------------------------------
-
     path(
         "donor/respond/<int:request_id>/",
         respond_to_request,
         name="respond_to_request"
     ),
 
-
-    # -----------------------------------------------------
-    # Donation History
-    # -----------------------------------------------------
-
     path(
         "donor/history/",
         donation_history,
         name="donation_history"
     ),
-
-
-    # -----------------------------------------------------
-    # Donor Alerts
-    # -----------------------------------------------------
 
     path(
         "donor/alerts/",
@@ -302,9 +248,19 @@ urlpatterns = [
     # NEEDER
     # =====================================================
 
-    # -----------------------------------------------------
-    # Create Blood Request
-    # -----------------------------------------------------
+    # Page 1:
+    # Needer Dashboard
+
+    path(
+        "needer-dashboard/",
+        needer_dashboard,
+        name="needer_dashboard"
+    ),
+
+
+    # Page 2:
+    # Create Blood Request + My Requests
+    # Both are now combined into one page.
 
     path(
         "needer/create-request/",
@@ -313,20 +269,8 @@ urlpatterns = [
     ),
 
 
-    # -----------------------------------------------------
-    # My Requests
-    # -----------------------------------------------------
-
-    path(
-        "needer/my-requests/",
-        my_requests,
-        name="my_requests"
-    ),
-
-
-    # -----------------------------------------------------
-    # Cancel Blood Request
-    # -----------------------------------------------------
+    # Cancel action for a blood request.
+    # This is not a separate page.
 
     path(
         "needer/cancel/<int:request_id>/",
@@ -335,9 +279,10 @@ urlpatterns = [
     ),
 
 
-    # -----------------------------------------------------
+    # Page 3:
     # Find Donor
-    # -----------------------------------------------------
+    # Shows the needer's own requests and
+    # donor responses for the selected request.
 
     path(
         "needer/find-donor/",

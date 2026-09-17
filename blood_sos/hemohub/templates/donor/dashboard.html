@@ -558,19 +558,9 @@
         <span>Profile</span>
     </a>
 
-    <a href="{% url 'blood_radar' %}">
-        <span class="nav-icon">⌖</span>
-        <span>Blood Radar</span>
-    </a>
-
     <a href="{% url 'donor_requests' %}">
         <span class="nav-icon">▤</span>
-        <span>Requests</span>
-    </a>
-
-    <a href="{% url 'donor_alerts' %}">
-        <span class="nav-icon">♢</span>
-        <span>Alerts</span>
+        <span>Blood Requests</span>
     </a>
 
     <a href="{% url 'donation_history' %}">
@@ -870,18 +860,7 @@
                     {% endif %}
 
                 </h3>
-
-                <p>
-                    Patient:
-                    {{ blood_request.patient_name }}
-                </p>
-
-                <p>
-                    Patient Age:
-                    {{ blood_request.patient_age }}
-                </p>
-
-                <p>
+<p>
                     Units Required:
                     {{ blood_request.units }}
                 </p>
@@ -912,7 +891,7 @@
                     type="submit"
                     class="respond-btn"
                 >
-                    Respond
+                    Accept Request
                 </button>
 
             </form>
@@ -930,7 +909,7 @@
             </h3>
 
             <p>
-                There are currently no active requests
+                There are currently no active requests<br>
                 matching your blood group.
             </p>
 

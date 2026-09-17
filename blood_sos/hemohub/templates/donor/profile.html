@@ -1,777 +1,1276 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Donor Profile | HemoHub</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css">
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Segoe UI", sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    background: #f4f7fb;
+    color: #1f2937;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    height: 100vh;
+    background: #0b3d91;
+    padding: 25px 16px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    box-shadow: 3px 0 12px rgba(0, 0, 0, 0.08);
+}
+
+.logo {
+    padding: 5px 14px 28px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.logo span {
+    display: block;
+    margin-top: 5px;
+    color: #dbe7ff;
+    font-size: 11px;
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+.nav {
+    margin-top: 25px;
+}
+
+.nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 13px 15px;
+    margin-bottom: 7px;
+    border-radius: 9px;
+    color: #e5edff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+.nav a:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+}
+
+.nav a.active {
+    background: #ffffff;
+    color: #0b3d91;
+    font-weight: 700;
+}
+
+.nav-icon {
+    width: 22px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.logout {
+    margin-top: auto;
+}
+
+.logout a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px;
+    background: #d62828;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.logout a:hover {
+    background: #b91c1c;
+}
+
+/* ================= MAIN ================= */
+.main {
+    margin-left: 250px;
+    min-height: 100vh;
+    padding: 30px 35px;
+}
+
+/* ================= PAGE HEADER ================= */
+.page-header {
+    margin-bottom: 25px;
+}
+
+.page-header h1 {
+    color: #172033;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.page-header p {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* ================= CARD ================= */
+.card {
+    background: #ffffff;
+    border: 1px solid #e1e7f0;
+    border-radius: 13px;
+    padding: 23px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 10px rgba(20, 40, 80, 0.035);
+}
+
+.card h2 {
+    color: #172033;
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* ================= FORM ================= */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d7dde7;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #1f2937;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+input:focus,
+select:focus {
+    border-color: #0b3d91;
+    box-shadow: 0 0 0 3px rgba(11, 61, 145, 0.08);
+}
+
+input[readonly] {
+    background: #f7f9fc;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+/* ================= LOCATION ================= */
+.location-section {
+    margin-top: 8px;
+}
+
+.location-title {
+    color: #172033;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.location-description {
+    color: #6b7280;
+    font-size: 12px;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.location-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    margin-bottom: 15px;
+}
+
+button {
+    border: none;
+    padding: 11px 17px;
+    border-radius: 7px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.btn-primary {
+    background: #0b3d91;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: #082f70;
+}
+
+.btn-secondary {
+    background: #333b4d;
+    color: #ffffff;
+}
+
+.btn-secondary:hover {
+    background: #202632;
+}
+
+.btn-light {
+    background: #eeeeee;
+    color: #333333;
+}
+
+.btn-light:hover {
+    background: #dddddd;
+}
+
+/* ================= LOCATION STATUS ================= */
+.location-status {
+    padding: 13px;
+    border-radius: 8px;
+    background: #f7f9fc;
+    border-left: 4px solid #0b3d91;
+    margin-bottom: 15px;
+    color: #555f70;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* ================= ADDRESS ================= */
+.address-box {
+    display: none;
+    background: #f8faff;
+    border: 1px solid #dce5f5;
+    border-radius: 10px;
+    padding: 18px;
+    margin-top: 15px;
+}
+
+.address-box.show {
+    display: block;
+}
+
+.address-title {
+    color: #0b3d91;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.address-line {
+    margin-bottom: 8px;
+    color: #555f70;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.address-label {
+    font-weight: 600;
+    color: #374151;
+}
+
+/* ================= MAP ================= */
+#map {
+    width: 100%;
+    height: 450px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 18px;
+    border: 1px solid #d9dee8;
+    background: #e9e9e9;
+}
+
+.map-help {
+    margin-top: 10px;
+    color: #6b7280;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* ================= COORDINATES ================= */
+.coordinates {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.coordinate-box {
+    background: #f7f9fc;
+    border: 1px solid #e5e9f0;
+    padding: 13px;
+    border-radius: 8px;
+}
+
+.coordinate-box span {
+    display: block;
+    font-size: 11px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.coordinate-box strong {
+    color: #333;
+    font-size: 13px;
+}
+
+/* ================= SAVE ================= */
+.save-area {
+    margin-top: 20px;
+    padding-top: 5px;
+}
+
+.save-btn {
+    background: #d62828;
+    color: #ffffff;
+    padding: 12px 23px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.save-btn:hover {
+    background: #b91c1c;
+}
+
+/* ================= DJANGO MESSAGES ================= */
+.messages {
+    margin-bottom: 20px;
+}
+
+.message {
+    padding: 12px 15px;
+    background: #e9f7ef;
+    color: #176b3a;
+    border: 1px solid #ccebd8;
+    border-radius: 7px;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1000px) {
+    .form-grid {
+        grid-template-columns: 1fr;
     }
 
-    body {
-        background: #f4f7fb;
-        color: #1f2937;
+    .coordinates {
+        grid-template-columns: repeat(3, 1fr);
     }
+}
 
-    /* ================= SIDEBAR ================= */
-
+@media (max-width: 800px) {
     .sidebar {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 250px;
-        height: 100vh;
-        background: #0b3d91;
-        padding: 25px 16px;
-        display: flex;
-        flex-direction: column;
-        z-index: 1000;
-        box-shadow: 3px 0 12px rgba(0,0,0,0.08);
+        width: 210px;
+    }
+
+    .main {
+        margin-left: 210px;
+        padding: 22px;
+    }
+
+    .coordinates {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: auto;
+        padding: 18px;
     }
 
     .logo {
-        color: #ffffff;
-        font-size: 25px;
-        font-weight: 700;
-        padding: 5px 14px 28px;
-        border-bottom: 1px solid rgba(255,255,255,.18);
-    }
-
-    .logo span {
-        display: block;
-        color: #dbe7ff;
-        font-size: 11px;
-        font-weight: 400;
-        margin-top: 4px;
-        line-height: 1.4;
+        padding-bottom: 18px;
     }
 
     .nav {
-        margin-top: 25px;
-    }
-
-    .nav a {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        width: 100%;
-        padding: 13px 15px;
-        margin-bottom: 7px;
-        border-radius: 9px;
-        color: #e5edff;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        transition: 0.2s;
-    }
-
-    .nav a:hover {
-        background: rgba(255,255,255,.12);
-        color: #ffffff;
-    }
-
-    .nav a.active {
-        background: #ffffff;
-        color: #0b3d91;
-        font-weight: 700;
-    }
-
-    .nav-icon {
-        width: 20px;
-        text-align: center;
-        font-size: 16px;
+        margin-top: 15px;
     }
 
     .logout {
-        margin-top: auto;
+        margin-top: 10px;
     }
-
-    .logout a {
-        display: block;
-        text-align: center;
-        padding: 12px;
-        background: #d62828;
-        color: #ffffff;
-        text-decoration: none;
-        border-radius: 9px;
-        font-size: 14px;
-        font-weight: 600;
-        transition: 0.2s;
-    }
-
-    .logout a:hover {
-        background: #b71c1c;
-    }
-
-    /* ================= MAIN ================= */
 
     .main {
-        margin-left: 250px;
-        min-height: 100vh;
-        padding: 30px 35px;
-    }
-
-    .page-header {
-        margin-bottom: 25px;
+        margin-left: 0;
+        padding: 20px 15px;
     }
 
     .page-header h1 {
-        font-size: 28px;
-        margin-bottom: 6px;
-        color: #1f2937;
+        font-size: 24px;
     }
 
-    .page-header p {
-        color: #6b7280;
-        font-size: 14px;
-    }
-
-    /* ================= PROFILE CARD ================= */
-
-    .profile-card {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 16px;
-        padding: 30px;
-        max-width: 850px;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.04);
-    }
-
-    .profile-header {
-        display: flex;
-        align-items: center;
-        gap: 18px;
-        padding-bottom: 25px;
-        border-bottom: 1px solid #eeeeee;
-        margin-bottom: 25px;
-    }
-
-    .avatar {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        background: #ffe5e5;
-        color: #d62828;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 28px;
-        font-weight: 700;
-        flex-shrink: 0;
-    }
-
-    .profile-header h2 {
-        font-size: 21px;
-        margin-bottom: 4px;
-        color: #1f2937;
-    }
-
-    .profile-header p {
-        color: #777777;
-        font-size: 13px;
-    }
-
-    /* ================= FORM ================= */
-
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-    }
-
-    .form-group {
-        display: flex;
+    .location-buttons {
         flex-direction: column;
     }
 
-    .form-group.full {
-        grid-column: 1 / -1;
-    }
-
-    label {
-        font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 7px;
-        color: #374151;
-    }
-
-    input,
-    select {
+    .location-buttons button {
         width: 100%;
-        padding: 12px 13px;
-        border: 1px solid #d9dde5;
-        border-radius: 9px;
-        outline: none;
-        font-size: 14px;
-        background: #ffffff;
-        color: #1f2937;
-        transition: 0.2s;
     }
 
-    input:focus,
-    select:focus {
-        border-color: #0b3d91;
-        box-shadow: 0 0 0 3px rgba(11,61,145,0.08);
+    #map {
+        height: 350px;
     }
-
-    input[readonly] {
-        background: #f3f4f6;
-        color: #777777;
-        cursor: not-allowed;
-    }
-
-    .hint {
-        font-size: 11px;
-        color: #888888;
-        margin-top: 5px;
-    }
-
-    /* ================= BUTTONS ================= */
-
-    .actions {
-        margin-top: 30px;
-        display: flex;
-        justify-content: flex-end;
-        gap: 12px;
-    }
-
-    .cancel-btn {
-        padding: 12px 22px;
-        border: 1px solid #d9dde5;
-        background: #ffffff;
-        color: #555555;
-        border-radius: 9px;
-        text-decoration: none;
-        font-size: 14px;
-        transition: 0.2s;
-    }
-
-    .cancel-btn:hover {
-        background: #f3f4f6;
-    }
-
-    .save-btn {
-        padding: 12px 24px;
-        border: none;
-        background: #d62828;
-        color: #ffffff;
-        border-radius: 9px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 600;
-        transition: 0.2s;
-    }
-
-    .save-btn:hover {
-        background: #b71c1c;
-    }
-
-    /* ================= STATUS ================= */
-
-    .status-box {
-        margin-top: 25px;
-        padding: 18px;
-        background: #f8fafc;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-    }
-
-    .status-box h3 {
-        font-size: 15px;
-        margin-bottom: 8px;
-        color: #1f2937;
-    }
-
-    .available {
-        color: #218838;
-        font-weight: 600;
-        font-size: 14px;
-    }
-
-    .unavailable {
-        color: #c1121f;
-        font-weight: 600;
-        font-size: 14px;
-    }
-
-    .status-box p {
-        font-size: 12px;
-        color: #777777;
-        margin-top: 6px;
-    }
-
-    /* ================= RESPONSIVE ================= */
-
-    @media (max-width: 800px) {
-
-        .sidebar {
-            width: 210px;
-        }
-
-        .main {
-            margin-left: 210px;
-            padding: 25px 20px;
-        }
-
-        .form-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .form-group.full {
-            grid-column: auto;
-        }
-    }
-
-    @media (max-width: 600px) {
-
-        .sidebar {
-            position: relative;
-            width: 100%;
-            height: auto;
-            padding: 20px 16px;
-        }
-
-        .logo {
-            padding-bottom: 20px;
-        }
-
-        .nav {
-            margin-top: 20px;
-        }
-
-        .logout {
-            margin-top: 15px;
-        }
-
-        .main {
-            margin-left: 0;
-            padding: 20px 15px;
-        }
-
-        .profile-card {
-            padding: 20px;
-        }
-
-        .profile-header {
-            align-items: flex-start;
-        }
-
-        .actions {
-            flex-direction: column;
-        }
-
-        .cancel-btn,
-        .save-btn {
-            width: 100%;
-            text-align: center;
-        }
-    }
+}
 </style>
-  
-
 </head>
 
 <body>
 
-<!-- =====================================================
-     SIDEBAR
-===================================================== -->
-
 <aside class="sidebar">
+    <div class="logo">
+        HemoHub
+        <span>Blood Donation & Emergency Response</span>
+    </div>
 
-  
-<div class="logo">
-    HemoHub
-    <span>Blood Donation & Emergency Response</span>
-</div>
+    <nav class="nav">
+        <a href="{% url 'donor_dashboard' %}">
+            <span class="nav-icon">▣</span>
+            <span>Dashboard</span>
+        </a>
 
-<nav class="nav">
+        <a href="{% url 'donor_profile' %}" class="active">
+            <span class="nav-icon">◉</span>
+            <span>Profile</span>
+        </a>
 
-    <a href="{% url 'donor_dashboard' %}">
-        <span class="nav-icon">▣</span>
-        <span>Dashboard</span>
-    </a>
+        <a href="{% url 'donor_requests' %}">
+            <span class="nav-icon">▤</span>
+            <span>Blood Requests</span>
+        </a>
 
-    <a href="{% url 'donor_profile' %}" class="active">
-        <span class="nav-icon">◉</span>
-        <span>Profile</span>
-    </a>
+        <a href="{% url 'donation_history' %}">
+            <span class="nav-icon">◫</span>
+            <span>Donation History</span>
+        </a>
+    </nav>
 
-    <a href="{% url 'blood_radar' %}">
-        <span class="nav-icon">⌖</span>
-        <span>Blood Radar</span>
-    </a>
-
-    <a href="{% url 'donor_requests' %}">
-        <span class="nav-icon">▤</span>
-        <span>Requests</span>
-    </a>
-
-    <a href="{% url 'donor_alerts' %}">
-        <span class="nav-icon">♢</span>
-        <span>Alerts</span>
-    </a>
-
-    <a href="{% url 'donation_history' %}">
-        <span class="nav-icon">◫</span>
-        <span>Donation History</span>
-    </a>
-
-</nav>
-
-<div class="logout">
-
-    <a href="{% url 'logout_user' %}">
-        Logout
-    </a>
-
-</div>
-  
-
+    <div class="logout">
+        <a href="{% url 'logout_user' %}">Logout</a>
+    </div>
 </aside>
 
-<!-- =====================================================
-     MAIN CONTENT
-===================================================== -->
-
 <main class="main">
-
-  
-<div class="page-header">
-
-    <h1>
-        Donor Profile
-    </h1>
-
-    <p>
-        View and update your donor information.
-    </p>
-
-</div>
-
-
-<!-- =================================================
-     PROFILE CARD
-================================================== -->
-
-<div class="profile-card">
-
-    <div class="profile-header">
-
-        <div class="avatar">
-
-            {% if name %}
-                {{ name|first|upper }}
-            {% else %}
-                D
-            {% endif %}
-
-        </div>
-
-        <div>
-
-            <h2>
-                {{ name }}
-            </h2>
-
-            <p>
-                Donor Account
-            </p>
-
-        </div>
-
+    <div class="page-header">
+        <h1>Donor Profile</h1>
+        <p>Manage your personal information and donation location.</p>
     </div>
 
-
-    <!-- =================================================
-         UPDATE FORM
-    ================================================== -->
-
-    <form method="POST">
-
-        {% csrf_token %}
-
-        <div class="form-grid">
-
-            <!-- NAME -->
-
-            <div class="form-group">
-
-                <label for="name">
-                    Full Name
-                </label>
-
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value="{{ name }}"
-                    placeholder="Enter your name"
-                    required
-                >
-
-            </div>
-
-
-            <!-- AGE -->
-
-            <div class="form-group">
-
-                <label for="age">
-                    Age
-                </label>
-
-                <input
-                    type="number"
-                    id="age"
-                    name="age"
-                    value="{{ age }}"
-                    min="1"
-                    max="120"
-                    placeholder="Enter your age"
-                    required
-                >
-
-            </div>
-
-
-            <!-- USERNAME -->
-
-            <div class="form-group">
-
-                <label for="username">
-                    Username
-                </label>
-
-                <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    value="{{ username }}"
-                    readonly
-                >
-
-                <span class="hint">
-                    Username cannot be changed.
-                </span>
-
-            </div>
-
-
-            <!-- BLOOD GROUP -->
-
-            <div class="form-group">
-
-                <label for="blood">
-                    Blood Group
-                </label>
-
-                <select
-                    id="blood"
-                    name="blood"
-                    required
-                >
-
-                    <option value="">
-                        Select Blood Group
-                    </option>
-
-                    <option value="A+"
-                        {% if blood_group == "A+" %}selected{% endif %}>
-                        A+
-                    </option>
-
-                    <option value="A-"
-                        {% if blood_group == "A-" %}selected{% endif %}>
-                        A-
-                    </option>
-
-                    <option value="B+"
-                        {% if blood_group == "B+" %}selected{% endif %}>
-                        B+
-                    </option>
-
-                    <option value="B-"
-                        {% if blood_group == "B-" %}selected{% endif %}>
-                        B-
-                    </option>
-
-                    <option value="AB+"
-                        {% if blood_group == "AB+" %}selected{% endif %}>
-                        AB+
-                    </option>
-
-                    <option value="AB-"
-                        {% if blood_group == "AB-" %}selected{% endif %}>
-                        AB-
-                    </option>
-
-                    <option value="O+"
-                        {% if blood_group == "O+" %}selected{% endif %}>
-                        O+
-                    </option>
-
-                    <option value="O-"
-                        {% if blood_group == "O-" %}selected{% endif %}>
-                        O-
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- PHONE -->
-
-            <div class="form-group">
-
-                <label for="phone">
-                    Phone Number
-                </label>
-
-                <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value="{{ phone }}"
-                    placeholder="Enter phone number"
-                >
-
-            </div>
-
-
-            <!-- LOCATION -->
-
-            <div class="form-group">
-
-                <label for="city">
-                    Location
-                </label>
-
-                <input
-                    type="text"
-                    id="city"
-                    name="city"
-                    value="{{ location }}"
-                    placeholder="Enter your location"
-                >
-
-            </div>
-
-
-            <!-- LAST DONATION -->
-
-            <div class="form-group full">
-
-                <label for="lastDonation">
-                    Last Donation Date
-                </label>
-
-                <input
-                    type="date"
-                    id="lastDonation"
-                    name="lastDonation"
-
-                    {% if last_donation_date %}
-                        value="{{ last_donation_date|date:'Y-m-d' }}"
-                    {% endif %}
-
-                >
-
-                <span class="hint">
-                    Leave empty if you have not donated before.
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <!-- =================================================
-             ACTION BUTTONS
-        ================================================== -->
-
-        <div class="actions">
-
-            <a
-                href="{% url 'donor_dashboard' %}"
-                class="cancel-btn"
-            >
-                Cancel
-            </a>
-
-            <button
-                type="submit"
-                class="save-btn"
-            >
-                Save Changes
-            </button>
-
-        </div>
-
-    </form>
-
-
-    <!-- =================================================
-         AVAILABILITY STATUS
-    ================================================== -->
-
-    <div class="status-box">
-
-        <h3>
-            Donation Availability
-        </h3>
-
-        {% if is_available %}
-
-            <span class="available">
-                ● Currently Available for Donation
-            </span>
-
-        {% else %}
-
-            <span class="unavailable">
-                ● Currently Unavailable for Donation
-            </span>
-
-        {% endif %}
-
-        <p>
-            You can change your availability from the dashboard.
-        </p>
-
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message">{{ message }}</div>
+        {% endfor %}
     </div>
+    {% endif %}
 
-</div>
-  
+    <div class="card">
+        <h2>Personal Information</h2>
 
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" value="{{ name }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" name="age" value="{{ age }}" min="18" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" value="{{ username }}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>Blood Group</label>
+                    <select name="blood" required>
+                        <option value="">Select Blood Group</option>
+                        <option value="A+" {% if blood == "A+" %}selected{% endif %}>A+</option>
+                        <option value="A-" {% if blood == "A-" %}selected{% endif %}>A-</option>
+                        <option value="B+" {% if blood == "B+" %}selected{% endif %}>B+</option>
+                        <option value="B-" {% if blood == "B-" %}selected{% endif %}>B-</option>
+                        <option value="AB+" {% if blood == "AB+" %}selected{% endif %}>AB+</option>
+                        <option value="AB-" {% if blood == "AB-" %}selected{% endif %}>AB-</option>
+                        <option value="O+" {% if blood == "O+" %}selected{% endif %}>O+</option>
+                        <option value="O-" {% if blood == "O-" %}selected{% endif %}>O-</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" value="{{ phone }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Last Donation</label>
+                    <input type="date" name="lastDonation" value="{{ lastDonation }}">
+                </div>
+
+                <div class="form-group full location-section">
+                    <div class="location-title">Donation Location</div>
+
+                    <div class="location-description">
+                        Your saved location is used by HemoHub to match you with nearby compatible blood requests.
+                    </div>
+
+                    <label>📍 Location / Area</label>
+
+                    <input
+                        type="text"
+                        id="locationInput"
+                        name="location"
+                        value="{{ location }}"
+                        placeholder="Example: Nallampallayam, Coimbatore">
+
+                    <div class="location-buttons">
+                        <button type="button" class="btn-primary" onclick="getCurrentLocation()">
+                            📍 Detect Current Location
+                        </button>
+
+                        <button type="button" class="btn-secondary" onclick="searchManualLocation()">
+                            🔎 Show Location on Map
+                        </button>
+
+                        <button type="button" class="btn-light" onclick="clearLocation()">
+                            ✕ Clear Location
+                        </button>
+                    </div>
+
+                    <div class="location-status" id="locationStatus">
+                        📍 Click <strong>Detect Current Location</strong> to get your device location.
+                    </div>
+
+                    <div class="address-box" id="addressBox">
+                        <div class="address-title">📍 Detected Location</div>
+
+                        <div class="address-line">
+                            <span class="address-label">Street:</span>
+                            <span id="streetValue">-</span>
+                        </div>
+
+                        <div class="address-line">
+                            <span class="address-label">Area / Locality:</span>
+                            <span id="areaValue">-</span>
+                        </div>
+
+                        <div class="address-line">
+                            <span class="address-label">City:</span>
+                            <span id="cityValue">-</span>
+                        </div>
+
+                        <div class="address-line">
+                            <span class="address-label">District:</span>
+                            <span id="districtValue">-</span>
+                        </div>
+
+                        <div class="address-line">
+                            <span class="address-label">State:</span>
+                            <span id="stateValue">-</span>
+                        </div>
+
+                        <div class="address-line">
+                            <span class="address-label">PIN Code:</span>
+                            <span id="postcodeValue">-</span>
+                        </div>
+
+                        <div class="address-line">
+                            <span class="address-label">Complete Address:</span>
+                            <span id="displayAddress">-</span>
+                        </div>
+                    </div>
+
+                    <div id="map"></div>
+
+                    <div class="map-help">
+                        🖱️ Drag the marker to adjust your location.
+                        <br>
+                        📍 GPS coordinates remain the source of truth.
+                    </div>
+
+                    <div class="coordinates">
+                        <div class="coordinate-box">
+                            <span>Latitude</span>
+                            <strong id="latitudeDisplay">
+                                {{ latitude|default:"Not available" }}
+                            </strong>
+                        </div>
+
+                        <div class="coordinate-box">
+                            <span>Longitude</span>
+                            <strong id="longitudeDisplay">
+                                {{ longitude|default:"Not available" }}
+                            </strong>
+                        </div>
+
+                        <div class="coordinate-box">
+                            <span>GPS Accuracy</span>
+                            <strong id="accuracyDisplay">
+                                {% if accuracy %}
+                                    ±{{ accuracy }} meters
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                            </strong>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="latitude" id="latitude" value="{{ latitude }}">
+                    <input type="hidden" name="longitude" id="longitude" value="{{ longitude }}">
+                    <input type="hidden" name="accuracy" id="accuracy" value="{{ accuracy }}">
+
+                    <div class="save-area">
+                        <button type="submit" class="save-btn">
+                            💾 Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </main>
 
-<!-- =====================================================
-     DJANGO MESSAGES
-===================================================== -->
-
-{% if messages %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl.js"></script>
 
 <script>
+let map = null;
+let marker = null;
+let currentAccuracy = null;
+let bestAccuracy = Infinity;
+let gpsWatchId = null;
+let gpsSamples = 0;
+let gpsFinished = false;
 
-    {% for message in messages %}
+const MAP_STYLE = "https://tiles.openfreemap.org/styles/liberty";
 
-        alert("{{ message|escapejs }}");
+/* ================= INITIALIZE MAP ================= */
+function initializeMap(latitude, longitude, zoom = 16) {
+    latitude = parseFloat(latitude);
+    longitude = parseFloat(longitude);
 
-    {% endfor %}
+    if (isNaN(latitude) || isNaN(longitude)) {
+        return;
+    }
 
+    if (map === null) {
+        map = L.map("map").setView([latitude, longitude], zoom);
+
+        L.maplibreGL({
+            style: MAP_STYLE
+        }).addTo(map);
+
+        marker = L.marker([latitude, longitude], {
+            draggable: true
+        }).addTo(map);
+
+        marker.on("dragend", function() {
+            const position = marker.getLatLng();
+
+            updateCoordinates(
+                position.lat,
+                position.lng,
+                null
+            );
+
+            document.getElementById("accuracyDisplay").textContent =
+                "Manual adjustment";
+
+            reverseGeocode(
+                position.lat,
+                position.lng
+            );
+        });
+    } else {
+        map.setView([latitude, longitude], zoom);
+        marker.setLatLng([latitude, longitude]);
+    }
+
+    setTimeout(function() {
+        map.invalidateSize();
+    }, 300);
+}
+
+/* ================= UPDATE COORDINATES ================= */
+function updateCoordinates(latitude, longitude, accuracy = null) {
+    latitude = parseFloat(latitude);
+    longitude = parseFloat(longitude);
+
+    if (isNaN(latitude) || isNaN(longitude)) {
+        return;
+    }
+
+    const latText = latitude.toFixed(6);
+    const lngText = longitude.toFixed(6);
+
+    document.getElementById("latitude").value = latText;
+    document.getElementById("longitude").value = lngText;
+
+    document.getElementById("latitudeDisplay").textContent = latText;
+    document.getElementById("longitudeDisplay").textContent = lngText;
+
+    if (accuracy !== null) {
+        currentAccuracy = parseFloat(accuracy);
+
+        document.getElementById("accuracy").value =
+            currentAccuracy.toFixed(2);
+
+        document.getElementById("accuracyDisplay").textContent =
+            "±" + Math.round(currentAccuracy) + " meters";
+    }
+}
+
+/* ================= ACCURACY MESSAGE ================= */
+function accuracyMessage(accuracy) {
+    accuracy = parseFloat(accuracy);
+
+    if (accuracy <= 10) {
+        return "Excellent accuracy";
+    }
+
+    if (accuracy <= 30) {
+        return "Good accuracy";
+    }
+
+    if (accuracy <= 100) {
+        return "Moderate accuracy";
+    }
+
+    return "Low accuracy";
+}
+
+/* ================= GET CURRENT LOCATION ================= */
+function getCurrentLocation() {
+    if (!navigator.geolocation) {
+        document.getElementById("locationStatus").innerHTML =
+            "❌ Your browser does not support location services.";
+        return;
+    }
+
+    bestAccuracy = Infinity;
+    gpsSamples = 0;
+    gpsFinished = false;
+
+    document.getElementById("locationStatus").innerHTML =
+        "📍 Getting your current device location...<br>" +
+        "Please keep the page open for a few seconds so GPS accuracy can improve.";
+
+    gpsWatchId = navigator.geolocation.watchPosition(
+        function(position) {
+            gpsSamples++;
+
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
+
+            if (accuracy < bestAccuracy) {
+                bestAccuracy = accuracy;
+
+                updateCoordinates(
+                    latitude,
+                    longitude,
+                    accuracy
+                );
+
+                initializeMap(
+                    latitude,
+                    longitude,
+                    18
+                );
+
+                document.getElementById("locationStatus").innerHTML =
+                    "📍 GPS location detected.<br>" +
+                    "<strong>Accuracy:</strong> ±" +
+                    Math.round(accuracy) +
+                    " meters — " +
+                    accuracyMessage(accuracy) +
+                    "<br>🔄 Improving GPS accuracy...";
+
+                if (accuracy <= 15) {
+                    finishGPS(
+                        latitude,
+                        longitude,
+                        accuracy
+                    );
+                }
+            }
+        },
+        function(error) {
+            if (gpsFinished) {
+                return;
+            }
+
+            let message = "❌ Unable to detect your location.";
+
+            if (error.code === 1) {
+                message =
+                    "❌ Location permission denied. Please allow location access in your browser.";
+            } else if (error.code === 2) {
+                message =
+                    "❌ Your device could not determine the current location.";
+            } else if (error.code === 3) {
+                message =
+                    "❌ GPS request timed out. Please try again.";
+            }
+
+            document.getElementById("locationStatus").innerHTML =
+                message;
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 30000,
+            maximumAge: 0
+        }
+    );
+
+    setTimeout(function() {
+        if (gpsFinished) {
+            return;
+        }
+
+        if (gpsWatchId !== null) {
+            navigator.geolocation.clearWatch(gpsWatchId);
+            gpsWatchId = null;
+        }
+
+        gpsFinished = true;
+
+        const lat = document.getElementById("latitude").value;
+        const lng = document.getElementById("longitude").value;
+
+        if (lat && lng) {
+            document.getElementById("locationStatus").innerHTML =
+                "✅ GPS location selected.<br>" +
+                "<strong>Best accuracy:</strong> ±" +
+                Math.round(bestAccuracy) +
+                " meters<br>" +
+                "🔎 Finding your street and area...";
+
+            reverseGeocode(
+                parseFloat(lat),
+                parseFloat(lng)
+            );
+        }
+    }, 20000);
+}
+
+/* ================= FINISH GPS ================= */
+function finishGPS(latitude, longitude, accuracy) {
+    if (gpsFinished) {
+        return;
+    }
+
+    gpsFinished = true;
+
+    if (gpsWatchId !== null) {
+        navigator.geolocation.clearWatch(gpsWatchId);
+        gpsWatchId = null;
+    }
+
+    updateCoordinates(
+        latitude,
+        longitude,
+        accuracy
+    );
+
+    initializeMap(
+        latitude,
+        longitude,
+        18
+    );
+
+    document.getElementById("locationStatus").innerHTML =
+        "✅ Very accurate GPS location detected.<br>" +
+        "<strong>Accuracy:</strong> ±" +
+        Math.round(accuracy) +
+        " meters<br>" +
+        "🔎 Finding your street and area...";
+
+    reverseGeocode(
+        latitude,
+        longitude
+    );
+}
+
+/* ================= REVERSE GEOCODING ================= */
+async function reverseGeocode(latitude, longitude) {
+    try {
+        const url =
+            "https://nominatim.openstreetmap.org/reverse" +
+            "?format=jsonv2" +
+            "&lat=" + encodeURIComponent(latitude) +
+            "&lon=" + encodeURIComponent(longitude) +
+            "&zoom=18" +
+            "&addressdetails=1";
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error("Reverse geocoding failed");
+        }
+
+        const data = await response.json();
+        const address = data.address || {};
+
+        const street =
+            address.road ||
+            address.street ||
+            address.pedestrian ||
+            address.residential ||
+            address.footway ||
+            address.path ||
+            address.cycleway ||
+            "-";
+
+        const area =
+            address.suburb ||
+            address.neighbourhood ||
+            address.residential ||
+            address.quarter ||
+            address.village ||
+            address.town ||
+            address.city_district ||
+            "-";
+
+        const city =
+            address.city ||
+            address.town ||
+            address.municipality ||
+            address.village ||
+            "-";
+
+        const district =
+            address.state_district ||
+            address.district ||
+            address.county ||
+            address.city_district ||
+            "-";
+
+        const state = address.state || "-";
+        const postcode = address.postcode || "-";
+        const completeAddress = data.display_name || "-";
+
+        document.getElementById("streetValue").textContent = street;
+        document.getElementById("areaValue").textContent = area;
+        document.getElementById("cityValue").textContent = city;
+        document.getElementById("districtValue").textContent = district;
+        document.getElementById("stateValue").textContent = state;
+        document.getElementById("postcodeValue").textContent = postcode;
+        document.getElementById("displayAddress").textContent = completeAddress;
+
+        document.getElementById("addressBox").classList.add("show");
+
+        let readableLocation = "";
+
+        if (area !== "-") {
+            readableLocation += area;
+        }
+
+        if (city !== "-" && city !== area) {
+            if (readableLocation) {
+                readableLocation += ", ";
+            }
+
+            readableLocation += city;
+        }
+
+        if (state !== "-" && state !== city) {
+            if (readableLocation) {
+                readableLocation += ", ";
+            }
+
+            readableLocation += state;
+        }
+
+        if (postcode !== "-") {
+            if (readableLocation) {
+                readableLocation += " - ";
+            }
+
+            readableLocation += postcode;
+        }
+
+        if (readableLocation) {
+            document.getElementById("locationInput").value =
+                readableLocation;
+        }
+
+        document.getElementById("locationStatus").innerHTML =
+            "✅ Location detected successfully.<br>" +
+            "<strong>GPS:</strong> " +
+            parseFloat(latitude).toFixed(6) +
+            ", " +
+            parseFloat(longitude).toFixed(6) +
+            "<br>📍 Street and area information loaded.";
+    } catch (error) {
+        console.error("Reverse geocoding error:", error);
+
+        document.getElementById("locationStatus").innerHTML =
+            "✅ GPS location detected.<br>" +
+            "⚠️ Street/area name could not be retrieved right now.<br>" +
+            "Your GPS coordinates are still available.";
+    }
+}
+
+/* ================= MANUAL LOCATION SEARCH ================= */
+async function searchManualLocation() {
+    const input = document.getElementById("locationInput");
+    const query = input.value.trim();
+
+    if (query === "") {
+        document.getElementById("locationStatus").innerHTML =
+            "⚠️ Enter a location first.<br>" +
+            "Example: Nallampallayam, Coimbatore";
+        return;
+    }
+
+    document.getElementById("locationStatus").innerHTML =
+        "🔎 Searching for <strong>" + query + "</strong>...";
+
+    try {
+        const url =
+            "https://nominatim.openstreetmap.org/search" +
+            "?format=jsonv2" +
+            "&q=" + encodeURIComponent(query) +
+            "&limit=1" +
+            "&addressdetails=1";
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error("Search failed");
+        }
+
+        const results = await response.json();
+
+        if (results.length === 0) {
+            document.getElementById("locationStatus").innerHTML =
+                "❌ Location not found.<br>" +
+                "Try entering a more specific area or street.";
+            return;
+        }
+
+        const result = results[0];
+        const latitude = parseFloat(result.lat);
+        const longitude = parseFloat(result.lon);
+
+        currentAccuracy = null;
+
+        updateCoordinates(
+            latitude,
+            longitude,
+            null
+        );
+
+        document.getElementById("accuracy").value = "";
+        document.getElementById("accuracyDisplay").textContent =
+            "Manual location";
+
+        initializeMap(
+            latitude,
+            longitude,
+            18
+        );
+
+        const address = result.address || {};
+
+        const street =
+            address.road ||
+            address.street ||
+            address.pedestrian ||
+            address.residential ||
+            address.footway ||
+            "-";
+
+        const area =
+            address.suburb ||
+            address.neighbourhood ||
+            address.residential ||
+            address.village ||
+            address.town ||
+            "-";
+
+        const city =
+            address.city ||
+            address.town ||
+            address.municipality ||
+            address.village ||
+            "-";
+
+        const district =
+            address.state_district ||
+            address.district ||
+            address.county ||
+            "-";
+
+        const state = address.state || "-";
+        const postcode = address.postcode || "-";
+
+        document.getElementById("streetValue").textContent = street;
+        document.getElementById("areaValue").textContent = area;
+        document.getElementById("cityValue").textContent = city;
+        document.getElementById("districtValue").textContent = district;
+        document.getElementById("stateValue").textContent = state;
+        document.getElementById("postcodeValue").textContent = postcode;
+
+        document.getElementById("displayAddress").textContent =
+            result.display_name || query;
+
+        document.getElementById("addressBox").classList.add("show");
+
+        document.getElementById("locationStatus").innerHTML =
+            "✅ Manual location found.<br>" +
+            "🖱️ Drag the marker if you want to fine-tune the position.";
+    } catch (error) {
+        console.error("Manual location error:", error);
+
+        document.getElementById("locationStatus").innerHTML =
+            "❌ Unable to search this location right now.";
+    }
+}
+
+/* ================= CLEAR LOCATION ================= */
+function clearLocation() {
+    if (gpsWatchId !== null) {
+        navigator.geolocation.clearWatch(gpsWatchId);
+        gpsWatchId = null;
+    }
+
+    gpsFinished = true;
+
+    document.getElementById("latitude").value = "";
+    document.getElementById("longitude").value = "";
+    document.getElementById("accuracy").value = "";
+
+    document.getElementById("latitudeDisplay").textContent =
+        "Not available";
+
+    document.getElementById("longitudeDisplay").textContent =
+        "Not available";
+
+    document.getElementById("accuracyDisplay").textContent =
+        "Not available";
+
+    document.getElementById("streetValue").textContent = "-";
+    document.getElementById("areaValue").textContent = "-";
+    document.getElementById("cityValue").textContent = "-";
+    document.getElementById("districtValue").textContent = "-";
+    document.getElementById("stateValue").textContent = "-";
+    document.getElementById("postcodeValue").textContent = "-";
+    document.getElementById("displayAddress").textContent = "-";
+
+    document.getElementById("locationInput").value = "";
+
+    document.getElementById("addressBox").classList.remove("show");
+
+    document.getElementById("locationStatus").innerHTML =
+        "📍 Location cleared.";
+
+    if (map !== null) {
+        map.remove();
+        map = null;
+        marker = null;
+    }
+
+    currentAccuracy = null;
+    bestAccuracy = Infinity;
+}
+
+/* ================= LOAD SAVED DJANGO LOCATION ================= */
+document.addEventListener("DOMContentLoaded", function() {
+    const savedLatitude =
+        "{{ latitude|default:''|escapejs }}";
+
+    const savedLongitude =
+        "{{ longitude|default:''|escapejs }}";
+
+    const savedAccuracy =
+        "{{ accuracy|default:''|escapejs }}";
+
+    if (savedLatitude && savedLongitude) {
+        const lat = parseFloat(savedLatitude);
+        const lng = parseFloat(savedLongitude);
+
+        if (!isNaN(lat) && !isNaN(lng)) {
+            if (savedAccuracy) {
+                currentAccuracy =
+                    parseFloat(savedAccuracy);
+            }
+
+            initializeMap(
+                lat,
+                lng,
+                16
+            );
+
+            updateCoordinates(
+                lat,
+                lng,
+                currentAccuracy
+            );
+
+            document.getElementById("locationStatus").innerHTML =
+                "📍 Saved donor location loaded.<br>" +
+                "🖱️ Drag the marker to update it.";
+
+            reverseGeocode(
+                lat,
+                lng
+            );
+        }
+    }
+});
 </script>
-
-{% endif %}
 
 </body>
 </html>
