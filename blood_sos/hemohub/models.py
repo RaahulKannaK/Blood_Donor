@@ -1,4 +1,3 @@
-
 from django.db import models
 
 
@@ -59,7 +58,8 @@ class DonorProfile(models.Model):
 
     user = models.OneToOneField(
         LoginUser,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="donor_profile"
     )
 
     blood_group = models.CharField(
@@ -71,6 +71,20 @@ class DonorProfile(models.Model):
         blank=True
     )
 
+    # -----------------------------------------------------
+    # GPS LOCATION
+    # -----------------------------------------------------
+
+    latitude = models.FloatField(
+        null=True,
+        blank=True
+    )
+
+    longitude = models.FloatField(
+        null=True,
+        blank=True
+    )
+
     phone = models.CharField(
         max_length=15,
         blank=True
@@ -79,10 +93,6 @@ class DonorProfile(models.Model):
     last_donation_date = models.DateField(
         null=True,
         blank=True
-    )
-
-    distance_km = models.FloatField(
-        default=0
     )
 
     is_available = models.BooleanField(
@@ -106,9 +116,17 @@ class BloodRequest(models.Model):
         ('Normal', 'Normal'),
     ]
 
+    STATUS_CHOICES = [
+        ('Active', 'Active'),
+        ('Matched', 'Matched'),
+        ('Fulfilled', 'Fulfilled'),
+        ('Cancelled', 'Cancelled'),
+    ]
+
     needer = models.ForeignKey(
         LoginUser,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="blood_requests"
     )
 
     patient_name = models.CharField(
@@ -131,6 +149,20 @@ class BloodRequest(models.Model):
         max_length=100
     )
 
+    # -----------------------------------------------------
+    # GPS LOCATION
+    # -----------------------------------------------------
+
+    latitude = models.FloatField(
+        null=True,
+        blank=True
+    )
+
+    longitude = models.FloatField(
+        null=True,
+        blank=True
+    )
+
     urgency = models.CharField(
         max_length=20,
         choices=URGENCY_CHOICES
@@ -142,6 +174,7 @@ class BloodRequest(models.Model):
 
     status = models.CharField(
         max_length=20,
+        choices=STATUS_CHOICES,
         default='Active'
     )
 
@@ -160,6 +193,13 @@ class BloodRequest(models.Model):
 
 class SuspiciousRequest(models.Model):
 
+    SEVERITY_CHOICES = [
+        ('Low', 'Low'),
+        ('Medium', 'Medium'),
+        ('High', 'High'),
+        ('Critical', 'Critical'),
+    ]
+
     blood_request = models.ForeignKey(
         BloodRequest,
         on_delete=models.CASCADE,
@@ -174,6 +214,7 @@ class SuspiciousRequest(models.Model):
 
     severity = models.CharField(
         max_length=20,
+        choices=SEVERITY_CHOICES,
         default="High"
     )
 
@@ -196,24 +237,44 @@ class SuspiciousRequest(models.Model):
 
 class DonorResponse(models.Model):
 
+    STATUS_CHOICES = [
+        ('Responded', 'Responded'),
+        ('Accepted', 'Accepted'),
+        ('Rejected', 'Rejected'),
+        ('Completed', 'Completed'),
+        ('Cancelled', 'Cancelled'),
+    ]
+
     donor = models.ForeignKey(
         DonorProfile,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="responses"
     )
 
     blood_request = models.ForeignKey(
         BloodRequest,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="donor_responses"
     )
 
     status = models.CharField(
         max_length=20,
+        choices=STATUS_CHOICES,
         default='Responded'
     )
 
     created_at = models.DateTimeField(
         auto_now_add=True
     )
+
+    class Meta:
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=['donor', 'blood_request'],
+                name='unique_donor_blood_request_response'
+            )
+        ]
 
     def __str__(self):
 
@@ -229,9 +290,15 @@ class DonorResponse(models.Model):
 
 class DonationHistory(models.Model):
 
+    STATUS_CHOICES = [
+        ('Completed', 'Completed'),
+        ('Cancelled', 'Cancelled'),
+    ]
+
     donor = models.ForeignKey(
         DonorProfile,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="donation_history"
     )
 
     blood_group = models.CharField(
@@ -250,7 +317,12 @@ class DonationHistory(models.Model):
 
     status = models.CharField(
         max_length=20,
+        choices=STATUS_CHOICES,
         default='Completed'
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
     )
 
     def __str__(self):
@@ -299,4 +371,3 @@ class AdminActionLog(models.Model):
             f"{self.admin.name} - "
             f"{self.action}"
         )
-
