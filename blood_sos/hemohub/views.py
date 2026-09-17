@@ -1012,7 +1012,7 @@ def needer_dashboard(request):
 
     return render(
         request,
-        "needer/needer_dahboard.html",
+        "needer/needer_dashboard.html",
         context
     )
 
