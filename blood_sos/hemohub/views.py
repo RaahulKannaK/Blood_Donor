@@ -1105,12 +1105,19 @@ def blood_radar(request):
 
 
 def donor_requests(request):
+
+    logger.warning("")
+    logger.warning("=" * 70)
+    logger.warning("🔥 HEMOHUB DONOR_REQUESTS VIEW ENTERED")
+    logger.warning("=" * 70)
+
     if "user_id" not in request.session:
+        logger.warning("❌ NO user_id IN SESSION")
         return redirect("login")
 
-    user_id = request.session.get(
-        "user_id"
-    )
+    user_id = request.session.get("user_id")
+
+    logger.warning("SESSION USER ID: %s", user_id)
 
     try:
         user = LoginUser.objects.get(
@@ -1126,11 +1133,20 @@ def donor_requests(request):
         LoginUser.DoesNotExist,
         DonorProfile.DoesNotExist
     ):
+        logger.warning("❌ DONOR USER/PROFILE NOT FOUND")
         return redirect("login")
 
     donor_blood_group = (
         donor.blood_group or ""
     ).strip().upper()
+
+    logger.warning("-" * 70)
+    logger.warning("DONOR NAME: %s", donor.user.name)
+    logger.warning("DONOR ID: %s", donor.id)
+    logger.warning("DONOR BLOOD GROUP: %s", donor_blood_group)
+    logger.warning("DONOR LATITUDE: %s", donor.latitude)
+    logger.warning("DONOR LONGITUDE: %s", donor.longitude)
+    logger.warning("-" * 70)
 
     context = {
         "name": user.name,
@@ -1148,13 +1164,8 @@ def donor_requests(request):
         donor.latitude is None
         or donor.longitude is None
     ):
-        messages.warning(
-            request,
-            (
-                "Please update your current location "
-                "in your donor profile to see nearby "
-                "blood requests."
-            )
+        logger.warning(
+            "❌ DONOR LOCATION MISSING"
         )
 
         context["location_missing"] = True
@@ -1175,12 +1186,9 @@ def donor_requests(request):
         )
 
     except (ValueError, TypeError):
-        messages.warning(
-            request,
-            (
-                "Your saved donor GPS coordinates are "
-                "invalid. Please update your profile location."
-            )
+
+        logger.warning(
+            "❌ INVALID DONOR COORDINATES"
         )
 
         context["location_missing"] = True
@@ -1190,17 +1198,20 @@ def donor_requests(request):
             "donor/requests.html",
             context
         )
+
+    logger.warning(
+        "VALID DONOR COORDINATES: %.8f, %.8f",
+        donor_latitude,
+        donor_longitude
+    )
 
     if not validate_coordinates(
         donor_latitude,
         donor_longitude
     ):
-        messages.warning(
-            request,
-            (
-                "Your saved donor GPS coordinates are "
-                "invalid. Please update your profile location."
-            )
+
+        logger.warning(
+            "❌ DONOR COORDINATES FAILED VALIDATION"
         )
 
         context["location_missing"] = True
@@ -1210,6 +1221,74 @@ def donor_requests(request):
             "donor/requests.html",
             context
         )
+
+    # =====================================================
+    # DATABASE DEBUG
+    # =====================================================
+
+    total_requests = BloodRequest.objects.count()
+
+    active_requests = (
+        BloodRequest.objects
+        .filter(status__iexact="Active")
+        .count()
+    )
+
+    matching_blood_group_count = (
+        BloodRequest.objects
+        .filter(
+            status__iexact="Active",
+            blood_group__iexact=donor_blood_group
+        )
+        .exclude(needer=user)
+        .count()
+    )
+
+    logger.warning("-" * 70)
+    logger.warning(
+        "TOTAL BLOOD REQUESTS IN RENDER DB: %s",
+        total_requests
+    )
+
+    logger.warning(
+        "ACTIVE BLOOD REQUESTS: %s",
+        active_requests
+    )
+
+    logger.warning(
+        "ACTIVE + MATCHING BLOOD GROUP: %s",
+        matching_blood_group_count
+    )
+
+    logger.warning("-" * 70)
+
+    # =====================================================
+    # PRINT EVERY ACTIVE REQUEST
+    # =====================================================
+
+    all_active_requests = (
+        BloodRequest.objects
+        .filter(status__iexact="Active")
+        .order_by("-created_at")
+    )
+
+    for br in all_active_requests:
+
+        logger.warning(
+            "REQUEST #%s | BG=%s | STATUS=%s | "
+            "NEEDER=%s | LOCATION=%s | LAT=%s | LON=%s",
+            br.id,
+            br.blood_group,
+            br.status,
+            br.needer.name if br.needer else "None",
+            br.location,
+            br.latitude,
+            br.longitude
+        )
+
+    # =====================================================
+    # STATUS FILTER
+    # =====================================================
 
     status_filter = (
         request.GET.get(
@@ -1219,6 +1298,22 @@ def donor_requests(request):
         .strip()
         .lower()
     )
+
+    if status_filter not in [
+        "critical",
+        "urgent",
+        "normal"
+    ]:
+        status_filter = "all"
+
+    logger.warning(
+        "STATUS FILTER: %s",
+        status_filter
+    )
+
+    # =====================================================
+    # MATCHING BLOOD REQUESTS
+    # =====================================================
 
     blood_requests = (
         BloodRequest.objects
@@ -1231,34 +1326,86 @@ def donor_requests(request):
     )
 
     if status_filter == "critical":
+
         blood_requests = blood_requests.filter(
             urgency__iexact="Emergency"
         )
 
     elif status_filter == "urgent":
+
         blood_requests = blood_requests.filter(
             urgency__iexact="Urgent"
         )
 
     elif status_filter == "normal":
+
         blood_requests = blood_requests.filter(
             urgency__iexact="Normal"
         )
 
-    else:
-        status_filter = "all"
+    logger.warning(
+        "MATCHING QUERY COUNT AFTER URGENCY FILTER: %s",
+        blood_requests.count()
+    )
+
+    # =====================================================
+    # PROCESS REQUESTS
+    # =====================================================
 
     nearby_requests = []
 
     for blood_request in blood_requests:
 
+        logger.warning("")
+        logger.warning(
+            "🩸 PROCESSING REQUEST #%s",
+            blood_request.id
+        )
+
+        logger.warning(
+            "REQUEST BG: %s",
+            blood_request.blood_group
+        )
+
+        logger.warning(
+            "REQUEST STATUS: %s",
+            blood_request.status
+        )
+
+        logger.warning(
+            "REQUEST URGENCY: %s",
+            blood_request.urgency
+        )
+
+        logger.warning(
+            "REQUEST LOCATION: %s",
+            blood_request.location
+        )
+
+        logger.warning(
+            "REQUEST LAT/LON: %s / %s",
+            blood_request.latitude,
+            blood_request.longitude
+        )
+
+        # -------------------------------------------------
+        # REQUEST LOCATION
+        # -------------------------------------------------
+
         if (
             blood_request.latitude is None
             or blood_request.longitude is None
         ):
+
+            logger.warning(
+                "❌ REQUEST #%s SKIPPED: LOCATION MISSING",
+                blood_request.id
+            )
+
             continue
 
         try:
+
             request_latitude = float(
                 blood_request.latitude
             )
@@ -1268,13 +1415,29 @@ def donor_requests(request):
             )
 
         except (ValueError, TypeError):
+
+            logger.warning(
+                "❌ REQUEST #%s SKIPPED: INVALID COORDINATES",
+                blood_request.id
+            )
+
             continue
 
         if not validate_coordinates(
             request_latitude,
             request_longitude
         ):
+
+            logger.warning(
+                "❌ REQUEST #%s SKIPPED: COORDINATES FAILED VALIDATION",
+                blood_request.id
+            )
+
             continue
+
+        # -------------------------------------------------
+        # STRAIGHT DISTANCE
+        # -------------------------------------------------
 
         straight_distance = calculate_distance_km(
             donor_latitude,
@@ -1283,8 +1446,28 @@ def donor_requests(request):
             request_longitude
         )
 
+        logger.warning(
+            "GPS STRAIGHT DISTANCE: %.2f KM",
+            straight_distance
+        )
+
         if straight_distance is None:
+
+            logger.warning(
+                "❌ REQUEST #%s SKIPPED: GPS DISTANCE FAILED",
+                blood_request.id
+            )
+
             continue
+
+        # -------------------------------------------------
+        # OSRM ROAD ROUTING
+        # -------------------------------------------------
+
+        logger.warning(
+            "🛣️ CALCULATING OSRM ROAD ROUTE FOR REQUEST #%s",
+            blood_request.id
+        )
 
         route_data = get_road_distance_and_eta(
             donor_latitude,
@@ -1294,33 +1477,81 @@ def donor_requests(request):
         )
 
         if not route_data:
+
+            logger.warning(
+                "❌ REQUEST #%s SKIPPED: OSRM RETURNED NO ROUTE",
+                blood_request.id
+            )
+
             continue
 
         road_distance = route_data.get(
             "road_distance_km"
         )
 
+        logger.warning(
+            "OSRM ROAD DISTANCE: %s KM",
+            road_distance
+        )
+
         if road_distance is None:
+
+            logger.warning(
+                "❌ REQUEST #%s SKIPPED: ROAD DISTANCE IS NONE",
+                blood_request.id
+            )
+
             continue
 
         try:
+
             road_distance = float(
                 road_distance
             )
 
         except (ValueError, TypeError):
+
+            logger.warning(
+                "❌ REQUEST #%s SKIPPED: INVALID ROAD DISTANCE",
+                blood_request.id
+            )
+
             continue
+
+        # -------------------------------------------------
+        # 15 KM MATCHING LIMIT
+        # -------------------------------------------------
+
+        logger.warning(
+            "MATCHING LIMIT: %.2f KM",
+            MAX_MATCH_DISTANCE_KM
+        )
 
         if road_distance > MAX_MATCH_DISTANCE_KM:
+
+            logger.warning(
+                "❌ REQUEST #%s SKIPPED: %.2f KM > %.2f KM",
+                blood_request.id,
+                road_distance,
+                MAX_MATCH_DISTANCE_KM
+            )
+
             continue
 
+        # -------------------------------------------------
+        # MATCHING STAGE
+        # -------------------------------------------------
+
         if road_distance <= 5:
+
             matching_stage = "Stage 1: 0–5 km"
 
         elif road_distance <= 10:
+
             matching_stage = "Stage 2: 5–10 km"
 
         else:
+
             matching_stage = "Stage 3: 10–15 km"
 
         urgency = (
@@ -1335,6 +1566,10 @@ def donor_requests(request):
             urgency,
             3
         )
+
+        # -------------------------------------------------
+        # RESPONSE STATUS
+        # -------------------------------------------------
 
         existing_response = (
             DonorResponse.objects
@@ -1356,63 +1591,86 @@ def donor_requests(request):
             else None
         )
 
+        # -------------------------------------------------
+        # CREATE REQUEST ITEM
+        # -------------------------------------------------
+
         item = {
             "id": blood_request.id,
             "blood_group": blood_request.blood_group,
             "location": blood_request.location,
             "urgency": blood_request.urgency,
+
             "distance_km": round(
                 road_distance,
                 2
             ),
+
             "straight_distance_km": round(
                 straight_distance,
                 2
             ),
+
             "car_distance_km": route_data.get(
                 "car_distance_km",
                 road_distance
             ),
+
             "car_eta_minutes": route_data.get(
                 "car_eta_minutes"
             ),
+
             "bike_distance_km": route_data.get(
                 "bike_distance_km"
             ),
+
             "bike_eta_minutes": route_data.get(
                 "bike_eta_minutes"
             ),
+
             "bus_distance_km": route_data.get(
                 "bus_distance_km"
             ),
+
             "bus_eta_minutes": route_data.get(
                 "bus_eta_minutes"
             ),
+
             "bus_waiting_minutes": route_data.get(
                 "bus_waiting_minutes"
             ),
+
             "estimated_minutes": route_data.get(
                 "car_eta_minutes"
             ),
+
             "matching_stage": matching_stage,
+
             "distance_type": route_data.get(
                 "distance_type",
                 "road"
             ),
+
             "geometry": route_data.get(
                 "geometry"
             ),
+
             "steps": route_data.get(
                 "steps",
                 []
             ),
+
             "already_responded": already_responded,
+
             "response_status": response_status,
+
             "details_unlocked": already_responded,
+
             "urgency_priority": urgency_priority
         }
 
         if already_responded:
+
             item.update({
                 "patient_name": blood_request.patient_name,
                 "patient_age": blood_request.patient_age,
@@ -1428,12 +1686,48 @@ def donor_requests(request):
             item
         )
 
+        logger.warning(
+            "✅ REQUEST #%s ADDED TO nearby_requests",
+            blood_request.id
+        )
+
+        logger.warning(
+            "ROAD DISTANCE: %.2f KM | STAGE: %s",
+            road_distance,
+            matching_stage
+        )
+
+    # =====================================================
+    # SORT
+    # =====================================================
+
     nearby_requests.sort(
         key=lambda item: (
             item["urgency_priority"],
             item["distance_km"]
         )
     )
+
+    logger.warning("")
+    logger.warning("=" * 70)
+    logger.warning(
+        "🎯 FINAL NEARBY REQUEST COUNT: %s",
+        len(nearby_requests)
+    )
+
+    for item in nearby_requests:
+
+        logger.warning(
+            "FINAL REQUEST #%s | %s | %.2f KM",
+            item["id"],
+            item["blood_group"],
+            item["distance_km"]
+        )
+
+    logger.warning("=" * 70)
+    logger.warning("🔥 HEMOHUB DONOR_REQUESTS VIEW FINISHED")
+    logger.warning("=" * 70)
+    logger.warning("")
 
     responded_request_ids = set(
         DonorResponse.objects
@@ -1457,7 +1751,6 @@ def donor_requests(request):
         "donor/requests.html",
         context
     )
-
 
 def respond_to_request(request, request_id):
     if "user_id" not in request.session:
