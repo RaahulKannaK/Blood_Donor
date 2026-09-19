@@ -15,22 +15,8 @@ from .models import (
 )
 logger = logging.getLogger(__name__)
 
-try:
-    from .services.distance import validate_coordinates
-    from .services.routing import get_road_distance_and_eta
-except ImportError:
-
-    def validate_coordinates(latitude, longitude):
-        try:
-            return (
-                -90 <= float(latitude) <= 90
-                and -180 <= float(longitude) <= 180
-            )
-        except (TypeError, ValueError):
-            return False
-
-    def get_road_distance_and_eta(*args, **kwargs):
-        return None
+from .services.distance import validate_coordinates
+from .services.routing import get_road_distance_and_eta
 
 
 MAX_MATCH_DISTANCE_KM = 15.0
