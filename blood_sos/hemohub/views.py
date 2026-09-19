@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import JsonResponse
 import json
+import logging
 from django.contrib.auth.hashers import check_password, make_password
 from math import radians, sin, cos, sqrt, atan2
 
@@ -12,6 +13,7 @@ from .models import (
     DonorResponse,
     DonationHistory
 )
+logger = logging.getLogger(__name__)
 
 try:
     from .services.distance import validate_coordinates
