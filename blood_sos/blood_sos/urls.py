@@ -53,6 +53,7 @@ from hemohub.views import (
     respond_to_request,
     donation_history,
     donor_alerts,
+    get_needer_donor_route,
 
 
     # =====================================================
@@ -62,6 +63,9 @@ from hemohub.views import (
     create_request,
     cancel_request,
     find_donor,
+
+    # NEW: ROAD ROUTE API
+    get_request_route,
 
 
     # =====================================================
@@ -78,8 +82,6 @@ urlpatterns = [
     # =====================================================
     # DJANGO BUILT-IN ADMIN
     # =====================================================
-    # Changed from "admin/" to "django-admin/"
-    # to avoid conflict with HemoHub custom admin pages.
 
     path(
         "django-admin/",
@@ -245,11 +247,19 @@ urlpatterns = [
 
 
     # =====================================================
-    # NEEDER
+    # ROAD ROUTE
     # =====================================================
 
-    # Page 1:
-    # Needer Dashboard
+    path(
+        "request-route/<int:request_id>/",
+        get_request_route,
+        name="get_request_route"
+    ),
+
+
+    # =====================================================
+    # NEEDER
+    # =====================================================
 
     path(
         "needer-dashboard/",
@@ -257,20 +267,11 @@ urlpatterns = [
         name="needer_dashboard"
     ),
 
-
-    # Page 2:
-    # Create Blood Request + My Requests
-    # Both are now combined into one page.
-
     path(
         "needer/create-request/",
         create_request,
         name="create_request"
     ),
-
-
-    # Cancel action for a blood request.
-    # This is not a separate page.
 
     path(
         "needer/cancel/<int:request_id>/",
@@ -278,16 +279,15 @@ urlpatterns = [
         name="cancel_request"
     ),
 
-
-    # Page 3:
-    # Find Donor
-    # Shows the needer's own requests and
-    # donor responses for the selected request.
-
     path(
         "needer/find-donor/",
         find_donor,
         name="find_donor"
+    ),
+    path(
+        "needer/donor-route/<int:response_id>/",
+        get_needer_donor_route,
+        name="get_needer_donor_route"
     ),
 
 

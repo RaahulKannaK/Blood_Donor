@@ -4,13 +4,28 @@
 
 <head>
 
- 
 <meta charset="UTF-8">
 
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
 <title>Find Donor | HemoHub</title>
+
+
+<!-- =========================================================
+     LEAFLET + MAPLIBRE
+     ========================================================= -->
+
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css"
+/>
+
 
 <style>
 
@@ -26,6 +41,7 @@
         color: #172033;
         min-height: 100vh;
     }
+
 
     /* ================= SIDEBAR ================= */
 
@@ -108,6 +124,7 @@
         color: #ffffff;
     }
 
+
     /* ================= MAIN ================= */
 
     .main {
@@ -115,6 +132,7 @@
         min-height: 100vh;
         padding: 30px 35px;
     }
+
 
     /* ================= TOP BAR ================= */
 
@@ -173,6 +191,7 @@
         font-weight: 600;
     }
 
+
     /* ================= MOBILE MENU ================= */
 
     .mobile-menu {
@@ -186,6 +205,7 @@
         font-size: 20px;
         cursor: pointer;
     }
+
 
     /* ================= PAGE HEADER ================= */
 
@@ -225,6 +245,7 @@
         top: -5px;
     }
 
+
     /* ================= SECTION ================= */
 
     .section-header {
@@ -244,6 +265,7 @@
         font-size: 12px;
         color: #64748b;
     }
+
 
     /* ================= REQUEST GRID ================= */
 
@@ -366,6 +388,7 @@
         background: #dbe7fb;
     }
 
+
     /* ================= EMPTY ================= */
 
     .empty-card {
@@ -408,6 +431,7 @@
     .create-btn:hover {
         background: #b91f1f;
     }
+
 
     /* ================= SELECTED REQUEST ================= */
 
@@ -479,6 +503,7 @@
         grid-column: 1 / -1;
     }
 
+
     /* ================= RESPONSE SUMMARY ================= */
 
     .response-summary {
@@ -540,6 +565,7 @@
         font-size: 20px;
         color: #172033;
     }
+
 
     /* ================= DONOR RESPONSES ================= */
 
@@ -674,6 +700,192 @@
         border-left: 3px solid #94a3b8;
     }
 
+
+    /* =========================================================
+       DONOR TRACKING MAP
+       ========================================================= */
+
+    .tracking-section {
+        margin-top: 20px;
+    }
+
+    .tracking-card {
+        background: white;
+        border: 1px solid #e1e7f0;
+        border-radius: 13px;
+        padding: 22px;
+        box-shadow: 0 3px 12px rgba(30, 64, 175, 0.05);
+    }
+
+    .tracking-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .tracking-header h3 {
+        font-size: 17px;
+        color: #172033;
+        font-weight: 600;
+    }
+
+    .tracking-header p {
+        font-size: 12px;
+        color: #64748b;
+        margin-top: 4px;
+    }
+
+    .tracking-status {
+        background: #e9f6ed;
+        color: #2e7d32;
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    #donorTrackingMap {
+        width: 100%;
+        height: 480px;
+        border-radius: 12px;
+        border: 1px solid #e1e7f0;
+        overflow: hidden;
+    }
+
+    .tracking-legend {
+        margin-top: 15px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 10px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        background: #f8fafc;
+        border: 1px solid #e8edf4;
+        border-radius: 9px;
+        padding: 10px;
+        font-size: 11px;
+        color: #334155;
+    }
+
+    .legend-marker {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        border: 2px solid white;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .legend-line {
+        width: 25px;
+        height: 4px;
+        border-radius: 4px;
+        flex-shrink: 0;
+    }
+
+    .legend-hospital {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #d62828;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+
+    .route-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .route-info-card {
+        background: #f8fafc;
+        border: 1px solid #e8edf4;
+        border-radius: 9px;
+        padding: 11px;
+    }
+
+    .route-info-card span {
+        display: block;
+        color: #94a3b8;
+        font-size: 10px;
+        margin-bottom: 4px;
+    }
+
+    .route-info-card strong {
+        color: #334155;
+        font-size: 12px;
+    }
+
+    .tracking-loading {
+        text-align: center;
+        padding: 30px 15px;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .tracking-error {
+        background: #fdeaea;
+        color: #d62828;
+        border: 1px solid #f4c7c7;
+        border-radius: 9px;
+        padding: 12px;
+        font-size: 12px;
+        margin-top: 12px;
+        display: none;
+    }
+
+
+    /* =========================================================
+       CUSTOM DONOR MARKER
+       ========================================================= */
+
+    .donor-map-marker {
+        width: 38px;
+        height: 38px;
+        border-radius: 50% 50% 50% 0;
+        transform: rotate(-45deg);
+        border: 3px solid white;
+        box-shadow: 0 3px 9px rgba(0, 0, 0, 0.35);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .donor-map-marker-inner {
+        transform: rotate(45deg);
+        color: white;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .needer-map-marker {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: #d62828;
+        border: 4px solid white;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 20px;
+    }
+
+
     /* ================= NO RESPONSE ================= */
 
     .no-response {
@@ -697,6 +909,7 @@
         font-size: 13px;
     }
 
+
     /* ================= MOBILE ================= */
 
     @media (max-width: 1100px) {
@@ -718,6 +931,7 @@
         }
 
     }
+
 
     @media (max-width: 800px) {
 
@@ -755,7 +969,12 @@
             grid-template-columns: 1fr;
         }
 
+        #donorTrackingMap {
+            height: 400px;
+        }
+
     }
+
 
     @media (max-width: 600px) {
 
@@ -805,7 +1024,21 @@
             flex-direction: column;
         }
 
+        .tracking-card {
+            padding: 15px;
+        }
+
+        .tracking-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        #donorTrackingMap {
+            height: 350px;
+        }
+
     }
+
 
     @media (max-width: 400px) {
 
@@ -813,16 +1046,20 @@
             grid-template-columns: 1fr;
         }
 
+        #donorTrackingMap {
+            height: 300px;
+        }
+
     }
 
 </style>
- 
 
 </head>
 
+
 <body>
 
- 
+
 <!-- ================= SIDEBAR ================= -->
 
 <aside class="sidebar" id="sidebar">
@@ -920,6 +1157,7 @@
 </aside>
 
 
+
 <!-- ================= MAIN ================= -->
 
 <main class="main">
@@ -972,6 +1210,7 @@
     </div>
 
 
+
     <!-- ================= PAGE BANNER ================= -->
 
     <section class="page-banner">
@@ -997,6 +1236,7 @@
     </section>
 
 
+
     <!-- ================= REQUESTS ================= -->
 
     <div class="section-header">
@@ -1011,6 +1251,7 @@
         </span>
 
     </div>
+
 
 
     {% if requests_list %}
@@ -1184,11 +1425,13 @@
     {% endif %}
 
 
+
     <!-- ================= SELECTED REQUEST ================= -->
 
     {% if selected_request %}
 
         <section class="selected-section">
+
 
             <div class="section-header">
 
@@ -1203,7 +1446,8 @@
             </div>
 
 
-            <!-- REQUEST DETAILS -->
+
+            <!-- ================= REQUEST DETAILS ================= -->
 
             <div class="selected-card">
 
@@ -1260,7 +1504,9 @@
                 </div>
 
 
+
                 <div class="selected-details">
+
 
                     <div class="selected-detail">
 
@@ -1410,6 +1656,7 @@
             </div>
 
 
+
             <!-- ================= RESPONSE SUMMARY ================= -->
 
             <div class="section-header">
@@ -1426,9 +1673,12 @@
             </div>
 
 
+
             {% if response_count %}
 
+
                 <div class="response-summary">
+
 
                     <div class="summary-card">
 
@@ -1449,6 +1699,7 @@
                         </div>
 
                     </div>
+
 
 
                     <div class="summary-card">
@@ -1472,6 +1723,7 @@
                     </div>
 
 
+
                     <div class="summary-card">
 
                         <div class="summary-icon rejected-icon">
@@ -1491,6 +1743,7 @@
                         </div>
 
                     </div>
+
 
 
                     <div class="summary-card">
@@ -1516,9 +1769,11 @@
                 </div>
 
 
+
                 <!-- ================= RESPONSE LIST ================= -->
 
                 <div class="responses-card">
+
 
                     <div class="responses-header">
 
@@ -1533,11 +1788,15 @@
                     </div>
 
 
+
                     {% for response in donor_responses %}
+
 
                         <div class="response-item">
 
+
                             <div class="response-top">
+
 
                                 <div class="donor-info">
 
@@ -1570,6 +1829,7 @@
                                 </div>
 
 
+
                                 {% if response.status == "Accepted" %}
 
                                     <span class="response-status accepted">
@@ -1599,7 +1859,9 @@
                             </div>
 
 
+
                             <div class="response-details">
+
 
                                 <div class="response-detail">
 
@@ -1623,7 +1885,9 @@
                                 </div>
 
 
+
                                 {% if response.location_available %}
+
 
                                     <div class="response-detail location-available">
 
@@ -1658,7 +1922,9 @@
 
                                     </div>
 
+
                                 {% else %}
+
 
                                     <div class="response-detail location-unavailable">
 
@@ -1681,17 +1947,107 @@
 
                                     </div>
 
+
                                 {% endif %}
 
                             </div>
 
                         </div>
 
+
                     {% endfor %}
 
                 </div>
 
+
+
+                <!-- =================================================
+                     DONOR ROUTE TRACKING
+                     ================================================= -->
+
+                {% if accepted_count %}
+
+                    <section class="tracking-section">
+
+                        <div class="section-header">
+
+                            <h3>
+                                Donor Route Tracking
+                            </h3>
+
+                            <span>
+                                {{ accepted_count }}
+                                accepted donor{{ accepted_count|pluralize }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="tracking-card">
+
+
+                            <div class="tracking-header">
+
+                                <div>
+
+                                    <h3>
+                                        🗺️ Live Donor Location Tracking
+                                    </h3>
+
+                                    <p>
+                                        View all accepted donors on one map.
+                                        Each donor has a different location color
+                                        and road route to your blood request.
+                                    </p>
+
+                                </div>
+
+
+                                <span class="tracking-status">
+                                    ● Location Tracking Active
+                                </span>
+
+                            </div>
+
+
+                            <div id="donorTrackingMap"></div>
+
+
+                            <div
+                                id="trackingLegend"
+                                class="tracking-legend"
+                            ></div>
+
+
+                            <div
+                                id="routeInfo"
+                                class="route-info"
+                            ></div>
+
+
+                            <div
+                                id="trackingError"
+                                class="tracking-error"
+                            ></div>
+
+
+                            <div
+                                id="trackingLoading"
+                                class="tracking-loading"
+                            >
+                                Loading donor locations...
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                {% endif %}
+
+
+
             {% else %}
+
 
                 <div class="responses-card">
 
@@ -1713,53 +2069,1727 @@
 
                 </div>
 
+
             {% endif %}
+
 
         </section>
 
     {% endif %}
 
+
 </main>
 
 
-<!-- ================= JAVASCRIPT ================= -->
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+<script
+    src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js">
+</script>
+
+<script
+    src="https://unpkg.com/@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl.js">
+</script>
+
+
 
 <script>
 
-    function toggleSidebar() {
 
-        document
-            .getElementById("sidebar")
-            .classList
-            .toggle("open");
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+function toggleSidebar() {
+
+    document
+        .getElementById("sidebar")
+        .classList
+        .toggle("open");
+
+}
+
+
+document
+    .querySelectorAll(".nav-item")
+    .forEach(function(item) {
+
+        item.addEventListener(
+            "click",
+            function() {
+
+                if (window.innerWidth <= 800) {
+
+                    document
+                        .getElementById("sidebar")
+                        .classList
+                        .remove("open");
+
+                }
+
+            }
+        );
+
+    });
+
+
+
+/* =========================================================
+   DONOR TRACKING
+   ========================================================= */
+
+
+/*
+    Every donor gets a different color.
+
+    Donor 1 = Red
+    Donor 2 = Blue
+    Donor 3 = Green
+    Donor 4 = Purple
+    Donor 5 = Orange
+    Donor 6 = Pink
+    Donor 7 = Teal
+    Donor 8 = Brown
+*/
+
+const donorRouteColors = [
+
+    "#d62828",
+    "#0b3d91",
+    "#2e7d32",
+    "#7b2cbf",
+    "#f08c00",
+    "#c2185b",
+    "#00897b",
+    "#6d4c41"
+
+];
+
+
+let trackingMap = null;
+
+let donorMarkers = [];
+
+let donorRoutes = [];
+
+let requestMarker = null;
+
+let trackingRefreshTimer = null;
+
+
+/*
+    Refresh the latest saved donor GPS
+    location every 15 seconds.
+*/
+
+const TRACKING_REFRESH_INTERVAL = 15000;
+
+
+
+/* =========================================================
+   DONOR ICON
+   ========================================================= */
+
+function createDonorIcon(
+    color,
+    donorNumber
+) {
+
+    return L.divIcon({
+
+        className: "",
+
+        html:
+
+            '<div class="donor-map-marker" ' +
+
+                'style="background:' +
+                color +
+                ';"' +
+
+            '>' +
+
+                '<div class="donor-map-marker-inner">' +
+
+                    donorNumber +
+
+                '</div>' +
+
+            '</div>',
+
+        iconSize: [38, 38],
+
+        iconAnchor: [19, 38],
+
+        popupAnchor: [0, -38]
+
+    });
+
+}
+
+
+
+/* =========================================================
+   NEEDER ICON
+   ========================================================= */
+
+function createNeederIcon() {
+
+    return L.divIcon({
+
+        className: "",
+
+        html:
+
+            '<div class="needer-map-marker">' +
+
+                '🏥' +
+
+            '</div>',
+
+        iconSize: [42, 42],
+
+        iconAnchor: [21, 21],
+
+        popupAnchor: [0, -21]
+
+    });
+
+}
+
+
+
+/* =========================================================
+   INITIALIZE MAP
+   ========================================================= */
+
+function initializeTrackingMap() {
+
+    if (trackingMap) {
+
+        return;
 
     }
 
 
-    document
-        .querySelectorAll(".nav-item")
-        .forEach(function(item) {
+    const mapElement =
+        document.getElementById(
+            "donorTrackingMap"
+        );
 
-            item.addEventListener(
-                "click",
-                function() {
 
-                    if (window.innerWidth <= 800) {
+    if (!mapElement) {
 
-                        document
-                            .getElementById("sidebar")
-                            .classList
-                            .remove("open");
+        return;
 
-                    }
+    }
+
+
+    trackingMap = L.map(
+        "donorTrackingMap"
+    );
+
+
+    /*
+        OpenFreeMap uses OpenStreetMap
+        map data through MapLibre.
+    */
+
+    L.maplibreGL({
+
+        style:
+            "https://tiles.openfreemap.org/styles/liberty"
+
+    }).addTo(
+        trackingMap
+    );
+
+
+    trackingMap.setView(
+        [11.0168, 76.9558],
+        12
+    );
+
+}
+
+
+
+/* =========================================================
+   CLEAR PREVIOUS MAP OBJECTS
+   ========================================================= */
+
+function clearTrackingObjects() {
+
+
+    donorMarkers.forEach(
+        function(marker) {
+
+            if (trackingMap) {
+
+                trackingMap.removeLayer(
+                    marker
+                );
+
+            }
+
+        }
+    );
+
+
+    donorRoutes.forEach(
+        function(route) {
+
+            if (trackingMap) {
+
+                trackingMap.removeLayer(
+                    route
+                );
+
+            }
+
+        }
+    );
+
+
+    donorMarkers = [];
+
+    donorRoutes = [];
+
+
+    if (requestMarker) {
+
+        if (trackingMap) {
+
+            trackingMap.removeLayer(
+                requestMarker
+            );
+
+        }
+
+        requestMarker = null;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   DRAW ROUTE
+   ========================================================= */
+
+function drawTrackingRoute(
+    geometry,
+    color
+) {
+
+
+    if (!geometry) {
+
+        return null;
+
+    }
+
+
+
+    /* ================= FEATURE COLLECTION ================= */
+
+    if (
+        geometry.type === "FeatureCollection"
+    ) {
+
+        const routes = [];
+
+
+        geometry.features.forEach(
+            function(feature) {
+
+                const route =
+                    drawTrackingRoute(
+                        feature,
+                        color
+                    );
+
+
+                if (route) {
+
+                    routes.push(
+                        route
+                    );
+
+                }
+
+            }
+        );
+
+
+        if (routes.length) {
+
+            return L.featureGroup(
+                routes
+            );
+
+        }
+
+
+        return null;
+
+    }
+
+
+
+    /* ================= FEATURE ================= */
+
+    if (
+        geometry.type === "Feature"
+    ) {
+
+        return drawTrackingRoute(
+            geometry.geometry,
+            color
+        );
+
+    }
+
+
+
+    /* ================= LINE STRING ================= */
+
+    if (
+        geometry.type === "LineString"
+    ) {
+
+        const coordinates =
+            geometry.coordinates;
+
+
+        const latLngs =
+            coordinates.map(
+                function(point) {
+
+                    return [
+
+                        Number(point[1]),
+
+                        Number(point[0])
+
+                    ];
 
                 }
             );
 
-        });
+
+        return L.polyline(
+            latLngs,
+            {
+
+                color: color,
+
+                weight: 5,
+
+                opacity: 0.85,
+
+                lineCap: "round",
+
+                lineJoin: "round"
+
+            }
+        ).addTo(
+            trackingMap
+        );
+
+    }
+
+
+
+    /* ================= MULTI LINE STRING ================= */
+
+    if (
+        geometry.type === "MultiLineString"
+    ) {
+
+        const lines =
+            geometry.coordinates.map(
+                function(line) {
+
+                    return line.map(
+                        function(point) {
+
+                            return [
+
+                                Number(point[1]),
+
+                                Number(point[0])
+
+                            ];
+
+                        }
+                    );
+
+                }
+            );
+
+
+        return L.polyline(
+            lines,
+            {
+
+                color: color,
+
+                weight: 5,
+
+                opacity: 0.85,
+
+                lineCap: "round",
+
+                lineJoin: "round"
+
+            }
+        ).addTo(
+            trackingMap
+        );
+
+    }
+
+
+
+    /* ================= RAW COORDINATES ================= */
+
+    if (
+        Array.isArray(geometry)
+    ) {
+
+        const latLngs =
+            geometry.map(
+                function(point) {
+
+                    return [
+
+                        Number(point[1]),
+
+                        Number(point[0])
+
+                    ];
+
+                }
+            );
+
+
+        return L.polyline(
+            latLngs,
+            {
+
+                color: color,
+
+                weight: 5,
+
+                opacity: 0.85,
+
+                lineCap: "round",
+
+                lineJoin: "round"
+
+            }
+        ).addTo(
+            trackingMap
+        );
+
+    }
+
+
+    return null;
+
+}
+
+
+
+/* =========================================================
+   ADD LEGEND
+   ========================================================= */
+
+function addLegendItem(
+    donorIndex,
+    donorName,
+    bloodGroup,
+    color
+) {
+
+
+    const legend =
+        document.getElementById(
+            "trackingLegend"
+        );
+
+
+    if (!legend) {
+
+        return;
+
+    }
+
+
+    const item =
+        document.createElement(
+            "div"
+        );
+
+
+    item.className =
+        "legend-item";
+
+
+    item.innerHTML =
+
+        '<div class="legend-marker" ' +
+
+            'style="background:' +
+            color +
+            ';"' +
+
+        '></div>' +
+
+        '<div>' +
+
+            '<strong>' +
+
+                'Donor ' +
+                donorIndex +
+
+            '</strong>' +
+
+            '<br>' +
+
+            '<span>' +
+
+                escapeHtml(
+                    donorName ||
+                    "Donor"
+                ) +
+
+                ' • ' +
+
+                escapeHtml(
+                    bloodGroup ||
+                    "N/A"
+                ) +
+
+            '</span>' +
+
+        '</div>';
+
+
+    legend.appendChild(
+        item
+    );
+
+}
+
+
+
+/* =========================================================
+   ADD REQUEST LEGEND
+   ========================================================= */
+
+function addRequestLegend() {
+
+
+    const legend =
+        document.getElementById(
+            "trackingLegend"
+        );
+
+
+    if (!legend) {
+
+        return;
+
+    }
+
+
+    const item =
+        document.createElement(
+            "div"
+        );
+
+
+    item.className =
+        "legend-item";
+
+
+    item.innerHTML =
+
+        '<div class="legend-hospital">' +
+
+            '🏥' +
+
+        '</div>' +
+
+        '<div>' +
+
+            '<strong>' +
+
+                'Blood Request' +
+
+            '</strong>' +
+
+            '<br>' +
+
+            '<span>' +
+
+                'Your request location' +
+
+            '</span>' +
+
+        '</div>';
+
+
+    legend.appendChild(
+        item
+    );
+
+}
+
+
+
+/* =========================================================
+   ROUTE INFORMATION
+   ========================================================= */
+
+function addRouteInfo(
+    donorIndex,
+    donorName,
+    bloodGroup,
+    roadDistance,
+    carEta,
+    color
+) {
+
+
+    const container =
+        document.getElementById(
+            "routeInfo"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "route-info-card";
+
+
+    let distanceText =
+        "Not available";
+
+
+    if (
+        roadDistance !== null &&
+        roadDistance !== undefined &&
+        !isNaN(Number(roadDistance))
+    ) {
+
+        distanceText =
+            Number(roadDistance)
+                .toFixed(1) +
+            " km";
+
+    }
+
+
+    let etaText =
+        "Not available";
+
+
+    if (
+        carEta !== null &&
+        carEta !== undefined &&
+        !isNaN(Number(carEta))
+    ) {
+
+        etaText =
+            Math.round(
+                Number(carEta)
+            ) +
+            " min";
+
+    }
+
+
+    card.innerHTML =
+
+        '<span>' +
+
+            '<span style="' +
+
+                'display:inline-block;' +
+
+                'width:9px;' +
+
+                'height:9px;' +
+
+                'border-radius:50%;' +
+
+                'background:' +
+                color +
+                ';' +
+
+                'margin-right:5px;' +
+
+            '">' +
+
+            '</span>' +
+
+            'Donor ' +
+            donorIndex +
+
+        '</span>' +
+
+        '<strong>' +
+
+            escapeHtml(
+                donorName ||
+                "Donor"
+            ) +
+
+            ' • ' +
+
+            escapeHtml(
+                bloodGroup ||
+                "N/A"
+            ) +
+
+        '</strong>' +
+
+        '<br>' +
+
+        '<span style="margin-top:7px;">' +
+
+            'Road distance: ' +
+
+            distanceText +
+
+            ' | ETA: ' +
+
+            etaText +
+
+        '</span>';
+
+
+    container.appendChild(
+        card
+    );
+
+}
+
+
+
+/* =========================================================
+   LOAD ONE DONOR
+   ========================================================= */
+
+async function loadDonorRoute(
+    responseId,
+    donorIndex,
+    bounds
+) {
+
+
+    const color =
+        donorRouteColors[
+            (donorIndex - 1) %
+            donorRouteColors.length
+        ];
+
+
+    try {
+
+
+        const url =
+            "{% url 'get_needer_donor_route' 0 %}"
+            .replace(
+                "/0/",
+                "/" +
+                responseId +
+                "/"
+            );
+
+
+        const response =
+            await fetch(
+                url,
+                {
+
+                    method: "GET",
+
+                    headers: {
+
+                        "X-Requested-With":
+                            "XMLHttpRequest",
+
+                        "Cache-Control":
+                            "no-cache"
+
+                    },
+
+                    cache: "no-store"
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.message ||
+                "Unable to load donor location."
+            );
+
+        }
+
+
+
+        /* =================================================
+           DONOR LOCATION
+           ================================================= */
+
+        const donor =
+            data.donor;
+
+
+        if (
+            donor &&
+            donor.latitude !== null &&
+            donor.longitude !== null
+        ) {
+
+
+            const donorLat =
+                Number(
+                    donor.latitude
+                );
+
+
+            const donorLng =
+                Number(
+                    donor.longitude
+                );
+
+
+            if (
+                !isNaN(donorLat) &&
+                !isNaN(donorLng)
+            ) {
+
+
+                const marker =
+                    L.marker(
+                        [
+                            donorLat,
+                            donorLng
+                        ],
+                        {
+
+                            icon:
+                                createDonorIcon(
+                                    color,
+                                    donorIndex
+                                ),
+
+                            zIndexOffset:
+                                1000 +
+                                donorIndex
+
+                        }
+                    ).addTo(
+                        trackingMap
+                    );
+
+
+                marker.bindPopup(
+
+                    '<div style="' +
+
+                        'min-width:190px;' +
+
+                        'font-family:' +
+
+                        'Segoe UI,Arial,sans-serif;' +
+
+                    '">' +
+
+                        '<strong style="' +
+
+                            'font-size:15px;' +
+
+                            'color:#172033;' +
+
+                        '">' +
+
+                            '🩸 Donor ' +
+                            donorIndex +
+
+                        '</strong>' +
+
+                        '<hr style="' +
+
+                            'border:none;' +
+
+                            'border-top:1px solid #e1e7f0;' +
+
+                            'margin:8px 0;' +
+
+                        '">' +
+
+                        '<div style="' +
+
+                            'font-size:11px;' +
+
+                            'color:#64748b;' +
+
+                        '">' +
+
+                            'Donor Name' +
+
+                        '</div>' +
+
+                        '<strong style="' +
+
+                            'font-size:13px;' +
+
+                            'color:#334155;' +
+
+                        '">' +
+
+                            escapeHtml(
+                                donor.name ||
+                                "Donor"
+                            ) +
+
+                        '</strong>' +
+
+                        '<div style="' +
+
+                            'font-size:11px;' +
+
+                            'color:#64748b;' +
+
+                            'margin-top:8px;' +
+
+                        '">' +
+
+                            'Blood Group' +
+
+                        '</div>' +
+
+                        '<strong style="' +
+
+                            'font-size:13px;' +
+
+                            'color:#d62828;' +
+
+                        '">' +
+
+                            escapeHtml(
+                                donor.blood_group ||
+                                "N/A"
+                            ) +
+
+                        '</strong>' +
+
+                        '<div style="' +
+
+                            'font-size:11px;' +
+
+                            'color:#64748b;' +
+
+                            'margin-top:8px;' +
+
+                        '">' +
+
+                            'Latest saved GPS position' +
+
+                        '</div>' +
+
+                    '</div>'
+
+                );
+
+
+                donorMarkers.push(
+                    marker
+                );
+
+
+                bounds.push(
+                    [
+                        donorLat,
+                        donorLng
+                    ]
+                );
+
+            }
+
+        }
+
+
+
+        /* =================================================
+           NEEDER REQUEST LOCATION
+           ================================================= */
+
+        const destination =
+            data.destination;
+
+
+        if (
+            destination &&
+            destination.latitude !== null &&
+            destination.longitude !== null
+        ) {
+
+
+            const destinationLat =
+                Number(
+                    destination.latitude
+                );
+
+
+            const destinationLng =
+                Number(
+                    destination.longitude
+                );
+
+
+            if (
+                !isNaN(destinationLat) &&
+                !isNaN(destinationLng)
+            ) {
+
+
+                if (!requestMarker) {
+
+
+                    requestMarker =
+                        L.marker(
+                            [
+                                destinationLat,
+                                destinationLng
+                            ],
+                            {
+
+                                icon:
+                                    createNeederIcon(),
+
+                                zIndexOffset:
+                                    2000
+
+                            }
+                        ).addTo(
+                            trackingMap
+                        );
+
+
+                    requestMarker.bindPopup(
+
+                        '<div style="' +
+
+                            'min-width:190px;' +
+
+                            'font-family:' +
+
+                            'Segoe UI,Arial,sans-serif;' +
+
+                        '">' +
+
+                            '<strong style="' +
+
+                                'font-size:14px;' +
+
+                                'color:#172033;' +
+
+                            '">' +
+
+                                '🏥 Blood Request Location' +
+
+                            '</strong>' +
+
+                            '<br><br>' +
+
+                            '<span style="' +
+
+                                'font-size:11px;' +
+
+                                'color:#64748b;' +
+
+                            '">' +
+
+                                'Your request destination' +
+
+                            '</span>' +
+
+                        '</div>'
+
+                    );
+
+
+                    bounds.push(
+                        [
+                            destinationLat,
+                            destinationLng
+                        ]
+                    );
+
+                }
+
+            }
+
+        }
+
+
+
+        /* =================================================
+           ROAD ROUTE
+           ================================================= */
+
+        if (data.geometry) {
+
+
+            const route =
+                drawTrackingRoute(
+                    data.geometry,
+                    color
+                );
+
+
+            if (route) {
+
+                donorRoutes.push(
+                    route
+                );
+
+            }
+
+        }
+
+
+
+        /* =================================================
+           LEGEND
+           ================================================= */
+
+        addLegendItem(
+
+            donorIndex,
+
+            donor.name ||
+            "Donor",
+
+            donor.blood_group ||
+            "",
+
+            color
+
+        );
+
+
+
+        /* =================================================
+           ROUTE INFORMATION
+           ================================================= */
+
+        addRouteInfo(
+
+            donorIndex,
+
+            donor.name ||
+            "Donor",
+
+            donor.blood_group ||
+            "",
+
+            data.road_distance_km,
+
+            data.car_eta_minutes,
+
+            color
+
+        );
+
+
+    }
+    catch (error) {
+
+
+        console.error(
+            "Donor " +
+            donorIndex +
+            " tracking error:",
+            error
+        );
+
+
+        const errorBox =
+            document.getElementById(
+                "trackingError"
+            );
+
+
+        if (errorBox) {
+
+            errorBox.style.display =
+                "block";
+
+
+            errorBox.innerHTML +=
+
+                '<div style="margin-bottom:5px;">' +
+
+                    'Donor ' +
+                    donorIndex +
+                    ': ' +
+
+                    escapeHtml(
+                        error.message ||
+                        "Location unavailable."
+                    ) +
+
+                '</div>';
+
+        }
+
+    }
+
+}
+
+
+
+/* =========================================================
+   LOAD ALL ACCEPTED DONORS
+   ========================================================= */
+
+async function loadAllAcceptedDonors(
+    fitMap = true
+) {
+
+
+    initializeTrackingMap();
+
+
+    if (!trackingMap) {
+
+        return;
+
+    }
+
+
+    const loading =
+        document.getElementById(
+            "trackingLoading"
+        );
+
+
+    const errorBox =
+        document.getElementById(
+            "trackingError"
+        );
+
+
+    const legend =
+        document.getElementById(
+            "trackingLegend"
+        );
+
+
+    const routeInfo =
+        document.getElementById(
+            "routeInfo"
+        );
+
+
+
+    /* =====================================================
+       ACCEPTED DONORS
+       ===================================================== */
+
+    const acceptedResponses = [
+
+        {% for response in donor_responses %}
+
+            {% if response.status == "Accepted" and response.can_track %}
+
+                {
+                    id:
+                        {{ response.id }}
+                },
+
+            {% endif %}
+
+        {% endfor %}
+
+    ];
+
+
+
+    if (
+        !acceptedResponses.length
+    ) {
+
+        if (loading) {
+
+            loading.style.display =
+                "block";
+
+            loading.innerHTML =
+                "No accepted donors with GPS location available.";
+
+        }
+
+        return;
+
+    }
+
+
+
+    /* =====================================================
+       CLEAR OLD DATA
+       ===================================================== */
+
+    clearTrackingObjects();
+
+
+    if (legend) {
+
+        legend.innerHTML = "";
+
+    }
+
+
+    if (routeInfo) {
+
+        routeInfo.innerHTML = "";
+
+    }
+
+
+    if (errorBox) {
+
+        errorBox.innerHTML = "";
+
+        errorBox.style.display =
+            "none";
+
+    }
+
+
+    if (loading) {
+
+        loading.style.display =
+            "block";
+
+        loading.innerHTML =
+            "Updating donor locations...";
+
+    }
+
+
+
+    const bounds = [];
+
+
+    addRequestLegend();
+
+
+
+    /* =====================================================
+       LOAD EVERY DONOR
+       ===================================================== */
+
+    await Promise.all(
+
+        acceptedResponses.map(
+
+            function(item, index) {
+
+                return loadDonorRoute(
+
+                    item.id,
+
+                    index + 1,
+
+                    bounds
+
+                );
+
+            }
+
+        )
+
+    );
+
+
+
+    /* =====================================================
+       FIT MAP TO ALL LOCATIONS
+       ===================================================== */
+
+    if (
+        fitMap &&
+        bounds.length
+    ) {
+
+        try {
+
+            const leafletBounds =
+                L.latLngBounds(
+                    bounds
+                );
+
+
+            trackingMap.fitBounds(
+                leafletBounds,
+                {
+
+                    padding:
+                        [50, 50],
+
+                    maxZoom:
+                        15
+
+                }
+            );
+
+        }
+        catch (error) {
+
+            console.error(
+                "Map bounds error:",
+                error
+            );
+
+        }
+
+    }
+
+
+
+    /* =====================================================
+       REFRESH MAP SIZE
+       ===================================================== */
+
+    setTimeout(
+        function() {
+
+            if (trackingMap) {
+
+                trackingMap.invalidateSize();
+
+            }
+
+        },
+        300
+    );
+
+
+    if (loading) {
+
+        loading.style.display =
+            "none";
+
+    }
+
+}
+
+
+
+/* =========================================================
+   START AUTO REFRESH
+   ========================================================= */
+
+function startDonorTracking() {
+
+
+    if (trackingRefreshTimer) {
+
+        clearInterval(
+            trackingRefreshTimer
+        );
+
+    }
+
+
+    /*
+        Load immediately.
+    */
+
+    loadAllAcceptedDonors(
+        true
+    );
+
+
+    /*
+        Refresh latest donor GPS
+        every 15 seconds.
+    */
+
+    trackingRefreshTimer =
+        setInterval(
+            function() {
+
+                loadAllAcceptedDonors(
+                    false
+                );
+
+            },
+            TRACKING_REFRESH_INTERVAL
+        );
+
+}
+
+
+
+/* =========================================================
+   PAGE VISIBILITY
+   ========================================================= */
+
+document.addEventListener(
+    "visibilitychange",
+    function() {
+
+
+        if (
+            document.hidden
+        ) {
+
+
+            if (
+                trackingRefreshTimer
+            ) {
+
+                clearInterval(
+                    trackingRefreshTimer
+                );
+
+                trackingRefreshTimer =
+                    null;
+
+            }
+
+        }
+        else {
+
+            startDonorTracking();
+
+        }
+
+    }
+);
+
+
+
+/* =========================================================
+   HTML ESCAPE
+   ========================================================= */
+
+function escapeHtml(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+
+/* =========================================================
+   START TRACKING
+   ========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+
+        const mapElement =
+            document.getElementById(
+                "donorTrackingMap"
+            );
+
+
+        if (mapElement) {
+
+            startDonorTracking();
+
+        }
+
+    }
+);
 
 </script>
- 
+
 
 </body>
 
