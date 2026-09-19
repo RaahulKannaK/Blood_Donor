@@ -103,54 +103,161 @@ def login(request):
 
 
 def register(request):
+
     if request.method == "POST":
+
+        # =====================================================
+        # GET FORM DATA
+        # =====================================================
+
         name = request.POST.get("name", "").strip()
         username = request.POST.get("username", "").strip()
-        email = request.POST.get("email", "").strip()
-        password = request.POST.get("password", "").strip()
-        role = request.POST.get("role", "").strip()
         age = request.POST.get("age", "").strip()
+        password = request.POST.get("password", "").strip()
+        confirm_password = request.POST.get(
+            "confirm_password",
+            ""
+        ).strip()
+        role = request.POST.get("role", "").strip()
+
+
+        # =====================================================
+        # REQUIRED FIELD VALIDATION
+        # =====================================================
 
         if not all([
             name,
             username,
-            email,
+            age,
             password,
-            role,
-            age
+            confirm_password,
+            role
         ]):
+
             messages.error(
                 request,
                 "Please fill all required fields."
             )
+
             return redirect("register")
+
+
+        # =====================================================
+        # PASSWORD CONFIRMATION
+        # =====================================================
+
+        if password != confirm_password:
+
+            messages.error(
+                request,
+                "Passwords do not match."
+            )
+
+            return redirect("register")
+
+
+        # =====================================================
+        # USERNAME CHECK
+        # =====================================================
 
         if LoginUser.objects.filter(
             username=username
         ).exists():
+
             messages.error(
                 request,
                 "Username already exists."
             )
+
             return redirect("register")
+
+
+        # =====================================================
+        # NAME CHECK
+        # =====================================================
 
         if LoginUser.objects.filter(
-            email=email
+            name=name
         ).exists():
+
             messages.error(
                 request,
-                "Email already exists."
+                "An account with this name already exists."
             )
+
             return redirect("register")
 
+
+        # =====================================================
+        # AGE VALIDATION
+        # =====================================================
+
+        try:
+
+            age = int(age)
+
+        except ValueError:
+
+            messages.error(
+                request,
+                "Please enter a valid age."
+            )
+
+            return redirect("register")
+
+
+        if age < 1 or age > 120:
+
+            messages.error(
+                request,
+                "Please enter a valid age between 1 and 120."
+            )
+
+            return redirect("register")
+
+
+        # =====================================================
+        # ROLE VALIDATION
+        # =====================================================
+
+        allowed_roles = [
+            "donor",
+            "needer",
+            "admin"
+        ]
+
+        if role not in allowed_roles:
+
+            messages.error(
+                request,
+                "Please select a valid role."
+            )
+
+            return redirect("register")
+
+
+        # =====================================================
+        # CREATE LOGIN USER
+        # =====================================================
+
         LoginUser.objects.create(
+
             name=name,
+
+            age=age,
+
             username=username,
-            email=email,
+
             password=make_password(password),
-            role=role,
-            age=age
+
+            role=role
+
         )
+
+
+        # =====================================================
+        # SUCCESS MESSAGE
+        # =====================================================
 
         messages.success(
             request,
@@ -159,8 +266,15 @@ def register(request):
 
         return redirect("login")
 
-    return render(request, "hemohub/register.html")
 
+    # =========================================================
+    # GET REQUEST
+    # =========================================================
+
+    return render(
+        request,
+        "hemohub/register.html"
+    )
 
 def forgot_password(request):
     if request.method == "POST":
