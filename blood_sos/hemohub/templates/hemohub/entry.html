@@ -3,184 +3,410 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>HemoHub - Welcome</title>
 
     <style>
 
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
         }
 
         body {
             min-height: 100vh;
+            background: #f5f7fa;
             display: flex;
-            justify-content: center;
             align-items: center;
-            background: #f5f5f5;
+            justify-content: center;
         }
 
         .container {
-            width: 420px;
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.12);
+            width: 100%;
+            max-width: 430px;
+            padding: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 40px 35px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
         }
 
         .logo {
             text-align: center;
-            font-size: 32px;
-            font-weight: bold;
-            color: #c62828;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #777;
-            margin-bottom: 35px;
-        }
-
-        .welcome {
-            font-size: 24px;
-            font-weight: bold;
             margin-bottom: 25px;
+        }
+
+        .logo-icon {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            background: #dc2626;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            color: #b91c1c;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .welcome-text {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .welcome-text h2 {
+            color: #1f2937;
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .welcome-text p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message-container {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .message.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .message.warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .message.info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        form {
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
+            margin-bottom: 7px;
+            color: #374151;
+            font-size: 14px;
+            font-weight: 600;
         }
 
         input {
             width: 100%;
-            padding: 14px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
+            padding: 13px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
             outline: none;
             font-size: 15px;
+            background: #ffffff;
+            transition: 0.2s;
         }
 
         input:focus {
-            border-color: #c62828;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+        }
+
+        input::placeholder {
+            color: #9ca3af;
         }
 
         .continue-btn {
             width: 100%;
             padding: 14px;
             border: none;
-            border-radius: 10px;
-            background: #c62828;
+            border-radius: 9px;
+            background: #dc2626;
             color: white;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
+            transition: 0.2s;
+            margin-top: 5px;
         }
 
         .continue-btn:hover {
-            background: #a91f1f;
+            background: #b91c1c;
+        }
+
+        .continue-btn:active {
+            transform: scale(0.98);
         }
 
         .links {
-            margin-top: 22px;
             text-align: center;
+            margin-top: 22px;
         }
 
         .links a {
-            display: block;
-            margin: 10px;
+            color: #dc2626;
             text-decoration: none;
-            color: #c62828;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            margin: 18px 0;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .register-text {
+            text-align: center;
+            color: #6b7280;
             font-size: 14px;
         }
 
-        .message {
-            background: #ffe5e5;
-            color: #b71c1c;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+        .register-text a {
+            color: #dc2626;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-text a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
             text-align: center;
+            margin-top: 20px;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        @media (max-width: 480px) {
+
+            .container {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 30px 22px;
+            }
+
+            .logo h1 {
+                font-size: 25px;
+            }
+
+            .welcome-text h2 {
+                font-size: 20px;
+            }
         }
 
     </style>
-
 </head>
 
 <body>
 
 <div class="container">
 
-    <div class="logo">
-        🩸 HemoHub
-    </div>
+    <div class="card">
 
-    <div class="subtitle">
-        Blood Donation & Emergency Support
-    </div>
+        <!-- =====================================================
+             LOGO
+        ====================================================== -->
 
-    <div class="welcome">
-        Welcome 👋
-    </div>
+        <div class="logo">
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="message">
-                {{ message }}
+            <div class="logo-icon">
+                🩸
             </div>
-        {% endfor %}
-    {% endif %}
 
-    <form method="POST">
+            <h1>HemoHub</h1>
 
-        {% csrf_token %}
+            <p>Blood Donation & Emergency Response System</p>
 
-        <label>
-            Name
-        </label>
+        </div>
 
-        <input
-            type="text"
-            name="name"
-            placeholder="Enter your name"
-            required
-        >
 
-        <label>
-            Password
-        </label>
+        <!-- =====================================================
+             WELCOME
+        ====================================================== -->
 
-        <input
-            type="password"
-            name="password"
-            placeholder="Enter your password"
-            required
-        >
+        <div class="welcome-text">
 
-        <button
-            type="submit"
-            class="continue-btn">
-            Continue
-        </button>
+            <h2>Welcome Back</h2>
 
-    </form>
+            <p>
+                Enter your registered name and password
+                to continue to HemoHub.
+            </p>
 
-    <div class="links">
+        </div>
 
-        <a href="{% url 'forgot_password' %}">
-            Forgot Password?
-        </a>
 
-        <a href="{% url 'register' %}">
-            Don't have an account? Register
-        </a>
+        <!-- =====================================================
+             DJANGO MESSAGES
+        ====================================================== -->
+
+        {% if messages %}
+
+        <div class="message-container">
+
+            {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =====================================================
+             LOGIN FORM
+             
+             IMPORTANT:
+             The form now submits to /login/
+             instead of posting back to /
+        ====================================================== -->
+
+        <form method="POST" action="{% url 'login' %}">
+
+            {% csrf_token %}
+
+
+            <!-- NAME -->
+
+            <div class="form-group">
+
+                <label for="name">
+                    Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your name"
+                    autocomplete="username"
+                    required
+                >
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </div>
+
+
+            <!-- LOGIN BUTTON -->
+
+            <button
+                type="submit"
+                class="continue-btn"
+            >
+                Continue
+            </button>
+
+        </form>
+
+
+        <!-- =====================================================
+             FORGOT PASSWORD
+        ====================================================== -->
+
+        <div class="links">
+
+            <a href="{% url 'forgot_password' %}">
+                Forgot Password?
+            </a>
+
+        </div>
+
+
+        <div class="divider"></div>
+
+
+        <!-- =====================================================
+             REGISTER
+        ====================================================== -->
+
+        <div class="register-text">
+
+            Don't have an account?
+
+            <a href="{% url 'register' %}">
+                Create Account
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <div class="footer">
+
+        © 2026 HemoHub. All rights reserved.
 
     </div>
 

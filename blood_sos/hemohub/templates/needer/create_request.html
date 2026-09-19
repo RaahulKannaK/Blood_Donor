@@ -1,977 +1,741 @@
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Create Blood Request | HemoHub</title>
+
+    <!-- ================= MAP LIBRARIES ================= -->
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css">
 
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Segoe UI", Arial, sans-serif;
-    }
 
-    body {
-        background: #f4f7fb;
-        color: #172033;
-        min-height: 100vh;
-    }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
 
-    /* ================= SIDEBAR ================= */
+body {
+    background: #f4f7fb;
+    color: #172033;
+    min-height: 100vh;
+}
+
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    height: 100vh;
+    background: #0b3d91;
+    color: white;
+    padding: 25px 18px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    box-shadow: 4px 0 15px rgba(11, 61, 145, 0.15);
+}
+
+.logo {
+    padding: 5px 10px 30px;
+}
+
+.logo h2 {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.logo span {
+    display: block;
+    font-size: 11px;
+    opacity: 0.75;
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.nav a,
+.sidebar-bottom a {
+    width: 100%;
+    padding: 13px 14px;
+    border-radius: 10px;
+    color: #e8eef9;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.nav a:hover,
+.sidebar-bottom a:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.nav a.active {
+    background: white;
+    color: #0b3d91;
+    font-weight: 600;
+}
+
+.nav-icon {
+    width: 22px;
+    text-align: center;
+    font-size: 17px;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.sidebar-bottom a {
+    color: #e8eef9;
+}
+
+.logout {
+    color: #ffffff !important;
+}
+
+
+/* ================= MAIN ================= */
+
+.main {
+    margin-left: 250px;
+    min-height: 100vh;
+    padding: 30px 35px;
+}
+
+
+/* ================= PAGE HEADER ================= */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    gap: 15px;
+}
+
+.page-header h1 {
+    font-size: 27px;
+    color: #172033;
+    font-weight: 700;
+}
+
+.page-header p {
+    color: #64748b;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+
+/* ================= SECTION CARD ================= */
+
+.section-card {
+    background: white;
+    border: 1px solid #e1e7f0;
+    border-radius: 13px;
+    padding: 24px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 12px rgba(30, 64, 175, 0.05);
+}
+
+.section-header {
+    margin-bottom: 22px;
+}
+
+.section-header h2 {
+    font-size: 18px;
+    color: #172033;
+    margin-bottom: 5px;
+}
+
+.section-header p {
+    color: #64748b;
+    font-size: 13px;
+}
+
+
+/* ================= FORM ================= */
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 7px;
+}
+
+.required {
+    color: #d62828;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #dbe1ea;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #334155;
+    background: white;
+    outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #0b3d91;
+    box-shadow: 0 0 0 3px rgba(11, 61, 145, 0.07);
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+
+/* ================= RADIO ================= */
+
+.radio-group {
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+}
+
+.radio-option {
+    border: 1px solid #dbe1ea;
+    padding: 9px 13px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #334155;
+    transition: 0.2s;
+}
+
+.radio-option:hover {
+    border-color: #0b3d91;
+}
+
+.radio-option input {
+    margin-right: 5px;
+}
+
+
+/* ================= LOCATION ================= */
+
+.location-section {
+    background: #f8fafc;
+    border: 1px solid #dbe4f0;
+    padding: 17px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+}
+
+.location-section h3 {
+    color: #172033;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.location-section > p {
+    color: #64748b;
+    font-size: 12px;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.location-input-row {
+    display: flex;
+    gap: 9px;
+    margin-bottom: 10px;
+}
+
+.location-input {
+    flex: 1;
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #dbe1ea;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #334155;
+    background: white;
+    outline: none;
+}
+
+.location-input:focus {
+    border-color: #0b3d91;
+}
+
+.location-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.location-button {
+    background: #0b3d91;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.location-button:hover {
+    background: #092f70;
+}
+
+.location-button.secondary {
+    background: #eef2f7;
+    color: #334155;
+    border: 1px solid #dbe1ea;
+}
+
+.location-button.secondary:hover {
+    background: #e2e8f0;
+}
+
+.location-button.clear {
+    background: #fff5f5;
+    color: #d62828;
+    border: 1px solid #f1c5c5;
+}
+
+.location-button.clear:hover {
+    background: #fdeaea;
+}
+
+.location-status {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.6;
+}
+
+
+/* ================= DETECTED ADDRESS ================= */
+
+.detected-address {
+    display: none;
+    margin-top: 15px;
+    background: white;
+    border: 1px solid #dbe4f0;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.detected-address.show {
+    display: block;
+}
+
+.detected-address-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #172033;
+    margin-bottom: 12px;
+}
+
+.address-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.address-item {
+    background: #f8fafc;
+    border: 1px solid #e8edf3;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.address-item span {
+    display: block;
+    font-size: 9px;
+    color: #94a3b8;
+    margin-bottom: 4px;
+}
+
+.address-item strong {
+    display: block;
+    font-size: 11px;
+    color: #334155;
+    word-break: break-word;
+}
+
+.complete-address {
+    grid-column: 1 / -1;
+}
+
+
+/* ================= MAP ================= */
+
+.map-wrapper {
+    margin-top: 15px;
+    display: none;
+}
+
+.map-wrapper.show {
+    display: block;
+}
+
+.map-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 8px;
+}
+
+#map {
+    width: 100%;
+    height: 360px;
+    border-radius: 10px;
+    border: 1px solid #dbe4f0;
+    overflow: hidden;
+    background: #e5e7eb;
+}
+
+.map-help {
+    margin-top: 7px;
+    font-size: 11px;
+    color: #64748b;
+}
+
+
+/* ================= COORDINATES ================= */
+
+.coordinates-box {
+    display: none;
+    margin-top: 12px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.coordinates-box.show {
+    display: grid;
+}
+
+.coordinate-item {
+    background: #f8fafc;
+    border: 1px solid #e5eaf0;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.coordinate-item span {
+    display: block;
+    font-size: 9px;
+    color: #94a3b8;
+    margin-bottom: 4px;
+}
+
+.coordinate-item strong {
+    display: block;
+    font-size: 12px;
+    color: #334155;
+    word-break: break-word;
+}
+
+
+/* ================= BUTTONS ================= */
+
+.button-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.submit-btn,
+.cancel-btn {
+    padding: 11px 19px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+}
+
+.submit-btn {
+    background: #0b3d91;
+    color: white;
+}
+
+.submit-btn:hover {
+    background: #092f70;
+}
+
+.cancel-btn {
+    background: #eef2f7;
+    color: #475569;
+}
+
+.cancel-btn:hover {
+    background: #e2e8f0;
+}
+
+
+/* ================= MESSAGES ================= */
+
+.messages {
+    margin-bottom: 20px;
+}
+
+.message {
+    padding: 12px 15px;
+    background: #e9f6ed;
+    border: 1px solid #b8dfc0;
+    color: #2e7d32;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+
+/* ================= MOBILE MENU ================= */
+
+.mobile-menu {
+    display: none;
+    width: 42px;
+    height: 42px;
+    border: none;
+    background: white;
+    color: #0b3d91;
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1000px) {
 
     .sidebar {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 250px;
-        height: 100vh;
-        background: #0b3d91;
-        color: white;
-        padding: 25px 18px;
-        display: flex;
-        flex-direction: column;
-        z-index: 1000;
-        box-shadow: 4px 0 15px rgba(11, 61, 145, 0.15);
+        transform: translateX(-100%);
+        transition: 0.3s;
     }
 
-    .logo {
-        padding: 5px 10px 30px;
+    .sidebar.open {
+        transform: translateX(0);
     }
-
-    .logo h2 {
-        font-size: 19px;
-        font-weight: 700;
-        letter-spacing: 0.2px;
-    }
-
-    .logo span {
-        display: block;
-        font-size: 11px;
-        opacity: 0.75;
-        margin-top: 4px;
-        line-height: 1.4;
-    }
-
-    .nav {
-        display: flex;
-        flex-direction: column;
-        gap: 7px;
-    }
-
-    .nav a,
-    .sidebar-bottom a {
-        width: 100%;
-        padding: 13px 14px;
-        border-radius: 10px;
-        color: #e8eef9;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 13px;
-        font-size: 14px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-
-    .nav a:hover,
-    .sidebar-bottom a:hover {
-        background: rgba(255, 255, 255, 0.12);
-    }
-
-    .nav a.active {
-        background: white;
-        color: #0b3d91;
-        font-weight: 600;
-    }
-
-    .nav-icon {
-        width: 22px;
-        text-align: center;
-        font-size: 17px;
-    }
-
-    .sidebar-bottom {
-        margin-top: auto;
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-        padding-top: 15px;
-        display: flex;
-        flex-direction: column;
-        gap: 7px;
-    }
-
-    .sidebar-bottom a {
-        color: #e8eef9;
-    }
-
-    .sidebar-bottom a:hover {
-        background: rgba(255, 255, 255, 0.12);
-    }
-
-    .logout {
-        color: #ffffff !important;
-    }
-
-    /* ================= MAIN ================= */
 
     .main {
-        margin-left: 250px;
-        min-height: 100vh;
-        padding: 30px 35px;
+        margin-left: 0;
+        padding: 25px;
     }
 
-    /* ================= PAGE HEADER ================= */
+    .mobile-menu {
+        display: block;
+    }
+
+    .address-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .coordinates-box {
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .main {
+        padding: 18px;
+    }
 
     .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-        gap: 15px;
+        align-items: flex-start;
     }
 
     .page-header h1 {
-        font-size: 27px;
-        color: #172033;
-        font-weight: 700;
+        font-size: 22px;
     }
-
-    .page-header p {
-        color: #64748b;
-        margin-top: 5px;
-        font-size: 14px;
-    }
-
-    /* ================= SECTION CARD ================= */
-
-    .section-card {
-        background: white;
-        border: 1px solid #e1e7f0;
-        border-radius: 13px;
-        padding: 24px;
-        margin-bottom: 25px;
-        box-shadow: 0 3px 12px rgba(30, 64, 175, 0.05);
-    }
-
-    .section-header {
-        margin-bottom: 22px;
-    }
-
-    .section-header h2 {
-        font-size: 18px;
-        color: #172033;
-        margin-bottom: 5px;
-    }
-
-    .section-header p {
-        color: #64748b;
-        font-size: 13px;
-    }
-
-    /* ================= FORM ================= */
 
     .form-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 18px;
-        margin-bottom: 18px;
+        grid-template-columns: 1fr;
     }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .form-group.full {
-        margin-bottom: 18px;
-    }
-
-    .form-group label {
-        font-size: 13px;
-        font-weight: 600;
-        color: #334155;
-        margin-bottom: 7px;
-    }
-
-    .required {
-        color: #d62828;
-    }
-
-    .form-group input[type="text"],
-    .form-group input[type="number"],
-    .form-group select,
-    .form-group textarea {
-        width: 100%;
-        padding: 11px 12px;
-        border: 1px solid #dbe1ea;
-        border-radius: 8px;
-        font-size: 13px;
-        color: #334155;
-        background: white;
-        outline: none;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-        border-color: #0b3d91;
-    }
-
-    textarea {
-        min-height: 100px;
-        resize: vertical;
-    }
-
-    /* ================= RADIO ================= */
-
-    .radio-group {
-        display: flex;
-        gap: 9px;
-        flex-wrap: wrap;
-    }
-
-    .radio-option {
-        border: 1px solid #dbe1ea;
-        padding: 9px 13px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 13px;
-        color: #334155;
-        transition: 0.2s;
-    }
-
-    .radio-option:hover {
-        border-color: #0b3d91;
-    }
-
-    .radio-option input {
-        margin-right: 5px;
-    }
-
-    /* ================= LOCATION ================= */
-
-    .location-section {
-        background: #f8fafc;
-        border: 1px solid #dbe4f0;
-        padding: 17px;
-        border-radius: 10px;
-        margin-bottom: 18px;
-    }
-
-    .location-section h3 {
-        color: #172033;
-        font-size: 15px;
-        margin-bottom: 5px;
-    }
-
-    .location-section p {
-        color: #64748b;
-        font-size: 12px;
-        margin-bottom: 12px;
-        line-height: 1.5;
-    }
-
-    .location-button {
-        background: #0b3d91;
-        color: white;
-        border: none;
-        padding: 10px 16px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: 600;
-    }
-
-    .location-button:hover {
-        background: #092f70;
-    }
-
-    .location-status {
-        margin-top: 9px;
-        font-size: 12px;
-        color: #64748b;
-    }
-
-    /* ================= BUTTONS ================= */
 
     .button-row {
-        display: flex;
-        gap: 10px;
-        margin-top: 22px;
+        flex-direction: column;
     }
 
     .submit-btn,
     .cancel-btn {
-        padding: 11px 19px;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        text-decoration: none;
-        border: none;
-    }
-
-    .submit-btn {
-        background: #d62828;
-        color: white;
-    }
-
-    .submit-btn:hover {
-        background: #b91f1f;
-    }
-
-    .cancel-btn {
-        background: #eef2f7;
-        color: #475569;
-    }
-
-    .cancel-btn:hover {
-        background: #e2e8f0;
-    }
-
-    /* ================= MESSAGES ================= */
-
-    .messages {
-        margin-bottom: 20px;
-    }
-
-    .message {
-        padding: 12px 15px;
-        background: #e9f6ed;
-        border: 1px solid #b8dfc0;
-        color: #2e7d32;
-        border-radius: 8px;
-        margin-bottom: 8px;
-        font-size: 13px;
-    }
-
-    /* ================= REQUEST HEADER ================= */
-
-    .request-section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 18px;
-    }
-
-    .request-section-header h2 {
-        font-size: 18px;
-        color: #172033;
-    }
-
-    /* ================= REQUEST CARD ================= */
-
-    .request-card {
-        background: #ffffff;
-        border: 1px solid #e1e7f0;
-        border-radius: 13px;
-        padding: 20px;
-        margin-bottom: 16px;
-    }
-
-    .request-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 15px;
-        margin-bottom: 17px;
-    }
-
-    .request-title {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .blood-badge {
-        background: #fdeaea;
-        color: #d62828;
-        padding: 6px 10px;
-        border-radius: 8px;
-        font-weight: 700;
-        font-size: 12px;
-    }
-
-    .request-title h3 {
-        font-size: 16px;
-        color: #172033;
-    }
-
-    /* ================= STATUS ================= */
-
-    .badges {
-        display: flex;
-        gap: 7px;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-    }
-
-    .status,
-    .urgency {
-        padding: 5px 9px;
-        border-radius: 8px;
-        font-size: 10px;
-        font-weight: 700;
-    }
-
-    .status-active {
-        background: #fff1d6;
-        color: #a86200;
-    }
-
-    .status-fulfilled {
-        background: #e9f6ed;
-        color: #218838;
-    }
-
-    .status-cancelled {
-        background: #f1f5f9;
-        color: #64748b;
-    }
-
-    .emergency {
-        background: #fdeaea;
-        color: #c1121f;
-    }
-
-    .urgent {
-        background: #fff1d6;
-        color: #a86200;
-    }
-
-    .normal {
-        background: #e9f6ed;
-        color: #218838;
-    }
-
-    /* ================= DETAILS ================= */
-
-    .details {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 13px;
-        padding: 17px 0;
-        border-top: 1px solid #edf0f4;
-        border-bottom: 1px solid #edf0f4;
-    }
-
-    .detail {
-        font-size: 11px;
-        color: #64748b;
-    }
-
-    .detail strong {
-        display: block;
-        color: #334155;
-        margin-top: 4px;
-        font-size: 13px;
-    }
-
-    /* ================= ADDITIONAL ================= */
-
-    .additional {
-        margin-top: 14px;
-        padding: 11px 13px;
-        background: #f8fafc;
-        border-left: 3px solid #d62828;
-        border-radius: 8px;
-        font-size: 12px;
-        color: #64748b;
-        line-height: 1.5;
-    }
-
-    .additional strong {
-        color: #334155;
-    }
-
-    /* ================= PROGRESS ================= */
-
-    .progress-section {
-        margin-top: 17px;
-    }
-
-    .progress-header {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 7px;
-    }
-
-    .progress-header strong {
-        color: #334155;
-        font-size: 12px;
-    }
-
-    .progress-header span {
-        color: #64748b;
-        font-size: 11px;
-    }
-
-    .progress-bar {
-        height: 7px;
-        background: #e8edf3;
-        border-radius: 20px;
-        overflow: hidden;
-    }
-
-    .progress-fill {
-        height: 100%;
-        background: #0b3d91;
-        border-radius: 20px;
-    }
-
-    /* ================= ACTIONS ================= */
-
-    .request-actions {
-        display: flex;
-        gap: 10px;
-        margin-top: 17px;
-    }
-
-    .find-btn {
-        flex: 1;
-        border: none;
-        background: #0b3d91;
-        color: white;
-        padding: 10px;
-        border-radius: 8px;
-        text-decoration: none;
+        width: 100%;
         text-align: center;
-        font-size: 12px;
-        font-weight: 600;
     }
 
-    .find-btn:hover {
-        background: #092f70;
+    .location-input-row {
+        flex-direction: column;
     }
 
-    .cancel-request-btn {
-        flex: 1;
-        border: 1px solid #f1c5c5;
-        background: #fff5f5;
-        color: #d62828;
-        padding: 10px;
-        border-radius: 8px;
-        text-decoration: none;
-        text-align: center;
-        font-size: 12px;
-        font-weight: 600;
+    .location-buttons {
+        flex-direction: column;
     }
 
-    .cancel-request-btn:hover {
-        background: #fdeaea;
+    .location-button {
+        width: 100%;
     }
 
-    /* ================= RESPONSE AREA ================= */
-
-    .response-section {
-        margin-top: 20px;
-        display: grid;
-        grid-template-columns: 1.4fr 1fr;
-        gap: 18px;
+    .address-grid {
+        grid-template-columns: 1fr;
     }
 
-    .response-card,
-    .tracking-card {
-        background: white;
-        border: 1px solid #e1e7f0;
-        border-radius: 13px;
-        padding: 20px;
+    .coordinates-box {
+        grid-template-columns: 1fr;
     }
 
-    .card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 17px;
+    #map {
+        height: 300px;
     }
 
-    .card-header h3 {
-        font-size: 16px;
-        color: #172033;
-    }
+}
 
-    .count-badge {
-        background: #fdeaea;
-        color: #d62828;
-        padding: 5px 9px;
-        border-radius: 15px;
-        font-size: 10px;
-        font-weight: 700;
-    }
-
-    /* ================= DONOR RESPONSE ================= */
-
-    .donor-response {
-        border: 1px solid #edf0f4;
-        border-radius: 10px;
-        padding: 14px;
-        margin-bottom: 10px;
-        background: #fafbfc;
-    }
-
-    .donor-response:last-child {
-        margin-bottom: 0;
-    }
-
-    .donor-info {
-        display: flex;
-        align-items: center;
-        gap: 11px;
-    }
-
-    .donor-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: #e8eef9;
-        color: #0b3d91;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-    }
-
-    .donor-info h4 {
-        font-size: 13px;
-        color: #334155;
-    }
-
-    .donor-info p {
-        font-size: 11px;
-        color: #64748b;
-        margin-top: 3px;
-    }
-
-    .response-status {
-        margin-top: 9px;
-        font-size: 11px;
-        color: #218838;
-        font-weight: 600;
-    }
-
-    .response-date {
-        margin-top: 4px;
-        font-size: 10px;
-        color: #94a3b8;
-    }
-
-    /* ================= TRACKING ================= */
-
-    .tracking-box {
-        margin-top: 14px;
-        padding: 13px;
-        background: #f8fafc;
-        border: 1px solid #e1e7f0;
-        border-radius: 9px;
-    }
-
-    .tracking-title {
-        font-size: 12px;
-        font-weight: 700;
-        color: #334155;
-        margin-bottom: 9px;
-    }
-
-    .tracking-status {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        font-size: 11px;
-        font-weight: 600;
-        margin-bottom: 10px;
-    }
-
-    .tracking-status.available {
-        color: #218838;
-    }
-
-    .tracking-status.unavailable {
-        color: #a86200;
-    }
-
-    .tracking-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: #218838;
-    }
-
-    .tracking-status.unavailable .tracking-dot {
-        background: #a86200;
-    }
-
-    .tracking-details {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 9px;
-    }
-
-    .tracking-detail {
-        background: white;
-        border: 1px solid #e5eaf0;
-        border-radius: 8px;
-        padding: 9px;
-    }
-
-    .tracking-detail span {
-        display: block;
-        font-size: 9px;
-        color: #94a3b8;
-        margin-bottom: 4px;
-    }
-
-    .tracking-detail strong {
-        display: block;
-        font-size: 12px;
-        color: #334155;
-    }
-
-    .tracking-message {
-        margin-top: 9px;
-        font-size: 10px;
-        color: #64748b;
-        line-height: 1.5;
-    }
-
-    /* ================= TIMELINE ================= */
-
-    .timeline {
-        position: relative;
-        padding-left: 27px;
-    }
-
-    .timeline::before {
-        content: "";
-        position: absolute;
-        left: 7px;
-        top: 7px;
-        bottom: 7px;
-        width: 2px;
-        background: #dbe4f0;
-    }
-
-    .timeline-item {
-        position: relative;
-        margin-bottom: 22px;
-    }
-
-    .timeline-item:last-child {
-        margin-bottom: 0;
-    }
-
-    .timeline-dot {
-        position: absolute;
-        left: -27px;
-        top: 1px;
-        width: 15px;
-        height: 15px;
-        border-radius: 50%;
-        background: #0b3d91;
-        border: 3px solid #e8eef9;
-    }
-
-    .timeline-item.pending .timeline-dot {
-        background: #cbd5e1;
-        border-color: #f1f5f9;
-    }
-
-    .timeline-item h4 {
-        font-size: 12px;
-        color: #334155;
-    }
-
-    .timeline-item p {
-        font-size: 10px;
-        color: #64748b;
-        margin-top: 4px;
-        line-height: 1.5;
-    }
-
-    /* ================= EMPTY ================= */
-
-    .empty {
-        background: white;
-        border: 1px solid #e1e7f0;
-        border-radius: 13px;
-        text-align: center;
-        padding: 45px 25px;
-    }
-
-    .empty-icon {
-        font-size: 40px;
-        margin-bottom: 12px;
-    }
-
-    .empty h3 {
-        font-size: 18px;
-        margin-bottom: 7px;
-        color: #172033;
-    }
-
-    .empty p {
-        color: #64748b;
-        font-size: 12px;
-    }
-
-    .empty-btn {
-        display: inline-block;
-        margin-top: 15px;
-        background: #d62828;
-        color: white;
-        padding: 10px 16px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    /* ================= MOBILE MENU ================= */
-
-    .mobile-menu {
-        display: none;
-        width: 42px;
-        height: 42px;
-        border: none;
-        background: white;
-        color: #0b3d91;
-        border-radius: 10px;
-        font-size: 20px;
-        cursor: pointer;
-    }
-
-    /* ================= RESPONSIVE ================= */
-
-    @media (max-width: 1000px) {
-
-        .sidebar {
-            transform: translateX(-100%);
-            transition: 0.3s;
-        }
-
-        .sidebar.open {
-            transform: translateX(0);
-        }
-
-        .main {
-            margin-left: 0;
-            padding: 25px;
-        }
-
-        .mobile-menu {
-            display: block;
-        }
-
-        .page-header {
-            gap: 12px;
-        }
-
-        .details {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .response-section {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    @media (max-width: 650px) {
-
-        .main {
-            padding: 18px;
-        }
-
-        .page-header {
-            align-items: flex-start;
-        }
-
-        .page-header h1 {
-            font-size: 22px;
-        }
-
-        .form-row {
-            grid-template-columns: 1fr;
-        }
-
-        .details {
-            grid-template-columns: 1fr;
-        }
-
-        .request-top {
-            flex-direction: column;
-        }
-
-        .badges {
-            justify-content: flex-start;
-        }
-
-        .request-actions {
-            flex-direction: column;
-        }
-
-        .tracking-details {
-            grid-template-columns: 1fr;
-        }
-
-        .button-row {
-            flex-direction: column;
-        }
-
-        .submit-btn,
-        .cancel-btn {
-            width: 100%;
-            text-align: center;
-        }
-    }
 </style>
- 
 
 </head>
 
+
 <body>
 
- 
+
 <!-- ================= SIDEBAR ================= -->
 
 <aside class="sidebar" id="sidebar">
 
     <div class="logo">
+
         <h2>HemoHub</h2>
-        <span>Blood Donation & Emergency Response</span>
+
+        <span>
+            Blood Donation & Emergency Response
+        </span>
+
     </div>
+
 
     <nav class="nav">
 
         <a href="{% url 'needer_dashboard' %}">
-            <span class="nav-icon">▣</span>
-            <span>Dashboard</span>
+
+            <span class="nav-icon">
+                ▣
+            </span>
+
+            <span>
+                Dashboard
+            </span>
+
         </a>
 
-        <a href="{% url 'create_request' %}" class="active">
-            <span class="nav-icon">🩸</span>
-            <span>Create Request</span>
+
+        <a href="{% url 'create_request' %}"
+           class="active">
+
+            <span class="nav-icon">
+                🩸
+            </span>
+
+            <span>
+                Create Request
+            </span>
+
         </a>
+
 
         <a href="{% url 'find_donor' %}">
-            <span class="nav-icon">◉</span>
-            <span>Find Donor</span>
+
+            <span class="nav-icon">
+                ◉
+            </span>
+
+            <span>
+                Find Donor
+            </span>
+
         </a>
 
     </nav>
 
+
     <div class="sidebar-bottom">
 
         <a href="{% url 'needer_dashboard' %}#profile">
-            <span class="nav-icon">◉</span>
-            <span>Profile</span>
+
+            <span class="nav-icon">
+                ◉
+            </span>
+
+            <span>
+                Profile
+            </span>
+
         </a>
 
-        <a href="{% url 'logout_user' %}" class="logout">
-            <span class="nav-icon">↪</span>
-            <span>Logout</span>
+
+        <a href="{% url 'logout_user' %}"
+           class="logout">
+
+            <span class="nav-icon">
+                ↪
+            </span>
+
+            <span>
+                Logout
+            </span>
+
         </a>
 
     </div>
@@ -983,24 +747,28 @@
 
 <main class="main">
 
+
     <div class="page-header">
 
         <div>
 
             <h1>
-                Blood Requests
+                Create Blood Request
             </h1>
 
             <p>
-                Create a blood request and track your existing requests.
+                Enter the patient and blood requirement details.
             </p>
 
         </div>
 
+
         <button
             class="mobile-menu"
             onclick="toggleSidebar()">
+
             ☰
+
         </button>
 
     </div>
@@ -1029,18 +797,6 @@
 
     <section class="section-card">
 
-        <div class="section-header">
-
-            <h2>
-                Create Blood Request
-            </h2>
-
-            <p>
-                Enter the patient and blood requirement details.
-            </p>
-
-        </div>
-
 
         <form
             method="POST"
@@ -1049,14 +805,23 @@
             {% csrf_token %}
 
 
+            <!-- ================= PATIENT DETAILS ================= -->
+
             <div class="form-row">
+
 
                 <div class="form-group">
 
                     <label for="patientName">
+
                         Patient Name
-                        <span class="required">*</span>
+
+                        <span class="required">
+                            *
+                        </span>
+
                     </label>
+
 
                     <input
                         type="text"
@@ -1071,9 +836,15 @@
                 <div class="form-group">
 
                     <label for="patientAge">
+
                         Patient Age
-                        <span class="required">*</span>
+
+                        <span class="required">
+                            *
+                        </span>
+
                     </label>
+
 
                     <input
                         type="number"
@@ -1089,52 +860,77 @@
             </div>
 
 
+            <!-- ================= BLOOD GROUP ================= -->
+
             <div class="form-group full">
 
                 <label>
+
                     Blood Group
-                    <span class="required">*</span>
+
+                    <span class="required">
+                        *
+                    </span>
+
                 </label>
+
 
                 <div class="radio-group">
 
                     <label class="radio-option">
-                        <input type="radio" name="bloodGroup" value="A+" required>
+                        <input type="radio"
+                               name="bloodGroup"
+                               value="A+"
+                               required>
                         A+
                     </label>
 
                     <label class="radio-option">
-                        <input type="radio" name="bloodGroup" value="A-">
+                        <input type="radio"
+                               name="bloodGroup"
+                               value="A-">
                         A-
                     </label>
 
                     <label class="radio-option">
-                        <input type="radio" name="bloodGroup" value="B+">
+                        <input type="radio"
+                               name="bloodGroup"
+                               value="B+">
                         B+
                     </label>
 
                     <label class="radio-option">
-                        <input type="radio" name="bloodGroup" value="B-">
+                        <input type="radio"
+                               name="bloodGroup"
+                               value="B-">
                         B-
                     </label>
 
                     <label class="radio-option">
-                        <input type="radio" name="bloodGroup" value="AB+">
+                        <input type="radio"
+                               name="bloodGroup"
+                               value="AB+">
                         AB+
                     </label>
 
                     <label class="radio-option">
-                        <input type="radio" name="bloodGroup" value="AB-">
+                        <input type="radio"
+                               name="bloodGroup"
+                               value="AB-">
                         AB-
                     </label>
 
                     <label class="radio-option">
-                        <input type="radio" name="bloodGroup" value="O+">
+                        <input type="radio"
+                               name="bloodGroup"
+                               value="O+">
                         O+
                     </label>
 
                     <label class="radio-option">
-                        <input type="radio" name="bloodGroup" value="O-">
+                        <input type="radio"
+                               name="bloodGroup"
+                               value="O-">
                         O-
                     </label>
 
@@ -1143,37 +939,56 @@
             </div>
 
 
+            <!-- ================= UNITS ================= -->
+
             <div class="form-group full">
 
                 <label>
+
                     Required Units
-                    <span class="required">*</span>
+
+                    <span class="required">
+                        *
+                    </span>
+
                 </label>
+
 
                 <div class="radio-group">
 
                     <label class="radio-option">
-                        <input type="radio" name="units" value="1" required>
+                        <input type="radio"
+                               name="units"
+                               value="1"
+                               required>
                         1 Unit
                     </label>
 
                     <label class="radio-option">
-                        <input type="radio" name="units" value="2">
+                        <input type="radio"
+                               name="units"
+                               value="2">
                         2 Units
                     </label>
 
                     <label class="radio-option">
-                        <input type="radio" name="units" value="3">
+                        <input type="radio"
+                               name="units"
+                               value="3">
                         3 Units
                     </label>
 
                     <label class="radio-option">
-                        <input type="radio" name="units" value="4">
+                        <input type="radio"
+                               name="units"
+                               value="4">
                         4 Units
                     </label>
 
                     <label class="radio-option">
-                        <input type="radio" name="units" value="5">
+                        <input type="radio"
+                               name="units"
+                               value="5">
                         5 Units
                     </label>
 
@@ -1182,14 +997,23 @@
             </div>
 
 
+            <!-- ================= HOSPITAL + LOCATION ================= -->
+
             <div class="form-row">
+
 
                 <div class="form-group">
 
                     <label for="hospital">
+
                         Hospital
-                        <span class="required">*</span>
+
+                        <span class="required">
+                            *
+                        </span>
+
                     </label>
+
 
                     <input
                         type="text"
@@ -1204,14 +1028,21 @@
                 <div class="form-group">
 
                     <label for="location">
+
                         Location
-                        <span class="required">*</span>
+
+                        <span class="required">
+                            *
+                        </span>
+
                     </label>
+
 
                     <input
                         type="text"
                         name="location"
                         id="location"
+                        value="{{ location|default:'' }}"
                         placeholder="Enter area / city"
                         required>
 
@@ -1220,81 +1051,358 @@
             </div>
 
 
-            <!-- GPS -->
+            <!-- ================= DYNAMIC GPS LOCATION ================= -->
 
             <div class="location-section">
 
+
                 <h3>
-                    📍 Current GPS Location
+                    📍 Emergency Location
                 </h3>
 
+
                 <p>
-                    Detect your current location so HemoHub can
-                    use it for nearby donor matching.
+
+                    Detect your current GPS location so HemoHub
+                    can use your exact location for nearby donor matching.
+
                 </p>
+
+
+                <!-- Search -->
+
+                <div class="location-input-row">
+
+                    <input
+                        type="text"
+                        id="locationSearch"
+                        class="location-input"
+                        placeholder="Search area, city, hospital or location...">
+
+                </div>
+
+
+                <!-- Buttons -->
+
+                <div class="location-buttons">
+
+                    <button
+                        type="button"
+                        class="location-button"
+                        onclick="getCurrentLocation()">
+
+                        📍 Detect Current Location
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="location-button secondary"
+                        onclick="searchManualLocation()">
+
+                        🔎 Search Location
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="location-button clear"
+                        onclick="clearLocation()">
+
+                        🧹 Clear Location
+
+                    </button>
+
+                </div>
+
+
+                <!-- Hidden GPS data -->
 
                 <input
                     type="hidden"
                     id="latitude"
-                    name="latitude">
+                    name="latitude"
+                    value="{{ latitude|default:'' }}">
+
 
                 <input
                     type="hidden"
                     id="longitude"
-                    name="longitude">
+                    name="longitude"
+                    value="{{ longitude|default:'' }}">
 
-                <button
-                    type="button"
-                    class="location-button"
-                    onclick="getCurrentLocation()">
 
-                    📍 Detect Current Location
+                <input
+                    type="hidden"
+                    id="accuracy"
+                    name="accuracy"
+                    value="{{ accuracy|default:'' }}">
 
-                </button>
+
+                <!-- Status -->
 
                 <div
                     id="locationStatus"
                     class="location-status">
 
-                    Location not detected yet.
+                    {% if latitude and longitude %}
+
+                        📍 Saved location loaded.
+
+                    {% else %}
+
+                        📍 Click
+                        <strong>Detect Current Location</strong>
+                        or search for a location.
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- ================= DETECTED ADDRESS ================= -->
+
+                <div
+                    id="detectedAddress"
+                    class="detected-address">
+
+
+                    <div class="detected-address-title">
+
+                        📍 Detected Location Details
+
+                    </div>
+
+
+                    <div class="address-grid">
+
+
+                        <div class="address-item">
+
+                            <span>
+                                Street
+                            </span>
+
+                            <strong id="street">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="address-item">
+
+                            <span>
+                                Area / Locality
+                            </span>
+
+                            <strong id="area">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="address-item">
+
+                            <span>
+                                City
+                            </span>
+
+                            <strong id="city">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="address-item">
+
+                            <span>
+                                District
+                            </span>
+
+                            <strong id="district">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="address-item">
+
+                            <span>
+                                State
+                            </span>
+
+                            <strong id="state">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="address-item">
+
+                            <span>
+                                PIN Code
+                            </span>
+
+                            <strong id="postcode">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="address-item complete-address">
+
+                            <span>
+                                Complete Address
+                            </span>
+
+                            <strong id="completeAddress">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= MAP ================= -->
+
+                <div
+                    id="mapWrapper"
+                    class="map-wrapper">
+
+
+                    <div class="map-title">
+
+                        🗺️ Location Map
+
+                    </div>
+
+
+                    <div id="map"></div>
+
+
+                    <div class="map-help">
+
+                        🖱️ Drag the marker to adjust the exact emergency
+                        location. The address will update automatically.
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= COORDINATES ================= -->
+
+                <div
+                    id="coordinatesBox"
+                    class="coordinates-box">
+
+
+                    <div class="coordinate-item">
+
+                        <span>
+                            Latitude
+                        </span>
+
+                        <strong id="latitudeDisplay">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="coordinate-item">
+
+                        <span>
+                            Longitude
+                        </span>
+
+                        <strong id="longitudeDisplay">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="coordinate-item">
+
+                        <span>
+                            GPS Accuracy
+                        </span>
+
+                        <strong id="accuracyDisplay">
+                            —
+                        </strong>
+
+                    </div>
 
                 </div>
 
             </div>
 
 
+            <!-- ================= URGENCY ================= -->
+
             <div class="form-group full">
 
                 <label>
+
                     Urgency
-                    <span class="required">*</span>
+
+                    <span class="required">
+                        *
+                    </span>
+
                 </label>
+
 
                 <div class="radio-group">
 
                     <label class="radio-option">
+
                         <input
                             type="radio"
                             name="urgency"
                             value="Emergency"
                             required>
+
                         Emergency
+
                     </label>
 
+
                     <label class="radio-option">
+
                         <input
                             type="radio"
                             name="urgency"
                             value="Urgent">
+
                         Urgent
+
                     </label>
 
+
                     <label class="radio-option">
+
                         <input
                             type="radio"
                             name="urgency"
                             value="Normal">
+
                         Normal
+
                     </label>
 
                 </div>
@@ -1302,11 +1410,16 @@
             </div>
 
 
+            <!-- ================= ADDITIONAL INFO ================= -->
+
             <div class="form-group">
 
                 <label for="additionalInfo">
+
                     Additional Information
+
                 </label>
+
 
                 <textarea
                     id="additionalInfo"
@@ -1316,7 +1429,10 @@
             </div>
 
 
+            <!-- ================= FORM BUTTONS ================= -->
+
             <div class="button-row">
+
 
                 <a
                     href="{% url 'needer_dashboard' %}"
@@ -1325,6 +1441,7 @@
                     Cancel
 
                 </a>
+
 
                 <button
                     type="submit"
@@ -1336,750 +1453,1443 @@
 
             </div>
 
+
         </form>
 
     </section>
 
 
-    <!-- ================= MY BLOOD REQUESTS ================= -->
-
-    <section>
-
-        <div class="request-section-header">
-
-            <h2>
-                My Blood Requests
-            </h2>
-
-        </div>
-
-
-        {% if requests_list %}
-
-            {% for req in requests_list %}
-
-                <article class="request-card">
-
-                    <div class="request-top">
-
-                        <div class="request-title">
-
-                            <span class="blood-badge">
-                                {{ req.blood_group }}
-                            </span>
-
-                            <h3>
-                                {{ req.hospital }}
-                            </h3>
-
-                            {% if req.urgency == "Emergency" %}
-
-                                <span class="urgency emergency">
-                                    🔴 Emergency
-                                </span>
-
-                            {% elif req.urgency == "Urgent" %}
-
-                                <span class="urgency urgent">
-                                    🟠 Urgent
-                                </span>
-
-                            {% else %}
-
-                                <span class="urgency normal">
-                                    🟢 Normal
-                                </span>
-
-                            {% endif %}
-
-                        </div>
-
-
-                        <div class="badges">
-
-                            {% if req.status == "Active" %}
-
-                                <span class="status status-active">
-                                    Active
-                                </span>
-
-                            {% elif req.status == "Fulfilled" %}
-
-                                <span class="status status-fulfilled">
-                                    Fulfilled
-                                </span>
-
-                            {% elif req.status == "Cancelled" %}
-
-                                <span class="status status-cancelled">
-                                    Cancelled
-                                </span>
-
-                            {% else %}
-
-                                <span class="status status-active">
-                                    {{ req.status }}
-                                </span>
-
-                            {% endif %}
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="details">
-
-                        <div class="detail">
-                            Patient
-                            <strong>
-                                {{ req.patient_name }}
-                            </strong>
-                        </div>
-
-                        <div class="detail">
-                            Patient Age
-                            <strong>
-                                {{ req.patient_age }}
-                            </strong>
-                        </div>
-
-                        <div class="detail">
-                            Blood Group
-                            <strong>
-                                {{ req.blood_group }}
-                            </strong>
-                        </div>
-
-                        <div class="detail">
-                            Units Required
-                            <strong>
-                                {{ req.units }}
-                            </strong>
-                        </div>
-
-                        <div class="detail">
-                            Hospital
-                            <strong>
-                                {{ req.hospital }}
-                            </strong>
-                        </div>
-
-                        <div class="detail">
-                            Location
-                            <strong>
-                                {{ req.location }}
-                            </strong>
-                        </div>
-
-                        <div class="detail">
-                            Request Status
-                            <strong>
-                                {{ req.status }}
-                            </strong>
-                        </div>
-
-                        <div class="detail">
-                            Requested On
-                            <strong>
-                                {{ req.created_at|date:"d M Y, h:i A" }}
-                            </strong>
-                        </div>
-
-                    </div>
-
-
-                    {% if req.additional_info %}
-
-                        <div class="additional">
-
-                            <strong>
-                                Additional Information:
-                            </strong>
-
-                            {{ req.additional_info }}
-
-                        </div>
-
-                    {% endif %}
-
-
-                    <div class="progress-section">
-
-                        <div class="progress-header">
-
-                            <strong>
-                                Request Progress
-                            </strong>
-
-                            <span>
-
-                                {% if req.status == "Fulfilled" %}
-
-                                    Completed
-
-                                {% elif req.status == "Cancelled" %}
-
-                                    Cancelled
-
-                                {% elif req.response_count > 0 %}
-
-                                    Donor response received
-
-                                {% else %}
-
-                                    Waiting for donor response
-
-                                {% endif %}
-
-                            </span>
-
-                        </div>
-
-
-                        <div class="progress-bar">
-
-                            <div
-                                class="progress-fill"
-
-                                {% if req.status == "Fulfilled" %}
-                                    style="width:100%;"
-                                {% elif req.response_count > 0 %}
-                                    style="width:75%;"
-                                {% elif req.status == "Active" %}
-                                    style="width:45%;"
-                                {% else %}
-                                    style="width:0%;"
-                                {% endif %}>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    {% if req.status == "Active" %}
-
-                        <div class="request-actions">
-
-                            <a
-                                href="{% url 'find_donor' %}?request_id={{ req.id }}"
-                                class="find-btn">
-
-                                👥 View Donor Responses
-
-                            </a>
-
-                            <form
-                                method="POST"
-                                action="{% url 'cancel_request' req.id %}"
-                                style="flex:1;">
-
-                                {% csrf_token %}
-
-                                <button
-                                    type="submit"
-                                    class="cancel-request-btn"
-                                    style="width:100%; cursor:pointer;"
-                                    onclick="return confirm('Are you sure you want to cancel this blood request?');">
-
-                                    Cancel Request
-
-                                </button>
-
-                            </form>
-
-                        </div>
-
-                    {% endif %}
-
-                </article>
-
-            {% endfor %}
-
-
-            <!-- ================= LATEST RESPONSE AREA ================= -->
-
-            {% if latest_request %}
-
-                <div class="response-section">
-
-                    <section class="response-card">
-
-                        <div class="card-header">
-
-                            <h3>
-                                Donor Responses
-                            </h3>
-
-                            <span class="count-badge">
-
-                                {{ response_count }}
-                                Response{{ response_count|pluralize }}
-
-                            </span>
-
-                        </div>
-
-
-                        {% if donor_responses %}
-
-                            {% for response in donor_responses %}
-
-                                <div class="donor-response">
-
-                                    <div class="donor-info">
-
-                                        <div class="donor-avatar">
-                                            👤
-                                        </div>
-
-                                        <div>
-
-                                            <h4>
-                                                {{ response.donor.user.name }}
-                                            </h4>
-
-                                            <p>
-                                                Blood Group:
-                                                {{ response.donor.blood_group }}
-                                            </p>
-
-                                        </div>
-
-                                    </div>
-
-
-                                    <div class="response-status">
-
-                                        {% if response.status %}
-                                            ✓ {{ response.status }}
-                                        {% else %}
-                                            ✓ Responded
-                                        {% endif %}
-
-                                    </div>
-
-
-                                    {% if response.created_at %}
-
-                                        <div class="response-date">
-
-                                            Responded on
-                                            {{ response.created_at|date:"d M Y, h:i A" }}
-
-                                        </div>
-
-                                    {% endif %}
-
-
-                                    <div class="tracking-box">
-
-                                        <div class="tracking-title">
-                                            📍 Donor Tracking
-                                        </div>
-
-
-                                        {% if response.location_available %}
-
-                                            <div class="tracking-status available">
-
-                                                <span class="tracking-dot"></span>
-
-                                                Donor location available
-
-                                            </div>
-
-
-                                            <div class="tracking-details">
-
-                                                <div class="tracking-detail">
-
-                                                    <span>
-                                                        Distance
-                                                    </span>
-
-                                                    <strong>
-
-                                                        {% if response.distance_km is not None %}
-                                                            {{ response.distance_km|floatformat:1 }} km
-                                                        {% else %}
-                                                            Distance unavailable
-                                                        {% endif %}
-
-                                                    </strong>
-
-                                                </div>
-
-
-                                                <div class="tracking-detail">
-
-                                                    <span>
-                                                        Location
-                                                    </span>
-
-                                                    <strong>
-                                                        📍 Available
-                                                    </strong>
-
-                                                </div>
-
-                                            </div>
-
-
-                                            <div class="tracking-message">
-
-                                                Donor location is available
-                                                for coordination.
-
-                                            </div>
-
-                                        {% else %}
-
-                                            <div class="tracking-status unavailable">
-
-                                                <span class="tracking-dot"></span>
-
-                                                Donor location unavailable
-
-                                            </div>
-
-
-                                            <div class="tracking-message">
-
-                                                This donor has not shared
-                                                their current location yet.
-
-                                            </div>
-
-                                        {% endif %}
-
-                                    </div>
-
-                                </div>
-
-                            {% endfor %}
-
-                        {% else %}
-
-                            <div class="empty">
-
-                                <div class="empty-icon">
-                                    👥
-                                </div>
-
-                                <h3>
-                                    No Donor Responses Yet
-                                </h3>
-
-                                <p>
-                                    Matching donors have not responded
-                                    to this request yet.
-                                </p>
-
-                            </div>
-
-                        {% endif %}
-
-                    </section>
-
-
-                    <section class="tracking-card">
-
-                        <div class="card-header">
-
-                            <h3>
-                                Request Tracking
-                            </h3>
-
-                        </div>
-
-
-                        <div class="timeline">
-
-                            <div class="timeline-item">
-
-                                <div class="timeline-dot"></div>
-
-                                <h4>
-                                    Request Created
-                                </h4>
-
-                                <p>
-                                    {{ latest_request.created_at|date:"d M Y, h:i A" }}
-                                </p>
-
-                            </div>
-
-
-                            <div class="timeline-item">
-
-                                <div class="timeline-dot"></div>
-
-                                <h4>
-                                    Donors Notified
-                                </h4>
-
-                                <p>
-                                    Matching donors can view your request.
-                                </p>
-
-                            </div>
-
-
-                            <div class="timeline-item
-                                {% if response_count == 0 %}pending{% endif %}">
-
-                                <div class="timeline-dot"></div>
-
-                                <h4>
-                                    Donor Response
-                                </h4>
-
-                                <p>
-
-                                    {% if response_count > 0 %}
-
-                                        {{ response_count }}
-                                        donor{{ response_count|pluralize }}
-                                        responded.
-
-                                    {% else %}
-
-                                        Waiting for donor response.
-
-                                    {% endif %}
-
-                                </p>
-
-                            </div>
-
-
-                            <div class="timeline-item
-                                {% if latest_request.status != "Fulfilled" %}pending{% endif %}">
-
-                                <div class="timeline-dot"></div>
-
-                                <h4>
-                                    Blood Collection
-                                </h4>
-
-                                <p>
-
-                                    {% if latest_request.status == "Fulfilled" %}
-
-                                        Blood collection completed.
-
-                                    {% elif response_count > 0 %}
-
-                                        Donor response received.
-                                        Collection can be coordinated.
-
-                                    {% else %}
-
-                                        Waiting for donor confirmation.
-
-                                    {% endif %}
-
-                                </p>
-
-                            </div>
-
-
-                            <div class="timeline-item
-                                {% if latest_request.status != "Fulfilled" %}pending{% endif %}">
-
-                                <div class="timeline-dot"></div>
-
-                                <h4>
-                                    Request Fulfilled
-                                </h4>
-
-                                <p>
-
-                                    {% if latest_request.status == "Fulfilled" %}
-
-                                        Blood requirement fulfilled.
-
-                                    {% else %}
-
-                                        Waiting for the blood requirement
-                                        to be fulfilled.
-
-                                    {% endif %}
-
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </section>
-
-                </div>
-
-            {% endif %}
-
-
-        {% else %}
-
-            <div class="empty">
-
-                <div class="empty-icon">
-                    🩸
-                </div>
-
-                <h3>
-                    No Blood Requests Found
-                </h3>
-
-                <p>
-                    You haven't created any blood requests yet.
-                </p>
-
-                <a
-                    href="#create-request"
-                    class="empty-btn">
-
-                    Create Your First Request
-
-                </a>
-
-            </div>
-
-        {% endif %}
-
-    </section>
-
 </main>
 
 
-<!-- ================= JAVASCRIPT ================= -->
+<!-- ================= MAP LIBRARIES ================= -->
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+
+<script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl.js"></script>
+
 
 <script>
 
-    function toggleSidebar() {
+/* ================= SIDEBAR ================= */
 
-        document
-            .getElementById("sidebar")
-            .classList.toggle("open");
+function toggleSidebar() {
+
+    document
+        .getElementById("sidebar")
+        .classList.toggle("open");
+
+}
+
+
+/* ================= MAP VARIABLES ================= */
+
+let map = null;
+let marker = null;
+
+let currentAccuracy = null;
+
+let gpsWatchId = null;
+let gpsFinished = false;
+
+let bestAccuracy = Infinity;
+
+const MAP_STYLE =
+    "https://tiles.openfreemap.org/styles/liberty";
+
+
+/* ================= INITIALIZE MAP ================= */
+
+function initializeMap(latitude, longitude, zoom = 16) {
+
+    latitude = parseFloat(latitude);
+    longitude = parseFloat(longitude);
+
+    if (
+        isNaN(latitude) ||
+        isNaN(longitude)
+    ) {
+        return;
+    }
+
+
+    /*
+     * IMPORTANT:
+     * The map container is initially hidden.
+     * We first show it and then create/invalidate
+     * the map so tiles render correctly.
+     */
+
+    document
+        .getElementById("mapWrapper")
+        .classList.add("show");
+
+
+    if (map === null) {
+
+
+        map = L.map("map", {
+
+            zoomControl: true
+
+        });
+
+
+        L.maplibreGL({
+
+            style: MAP_STYLE
+
+        }).addTo(map);
+
+
+        marker = L.marker(
+            [latitude, longitude],
+            {
+                draggable: true
+            }
+        ).addTo(map);
+
+
+        marker.on(
+            "dragend",
+            function() {
+
+                const position =
+                    marker.getLatLng();
+
+
+                updateCoordinates(
+                    position.lat,
+                    position.lng,
+                    null
+                );
+
+
+                document
+                    .getElementById("accuracyDisplay")
+                    .textContent =
+                    "Manual adjustment";
+
+
+                reverseGeocode(
+                    position.lat,
+                    position.lng
+                );
+
+            }
+        );
+
+    }
+
+    else {
+
+        map.setView(
+            [latitude, longitude],
+            zoom
+        );
+
+
+        marker.setLatLng(
+            [latitude, longitude]
+        );
 
     }
 
 
-    function getCurrentLocation() {
-
-        const status =
-            document.getElementById("locationStatus");
-
-        const latitudeInput =
-            document.getElementById("latitude");
-
-        const longitudeInput =
-            document.getElementById("longitude");
+    map.setView(
+        [latitude, longitude],
+        zoom
+    );
 
 
-        if (!navigator.geolocation) {
+    /*
+     * Leaflet needs this when the map
+     * container has been hidden before.
+     */
 
-            status.textContent =
-                "Geolocation is not supported by this browser.";
+    setTimeout(
+        function() {
 
-            return;
+            if (map) {
 
-        }
+                map.invalidateSize();
+
+                map.setView(
+                    [latitude, longitude],
+                    zoom
+                );
+
+            }
+
+        },
+        300
+    );
+
+}
 
 
-        status.textContent =
-            "Detecting your current location...";
+/* ================= UPDATE COORDINATES ================= */
+
+function updateCoordinates(
+    latitude,
+    longitude,
+    accuracy = null
+) {
+
+    latitude = parseFloat(latitude);
+    longitude = parseFloat(longitude);
+
+    if (
+        isNaN(latitude) ||
+        isNaN(longitude)
+    ) {
+        return;
+    }
 
 
-        navigator.geolocation.getCurrentPosition(
+    const latText =
+        latitude.toFixed(6);
+
+    const lngText =
+        longitude.toFixed(6);
+
+
+    document
+        .getElementById("latitude")
+        .value =
+        latText;
+
+
+    document
+        .getElementById("longitude")
+        .value =
+        lngText;
+
+
+    document
+        .getElementById("latitudeDisplay")
+        .textContent =
+        latText;
+
+
+    document
+        .getElementById("longitudeDisplay")
+        .textContent =
+        lngText;
+
+
+    if (
+        accuracy !== null &&
+        accuracy !== undefined
+    ) {
+
+        currentAccuracy =
+            parseFloat(accuracy);
+
+
+        document
+            .getElementById("accuracy")
+            .value =
+            currentAccuracy.toFixed(2);
+
+
+        document
+            .getElementById("accuracyDisplay")
+            .textContent =
+            "±" +
+            Math.round(currentAccuracy) +
+            " meters";
+
+    }
+
+
+    document
+        .getElementById("coordinatesBox")
+        .classList.add("show");
+
+}
+
+
+/* ================= ACCURACY MESSAGE ================= */
+
+function accuracyMessage(accuracy) {
+
+    accuracy =
+        parseFloat(accuracy);
+
+
+    if (accuracy <= 10) {
+
+        return "Excellent accuracy";
+
+    }
+
+
+    if (accuracy <= 30) {
+
+        return "Good accuracy";
+
+    }
+
+
+    if (accuracy <= 100) {
+
+        return "Moderate accuracy";
+
+    }
+
+
+    return "Low accuracy";
+
+}
+
+
+/* ================= CURRENT LOCATION ================= */
+
+function getCurrentLocation() {
+
+
+    if (!navigator.geolocation) {
+
+        document
+            .getElementById("locationStatus")
+            .innerHTML =
+            "❌ Your browser does not support location services.";
+
+        return;
+
+    }
+
+
+    /*
+     * Stop previous GPS watch
+     * if one is already running.
+     */
+
+    if (gpsWatchId !== null) {
+
+        navigator.geolocation.clearWatch(
+            gpsWatchId
+        );
+
+        gpsWatchId = null;
+
+    }
+
+
+    bestAccuracy = Infinity;
+
+    gpsFinished = false;
+
+
+    document
+        .getElementById("locationStatus")
+        .innerHTML =
+        "📍 Getting your current device location...<br>" +
+        "Please keep the page open for a few seconds so GPS accuracy can improve.";
+
+
+    gpsWatchId =
+        navigator.geolocation.watchPosition(
 
             function(position) {
 
+
+                if (gpsFinished) {
+                    return;
+                }
+
+
                 const latitude =
                     position.coords.latitude;
+
 
                 const longitude =
                     position.coords.longitude;
 
 
-                latitudeInput.value =
-                    latitude;
-
-                longitudeInput.value =
-                    longitude;
+                const accuracy =
+                    position.coords.accuracy;
 
 
-                status.textContent =
-                    "✓ Location detected successfully. You can now submit the request.";
+                /*
+                 * Keep only the best GPS reading.
+                 */
+
+                if (
+                    accuracy <
+                    bestAccuracy
+                ) {
+
+
+                    bestAccuracy =
+                        accuracy;
+
+
+                    updateCoordinates(
+                        latitude,
+                        longitude,
+                        accuracy
+                    );
+
+
+                    initializeMap(
+                        latitude,
+                        longitude,
+                        18
+                    );
+
+
+                    document
+                        .getElementById(
+                            "locationStatus"
+                        )
+                        .innerHTML =
+                        "📍 GPS location detected.<br>" +
+                        "<strong>Accuracy:</strong> ±" +
+                        Math.round(accuracy) +
+                        " meters — " +
+                        accuracyMessage(accuracy) +
+                        "<br>🔄 Improving GPS accuracy...";
+
+
+                    /*
+                     * Finish early if accuracy
+                     * reaches 15 meters or better.
+                     */
+
+                    if (accuracy <= 15) {
+
+                        finishGPS(
+                            latitude,
+                            longitude,
+                            accuracy
+                        );
+
+                    }
+
+                }
 
             },
 
 
             function(error) {
 
-                if (error.code === error.PERMISSION_DENIED) {
 
-                    status.textContent =
-                        "Location permission denied. Please allow location access.";
+                if (gpsFinished) {
+                    return;
+                }
+
+
+                let message =
+                    "❌ Unable to detect your location.";
+
+
+                if (
+                    error.code === 1
+                ) {
+
+                    message =
+                        "❌ Location permission denied. Please allow location access in your browser.";
 
                 }
 
-                else if (error.code === error.POSITION_UNAVAILABLE) {
+                else if (
+                    error.code === 2
+                ) {
 
-                    status.textContent =
-                        "Location information is unavailable.";
-
-                }
-
-                else if (error.code === error.TIMEOUT) {
-
-                    status.textContent =
-                        "Location request timed out. Please try again.";
+                    message =
+                        "❌ Your device could not determine the current location.";
 
                 }
 
-                else {
+                else if (
+                    error.code === 3
+                ) {
 
-                    status.textContent =
-                        "Unable to detect your location.";
+                    message =
+                        "❌ GPS request timed out. Please try again.";
 
                 }
+
+
+                document
+                    .getElementById(
+                        "locationStatus"
+                    )
+                    .innerHTML =
+                    message;
 
             },
 
 
             {
+
                 enableHighAccuracy: true,
-                timeout: 10000,
+
+                timeout: 30000,
+
                 maximumAge: 0
+
             }
 
         );
 
+
+    /*
+     * Allow GPS up to 20 seconds.
+     */
+
+    setTimeout(
+        function() {
+
+
+            if (gpsFinished) {
+                return;
+            }
+
+
+            if (gpsWatchId !== null) {
+
+                navigator.geolocation.clearWatch(
+                    gpsWatchId
+                );
+
+                gpsWatchId = null;
+
+            }
+
+
+            gpsFinished = true;
+
+
+            const lat =
+                document
+                    .getElementById("latitude")
+                    .value;
+
+
+            const lng =
+                document
+                    .getElementById("longitude")
+                    .value;
+
+
+            if (
+                lat &&
+                lng
+            ) {
+
+
+                document
+                    .getElementById(
+                        "locationStatus"
+                    )
+                    .innerHTML =
+                    "✅ GPS location selected.<br>" +
+                    "<strong>Best accuracy:</strong> ±" +
+                    Math.round(bestAccuracy) +
+                    " meters<br>" +
+                    "🔎 Finding your street and area...";
+
+
+                reverseGeocode(
+                    parseFloat(lat),
+                    parseFloat(lng)
+                );
+
+            }
+
+            else {
+
+                document
+                    .getElementById(
+                        "locationStatus"
+                    )
+                    .innerHTML =
+                    "❌ Could not obtain GPS location. Please try again.";
+
+            }
+
+        },
+        20000
+    );
+
+}
+
+
+/* ================= FINISH GPS ================= */
+
+function finishGPS(
+    latitude,
+    longitude,
+    accuracy
+) {
+
+
+    if (gpsFinished) {
+        return;
     }
 
 
+    gpsFinished = true;
+
+
+    if (gpsWatchId !== null) {
+
+        navigator.geolocation.clearWatch(
+            gpsWatchId
+        );
+
+        gpsWatchId = null;
+
+    }
+
+
+    updateCoordinates(
+        latitude,
+        longitude,
+        accuracy
+    );
+
+
+    initializeMap(
+        latitude,
+        longitude,
+        18
+    );
+
+
     document
-        .querySelectorAll(".nav a, .sidebar-bottom a")
-        .forEach(function(item) {
+        .getElementById(
+            "locationStatus"
+        )
+        .innerHTML =
+        "✅ Very accurate GPS location detected.<br>" +
+        "<strong>Accuracy:</strong> ±" +
+        Math.round(accuracy) +
+        " meters<br>" +
+        "🔎 Finding your street and area...";
 
-            item.addEventListener("click", function() {
 
-                if (window.innerWidth <= 1000) {
+    reverseGeocode(
+        latitude,
+        longitude
+    );
 
-                    document
-                        .getElementById("sidebar")
-                        .classList.remove("open");
+}
+
+
+/* ================= REVERSE GEOCODING ================= */
+
+async function reverseGeocode(
+    latitude,
+    longitude
+) {
+
+
+    try {
+
+
+        const url =
+            "https://nominatim.openstreetmap.org/reverse" +
+            "?format=jsonv2" +
+            "&lat=" +
+            encodeURIComponent(latitude) +
+            "&lon=" +
+            encodeURIComponent(longitude) +
+            "&zoom=18" +
+            "&addressdetails=1";
+
+
+        const response =
+            await fetch(
+                url,
+                {
+                    headers: {
+                        "Accept":
+                            "application/json"
+                    }
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Reverse geocoding failed"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        const address =
+            data.address || {};
+
+
+        const street =
+            address.road ||
+            address.street ||
+            address.pedestrian ||
+            address.residential ||
+            address.footway ||
+            address.path ||
+            address.cycleway ||
+            "—";
+
+
+        const area =
+            address.suburb ||
+            address.neighbourhood ||
+            address.residential ||
+            address.quarter ||
+            address.village ||
+            address.town ||
+            address.city_district ||
+            "—";
+
+
+        const city =
+            address.city ||
+            address.town ||
+            address.municipality ||
+            address.village ||
+            "—";
+
+
+        const district =
+            address.state_district ||
+            address.district ||
+            address.county ||
+            address.city_district ||
+            "—";
+
+
+        const state =
+            address.state ||
+            "—";
+
+
+        const postcode =
+            address.postcode ||
+            "—";
+
+
+        const completeAddress =
+            data.display_name ||
+            "Address unavailable";
+
+
+        document
+            .getElementById("street")
+            .textContent =
+            street;
+
+
+        document
+            .getElementById("area")
+            .textContent =
+            area;
+
+
+        document
+            .getElementById("city")
+            .textContent =
+            city;
+
+
+        document
+            .getElementById("district")
+            .textContent =
+            district;
+
+
+        document
+            .getElementById("state")
+            .textContent =
+            state;
+
+
+        document
+            .getElementById("postcode")
+            .textContent =
+            postcode;
+
+
+        document
+            .getElementById("completeAddress")
+            .textContent =
+            completeAddress;
+
+
+        document
+            .getElementById("detectedAddress")
+            .classList
+            .add("show");
+
+
+        /*
+         * Update the actual Django
+         * Location field.
+         */
+
+        const locationInput =
+            document.getElementById(
+                "location"
+            );
+
+
+        if (locationInput) {
+
+            let readableLocation = "";
+
+
+            if (area !== "—") {
+
+                readableLocation =
+                    area;
+
+            }
+
+
+            if (
+                city !== "—" &&
+                city !== area
+            ) {
+
+                if (readableLocation) {
+
+                    readableLocation += ", ";
 
                 }
 
-            });
+                readableLocation += city;
 
-        });
+            }
+
+
+            if (
+                state !== "—" &&
+                state !== city
+            ) {
+
+                if (readableLocation) {
+
+                    readableLocation += ", ";
+
+                }
+
+                readableLocation += state;
+
+            }
+
+
+            if (postcode !== "—") {
+
+                if (readableLocation) {
+
+                    readableLocation +=
+                        " - ";
+
+                }
+
+                readableLocation +=
+                    postcode;
+
+            }
+
+
+            if (readableLocation) {
+
+                locationInput.value =
+                    readableLocation;
+
+            }
+
+        }
+
+
+        document
+            .getElementById(
+                "locationStatus"
+            )
+            .innerHTML =
+            "✅ Location detected successfully.<br>" +
+            "<strong>GPS:</strong> " +
+            parseFloat(latitude).toFixed(6) +
+            ", " +
+            parseFloat(longitude).toFixed(6) +
+            "<br>📍 Street and area information loaded.";
+
+
+    }
+
+    catch (error) {
+
+
+        console.error(
+            "Reverse geocoding error:",
+            error
+        );
+
+
+        document
+            .getElementById(
+                "locationStatus"
+            )
+            .innerHTML =
+            "✅ GPS location detected.<br>" +
+            "⚠️ Street/area name could not be retrieved right now.<br>" +
+            "Your GPS coordinates are still available.";
+
+    }
+
+}
+
+
+/* ================= MANUAL LOCATION SEARCH ================= */
+
+async function searchManualLocation() {
+
+
+    const searchInput =
+        document.getElementById(
+            "locationSearch"
+        );
+
+
+    const query =
+        searchInput.value.trim();
+
+
+    const status =
+        document.getElementById(
+            "locationStatus"
+        );
+
+
+    if (!query) {
+
+        status.innerHTML =
+            "⚠️ Enter a location first.<br>" +
+            "Example: Nallampallayam, Coimbatore";
+
+        searchInput.focus();
+
+        return;
+
+    }
+
+
+    status.innerHTML =
+        "🔎 Searching for <strong>" +
+        query +
+        "</strong>...";
+
+
+    try {
+
+
+        const url =
+            "https://nominatim.openstreetmap.org/search" +
+            "?format=jsonv2" +
+            "&q=" +
+            encodeURIComponent(query) +
+            "&limit=1" +
+            "&addressdetails=1";
+
+
+        const response =
+            await fetch(
+                url,
+                {
+                    headers: {
+                        "Accept":
+                            "application/json"
+                    }
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Search failed"
+            );
+
+        }
+
+
+        const results =
+            await response.json();
+
+
+        if (
+            results.length === 0
+        ) {
+
+            status.innerHTML =
+                "❌ Location not found.<br>" +
+                "Try entering a more specific area or street.";
+
+            return;
+
+        }
+
+
+        const result =
+            results[0];
+
+
+        const latitude =
+            parseFloat(
+                result.lat
+            );
+
+
+        const longitude =
+            parseFloat(
+                result.lon
+            );
+
+
+        /*
+         * Manual search does not have
+         * GPS accuracy.
+         */
+
+        currentAccuracy = null;
+
+
+        updateCoordinates(
+            latitude,
+            longitude,
+            null
+        );
+
+
+        document
+            .getElementById(
+                "accuracy"
+            )
+            .value = "";
+
+
+        document
+            .getElementById(
+                "accuracyDisplay"
+            )
+            .textContent =
+            "Manual location";
+
+
+        initializeMap(
+            latitude,
+            longitude,
+            16
+        );
+
+
+        status.innerHTML =
+            "✅ Location found successfully.<br>" +
+            "🖱️ Drag the marker if you want to fine-tune the position.";
+
+
+        reverseGeocode(
+            latitude,
+            longitude
+        );
+
+    }
+
+    catch (error) {
+
+
+        console.error(
+            "Manual location error:",
+            error
+        );
+
+
+        status.innerHTML =
+            "❌ Unable to search this location right now.";
+
+    }
+
+}
+
+
+/* ================= CLEAR LOCATION ================= */
+
+function clearLocation() {
+
+
+    if (gpsWatchId !== null) {
+
+        navigator.geolocation.clearWatch(
+            gpsWatchId
+        );
+
+        gpsWatchId = null;
+
+    }
+
+
+    gpsFinished = true;
+
+
+    document
+        .getElementById(
+            "latitude"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "longitude"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "accuracy"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "latitudeDisplay"
+        )
+        .textContent =
+        "—";
+
+
+    document
+        .getElementById(
+            "longitudeDisplay"
+        )
+        .textContent =
+        "—";
+
+
+    document
+        .getElementById(
+            "accuracyDisplay"
+        )
+        .textContent =
+        "—";
+
+
+    document
+        .getElementById(
+            "coordinatesBox"
+        )
+        .classList
+        .remove("show");
+
+
+    document
+        .getElementById(
+            "street"
+        )
+        .textContent =
+        "—";
+
+
+    document
+        .getElementById(
+            "area"
+        )
+        .textContent =
+        "—";
+
+
+    document
+        .getElementById(
+            "city"
+        )
+        .textContent =
+        "—";
+
+
+    document
+        .getElementById(
+            "district"
+        )
+        .textContent =
+        "—";
+
+
+    document
+        .getElementById(
+            "state"
+        )
+        .textContent =
+        "—";
+
+
+    document
+        .getElementById(
+            "postcode"
+        )
+        .textContent =
+        "—";
+
+
+    document
+        .getElementById(
+            "completeAddress"
+        )
+        .textContent =
+        "—";
+
+
+    document
+        .getElementById(
+            "detectedAddress"
+        )
+        .classList
+        .remove("show");
+
+
+    document
+        .getElementById(
+            "mapWrapper"
+        )
+        .classList
+        .remove("show");
+
+
+    document
+        .getElementById(
+            "locationSearch"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "location"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "locationStatus"
+        )
+        .innerHTML =
+        "📍 Location cleared. You can detect or search again.";
+
+
+    /*
+     * Completely remove old map so the next
+     * search/GPS detection creates a fresh map.
+     */
+
+    if (map !== null) {
+
+        map.remove();
+
+        map = null;
+
+        marker = null;
+
+    }
+
+
+    currentAccuracy = null;
+
+    bestAccuracy = Infinity;
+
+}
+
+
+/* ================= ENTER KEY SEARCH ================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+
+        const searchInput =
+            document.getElementById(
+                "locationSearch"
+            );
+
+
+        if (searchInput) {
+
+            searchInput.addEventListener(
+                "keydown",
+                function(event) {
+
+                    if (
+                        event.key === "Enter"
+                    ) {
+
+                        event.preventDefault();
+
+                        searchManualLocation();
+
+                    }
+
+                }
+            );
+
+        }
+
+    }
+);
+
+
+/* ================= LOAD SAVED LOCATION ================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+
+        const savedLatitude =
+            document
+                .getElementById(
+                    "latitude"
+                )
+                .value;
+
+
+        const savedLongitude =
+            document
+                .getElementById(
+                    "longitude"
+                )
+                .value;
+
+
+        const savedAccuracy =
+            document
+                .getElementById(
+                    "accuracy"
+                )
+                .value;
+
+
+        if (
+            savedLatitude &&
+            savedLongitude
+        ) {
+
+
+            const latitude =
+                parseFloat(
+                    savedLatitude
+                );
+
+
+            const longitude =
+                parseFloat(
+                    savedLongitude
+                );
+
+
+            const accuracy =
+                savedAccuracy
+                    ? parseFloat(
+                        savedAccuracy
+                    )
+                    : null;
+
+
+            if (
+                !isNaN(latitude) &&
+                !isNaN(longitude)
+            ) {
+
+
+                updateCoordinates(
+                    latitude,
+                    longitude,
+                    accuracy
+                );
+
+
+                initializeMap(
+                    latitude,
+                    longitude,
+                    16
+                );
+
+
+                reverseGeocode(
+                    latitude,
+                    longitude
+                );
+
+
+                document
+                    .getElementById(
+                        "locationStatus"
+                    )
+                    .innerHTML =
+                    "📍 Saved location loaded.<br>" +
+                    "🖱️ Drag the marker to update it.";
+
+            }
+
+        }
+
+
+        /*
+         * Mobile sidebar closes after navigation.
+         */
+
+        document
+            .querySelectorAll(
+                ".nav a, .sidebar-bottom a"
+            )
+            .forEach(
+                function(item) {
+
+
+                    item.addEventListener(
+                        "click",
+                        function() {
+
+
+                            if (
+                                window.innerWidth <=
+                                1000
+                            ) {
+
+                                document
+                                    .getElementById(
+                                        "sidebar"
+                                    )
+                                    .classList
+                                    .remove("open");
+
+                            }
+
+                        }
+                    );
+
+                }
+            );
+
+    }
+);
 
 </script>
 
 </body>
 </html>
+
